@@ -217,9 +217,9 @@
     transform:translateX(135%); opacity:0; pointer-events:none;
     transition:transform .5s cubic-bezier(.3,1.4,.5,1), opacity .3s; }
   .mascot.show{ transform:none; opacity:1; pointer-events:auto; }
-  .mascot-dog{ width:66px; height:66px; flex:none; cursor:pointer; filter:drop-shadow(0 5px 12px rgba(0,0,0,.35)); animation:dogbob 2.8s ease-in-out infinite; }
+  .mascot-dog{ width:82px; height:82px; flex:none; cursor:pointer; filter:drop-shadow(0 6px 13px rgba(0,0,0,.38)); animation:dogbob 2.8s ease-in-out infinite; }
   .mascot-dog svg{ width:100%; height:100%; display:block; overflow:visible; }
-  .mascot-bubble{ position:relative; max-width:224px; background:var(--panel); border:1px solid var(--border); border-radius:13px 13px 4px 13px;
+  .mascot-bubble{ position:relative; max-width:236px; background:var(--panel); border:1px solid var(--border); border-radius:13px 13px 4px 13px;
     padding:10px 26px 8px 12px; font-size:12.5px; line-height:1.45; color:var(--text); box-shadow:0 8px 20px rgba(0,0,0,.28); }
   .mascot-bubble:after{ content:""; position:absolute; right:-7px; bottom:11px; width:12px; height:12px; background:var(--panel);
     border-right:1px solid var(--border); border-bottom:1px solid var(--border); transform:rotate(-45deg); }
@@ -248,8 +248,8 @@
   }
   @media (max-width:520px){
     .mascot{ right:8px; bottom:10px; }
-    .mascot-dog{ width:54px; height:54px; }
-    .mascot-bubble{ max-width:176px; font-size:12px; padding:9px 24px 7px 10px; }
+    .mascot-dog{ width:68px; height:68px; }
+    .mascot-bubble{ max-width:184px; font-size:12px; padding:9px 24px 7px 10px; }
   }
 
   /* ---------- choice / flash ---------- */
@@ -2594,26 +2594,48 @@ let _masMsg = { nl: "", en: "" };
 
 // Samoyed "Beau" — pluizige witte hond met naamplaatje
 const DOG_SVG =
-  '<svg viewBox="0 0 100 112" xmlns="http://www.w3.org/2000/svg">' +
-  '<path class="dog-tail" d="M23 55 q-21 -5 -13 -31 q23 2 27 25 q-5 8 -14 6 Z" fill="#e9edf4"/>' +
-  '<ellipse cx="53" cy="84" rx="30" ry="23" fill="#f5f7fb"/>' +
-  '<ellipse cx="41" cy="104" rx="8" ry="5.5" fill="#eef1f7"/><ellipse cx="66" cy="104" rx="8" ry="5.5" fill="#eef1f7"/>' +
-  '<ellipse cx="50" cy="65" rx="28" ry="17" fill="#eef1f7"/>' +
-  '<path class="dog-ear dog-ear-l" d="M31 24 L22 3 L45 19 Z" fill="#eef1f7"/>' +
-  '<path class="dog-ear dog-ear-r" d="M69 24 L78 3 L55 19 Z" fill="#eef1f7"/>' +
-  '<path d="M33 22 L28 9 L41 20 Z" fill="#f3ccd7"/><path d="M67 22 L72 9 L59 20 Z" fill="#f3ccd7"/>' +
-  '<circle cx="50" cy="44" r="26" fill="#f7f9fc"/>' +
-  '<ellipse cx="40" cy="42" rx="3.7" ry="4.7" fill="#26262b"/><ellipse cx="60" cy="42" rx="3.7" ry="4.7" fill="#26262b"/>' +
-  '<circle cx="41.3" cy="40.1" r="1.3" fill="#fff"/><circle cx="61.3" cy="40.1" r="1.3" fill="#fff"/>' +
-  '<rect class="dog-lid" x="35.5" y="35" width="9" height="10" rx="4.5" fill="#f7f9fc"/>' +
-  '<rect class="dog-lid" x="55.5" y="35" width="9" height="10" rx="4.5" fill="#f7f9fc"/>' +
-  '<ellipse cx="50" cy="50" rx="4.6" ry="3.4" fill="#26262b"/>' +
-  '<path d="M50 53 v3 M50 56 q-8 7 -13 -1 M50 56 q8 7 13 -1" stroke="#26262b" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-  '<path class="dog-tongue" d="M46 57 q4 7 8 0 Z" fill="#f2889b"/>' +
-  '<path d="M29 60 q21 14 42 0" stroke="#a78bfa" stroke-width="5" fill="none" stroke-linecap="round"/>' +
-  '<line x1="50" y1="64" x2="50" y2="69" stroke="#c9a24a" stroke-width="1.6"/>' +
-  '<rect x="36" y="68" width="28" height="13.5" rx="3.5" fill="#fbbf24" stroke="#dca62f" stroke-width="1"/>' +
-  '<text x="50" y="77.9" text-anchor="middle" font-family="system-ui,-apple-system,Arial,sans-serif" font-size="8.4" font-weight="800" fill="#5b3d0b">Beau</text>' +
+  '<svg viewBox="0 0 104 120" xmlns="http://www.w3.org/2000/svg">' +
+  '<ellipse cx="53" cy="114" rx="30" ry="5.5" fill="#000" opacity=".2"/>' +
+  '<g class="dog-tail">' +
+    '<path d="M24 58 q-24 -6 -16 -34 q26 2 30 27 q-5 9 -14 7 Z" fill="#e7ecf3"/>' +
+    '<path d="M12 30 q6 10 12 16 M9 39 q8 8 15 12 M11 47 q9 6 16 8" stroke="#d3dae6" stroke-width="1.5" fill="none" stroke-linecap="round"/>' +
+  '</g>' +
+  '<ellipse cx="54" cy="89" rx="32" ry="25" fill="#e6ebf3"/>' +
+  '<ellipse cx="54" cy="87" rx="30" ry="23" fill="#f6f8fc"/>' +
+  '<ellipse cx="54" cy="93" rx="19" ry="15" fill="#ffffff" opacity=".65"/>' +
+  '<path d="M24 85 l-5 -3 l4 6 Z M27 99 l-6 1 l5 4 Z M83 83 l6 -3 l-4 6 Z M81 99 l7 1 l-6 4 Z" fill="#f6f8fc"/>' +
+  '<ellipse cx="42" cy="109" rx="9" ry="6" fill="#eef2f8"/><ellipse cx="67" cy="109" rx="9" ry="6" fill="#eef2f8"/>' +
+  '<path d="M39 106 v6 M42 106 v6 M45 106 v6 M64 106 v6 M67 106 v6 M70 106 v6" stroke="#d7dee9" stroke-width="1.1" stroke-linecap="round"/>' +
+  '<path d="M27 62 q26 20 53 0 q-4 11 -11 14 q-16 8 -31 0 q-7 -3 -11 -14 Z" fill="#eef2f8"/>' +
+  '<path d="M29 60 l-4 -4 l1 6 Z M37 67 l-3 -5 l0 6 Z M77 60 l4 -4 l-1 6 Z M69 67 l3 -5 l0 6 Z" fill="#eef2f8"/>' +
+  '<g class="dog-ear dog-ear-l">' +
+    '<path d="M31 24 L20 1 L47 18 Z" fill="#eef2f8"/><path d="M33 22 L28 7 L42 19 Z" fill="#f3ccd7"/>' +
+    '<path d="M31 24 q-3 -4 -6 -3 M47 18 q3 -3 3 -6" stroke="#dfe5ee" stroke-width="1.3" fill="none" stroke-linecap="round"/>' +
+  '</g>' +
+  '<g class="dog-ear dog-ear-r">' +
+    '<path d="M73 24 L84 1 L57 18 Z" fill="#eef2f8"/><path d="M71 22 L76 7 L62 19 Z" fill="#f3ccd7"/>' +
+    '<path d="M73 24 q3 -4 6 -3 M57 18 q-3 -3 -3 -6" stroke="#dfe5ee" stroke-width="1.3" fill="none" stroke-linecap="round"/>' +
+  '</g>' +
+  '<circle cx="52" cy="44" r="27" fill="#f7f9fc"/>' +
+  '<path d="M25 46 l-6 -2 l5 6 Z M25 39 l-6 -4 l6 3 Z M79 46 l6 -2 l-5 6 Z M79 39 l6 -4 l-6 3 Z" fill="#f7f9fc"/>' +
+  '<ellipse cx="52" cy="40" rx="22" ry="18" fill="#ffffff" opacity=".5"/>' +
+  '<path d="M40 34 q3 -3 7 -1 M64 34 q-3 -3 -7 -1" stroke="#dfe5ee" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+  '<ellipse cx="37" cy="50" rx="4" ry="2.6" fill="#f6b8c6" opacity=".5"/>' +
+  '<ellipse cx="67" cy="50" rx="4" ry="2.6" fill="#f6b8c6" opacity=".5"/>' +
+  '<ellipse cx="42" cy="42" rx="3.9" ry="5" fill="#26262b"/><ellipse cx="62" cy="42" rx="3.9" ry="5" fill="#26262b"/>' +
+  '<circle cx="43.4" cy="39.8" r="1.4" fill="#fff"/><circle cx="63.4" cy="39.8" r="1.4" fill="#fff"/>' +
+  '<rect class="dog-lid" x="37.4" y="34" width="9.4" height="11" rx="4.7" fill="#f7f9fc"/>' +
+  '<rect class="dog-lid" x="57.4" y="34" width="9.4" height="11" rx="4.7" fill="#f7f9fc"/>' +
+  '<ellipse cx="52" cy="52" rx="12" ry="9" fill="#ffffff"/>' +
+  '<ellipse cx="52" cy="50" rx="5" ry="3.7" fill="#26262b"/>' +
+  '<circle cx="50.4" cy="48.5" r="1.1" fill="#fff" opacity=".85"/>' +
+  '<path d="M52 53 v3.4 M52 56.4 q-9 8 -14 -1 M52 56.4 q9 8 14 -1" stroke="#26262b" stroke-width="2.1" fill="none" stroke-linecap="round"/>' +
+  '<path class="dog-tongue" d="M48 58 q4 8 8 0 Z" fill="#f2889b"/>' +
+  '<path d="M30 62 q22 15 44 0" stroke="#a78bfa" stroke-width="5.4" fill="none" stroke-linecap="round"/>' +
+  '<path d="M30 62 q22 15 44 0" stroke="#8b6df0" stroke-width="1.3" fill="none" stroke-linecap="round" opacity=".55"/>' +
+  '<circle cx="52" cy="70" r="2" fill="none" stroke="#c9a24a" stroke-width="1.3"/>' +
+  '<rect x="37" y="70.5" width="30" height="14.5" rx="4" fill="#fbbf24" stroke="#dca62f" stroke-width="1"/>' +
+  '<text x="52" y="80.9" text-anchor="middle" font-family="system-ui,-apple-system,Arial,sans-serif" font-size="9" font-weight="800" fill="#5b3d0b">Beau</text>' +
   '</svg>';
 
 function ensureMascot(){
