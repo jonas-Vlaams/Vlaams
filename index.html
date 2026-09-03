@@ -2592,7 +2592,7 @@ let _mascotEl = null, _mascotTimer = null, _lastMascot = 0, _mascotCount = 0;
 let _masLang = (lsGet(NS + "_masclang", "nl") === "en") ? "en" : "nl";
 let _masMsg = { nl: "", en: "" };
 
-// Samoyed "Beau" — schoon vormgegeven: pluizige silhouet uit gelijke bolletjes
+// Samoyed "Beau" — schoon vormgegeven, zittend met pootjes
 const DOG_SVG = (function(){
   function fluff(cx, cy, R, n, r, fill, start){
     let s = "";
@@ -2605,12 +2605,19 @@ const DOG_SVG = (function(){
     return s;
   }
   const SHADE = "#e4ebf4", SOFT = "#f8fafc", WHITE = "#ffffff";
-  return '<svg viewBox="0 0 108 124" xmlns="http://www.w3.org/2000/svg">' +
-    '<ellipse cx="54" cy="118" rx="30" ry="4.5" fill="#000" opacity=".16"/>' +
+  return '<svg viewBox="0 0 108 128" xmlns="http://www.w3.org/2000/svg">' +
+    '<ellipse cx="55" cy="122" rx="33" ry="4.5" fill="#000" opacity=".16"/>' +
     '<g class="dog-tail">' + fluff(19, 62, 8, 5, 8, SHADE) + fluff(20, 61, 7, 5, 7.5, SOFT) + '</g>' +
-    fluff(56, 92, 27, 9, 11.5, SHADE, -0.2) +
-    fluff(56, 90, 26, 9, 11.5, SOFT, -0.2) +
-    '<ellipse cx="56" cy="92" rx="24" ry="20" fill="' + WHITE + '"/>' +
+    fluff(56, 90, 27, 9, 11.5, SHADE, -0.2) +
+    fluff(56, 88, 26, 9, 11.5, SOFT, -0.2) +
+    '<ellipse cx="56" cy="90" rx="24" ry="21" fill="' + WHITE + '"/>' +
+    '<ellipse cx="45" cy="112" rx="9.5" ry="8" fill="' + SHADE + '"/>' +
+    '<ellipse cx="45" cy="110" rx="9" ry="7.5" fill="' + WHITE + '"/>' +
+    '<ellipse cx="67" cy="112" rx="9.5" ry="8" fill="' + SHADE + '"/>' +
+    '<ellipse cx="67" cy="110" rx="9" ry="7.5" fill="' + WHITE + '"/>' +
+    '<path d="M41.5 108 v5 M45 108.5 v5.5 M48.5 108 v5" stroke="#d8e0ec" stroke-width="1.4" fill="none" stroke-linecap="round"/>' +
+    '<path d="M63.5 108 v5 M67 108.5 v5.5 M70.5 108 v5" stroke="#d8e0ec" stroke-width="1.4" fill="none" stroke-linecap="round"/>' +
+    '<ellipse cx="56" cy="86" rx="15" ry="12" fill="' + WHITE + '"/>' +
     '<g class="dog-ear dog-ear-l"><path d="M35 27 Q30 5 45 16 Q47 25 40 31 Z" fill="' + SOFT + '"/>' +
       '<path d="M37 26 Q34 13 42 18 Q43 24 39 28 Z" fill="#f6c9d6"/></g>' +
     '<g class="dog-ear dog-ear-r"><path d="M73 27 Q78 5 63 16 Q61 25 68 31 Z" fill="' + SOFT + '"/>' +
