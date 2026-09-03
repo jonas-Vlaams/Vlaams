@@ -196,6 +196,51 @@
   .orderhint.bad{ color:var(--bad); }
   .c-en{ color:var(--en); font-weight:600; font-size:14.5px; }
 
+  /* ---------- type (vertaal & typ) ---------- */
+  .typerow{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+  .typeinput{ flex:1; min-width:180px; background:var(--panel2); border:2px solid var(--border); border-radius:8px; color:var(--text); font-size:16px; padding:9px 11px; }
+  .typeinput:focus{ outline:none; border-color:var(--accent); }
+  .typeinput.green{ border-color:var(--good); background:var(--good-bg); color:var(--good); }
+  .typeinput.yellow{ border-color:var(--nl); background:rgba(251,191,36,0.12); color:var(--nl); }
+  .typeinput.red{ border-color:var(--bad); background:var(--bad-bg); color:var(--bad); }
+  .typeinput:disabled{ opacity:.9; }
+  .typebtn{ background:var(--panel2); border:2px solid var(--border); color:var(--text); border-radius:8px; padding:9px 14px; font-size:14px; font-weight:600; cursor:pointer; white-space:nowrap; }
+  .typebtn:hover{ border-color:var(--accent); }
+  .typebtn.ghost{ background:none; border-color:var(--border-soft); color:var(--text-dim); margin-top:8px; font-weight:400; }
+  .typefb{ font-size:12.5px; margin-top:8px; min-height:16px; color:var(--text-dim); }
+  .typefb.green{ color:var(--good); font-weight:600; }
+  .typefb.yellow{ color:var(--nl); }
+  .typefb.red{ color:var(--bad); }
+
+  /* ---------- mascotte ---------- */
+  .mascot{ position:fixed; right:14px; bottom:14px; z-index:60; display:flex; align-items:flex-end; gap:8px;
+    transform:translateY(150%); opacity:0; pointer-events:none;
+    transition:transform .5s cubic-bezier(.34,1.4,.5,1), opacity .35s; }
+  .mascot.show{ transform:none; opacity:1; pointer-events:auto; }
+  .mascot-owl{ width:78px; height:78px; flex:none; cursor:pointer; filter:drop-shadow(0 6px 14px rgba(0,0,0,.35)); animation:owlbob 2.8s ease-in-out infinite; }
+  .mascot-owl svg{ width:100%; height:100%; display:block; overflow:visible; }
+  .mascot-bubble{ position:relative; max-width:240px; background:var(--panel); border:1px solid var(--border); border-radius:14px 14px 4px 14px;
+    padding:11px 30px 11px 13px; font-size:13px; line-height:1.45; color:var(--text); box-shadow:0 8px 20px rgba(0,0,0,.28); }
+  .mascot-bubble:after{ content:""; position:absolute; right:-7px; bottom:12px; width:12px; height:12px; background:var(--panel);
+    border-right:1px solid var(--border); border-bottom:1px solid var(--border); transform:rotate(-45deg); }
+  .mascot-x{ position:absolute; top:4px; right:6px; background:none; border:none; color:var(--text-dim); font-size:16px; line-height:1; cursor:pointer; padding:2px 5px; }
+  .mascot-x:hover{ color:var(--text); }
+  .owl-eye-lid{ transform-box:fill-box; transform-origin:center; animation:owlblink 4.4s infinite; }
+  .owl-wing{ transform-box:fill-box; transform-origin:top center; }
+  .mascot.show .owl-wing{ animation:owlwave .5s ease 2; }
+  .mascot.celebrate .mascot-owl{ animation:owlhop .5s ease 3; }
+  .mascot .spark{ position:absolute; width:10px; height:10px; pointer-events:none; color:var(--nl); font-size:12px; animation:sparkup .9s ease forwards; }
+  @keyframes owlbob{ 50%{ transform:translateY(-6px); } }
+  @keyframes owlblink{ 0%,90%,100%{ transform:scaleY(1); } 94%{ transform:scaleY(.08); } }
+  @keyframes owlwave{ 0%,100%{ transform:rotate(0); } 50%{ transform:rotate(-24deg); } }
+  @keyframes owlhop{ 0%,100%{ transform:translateY(0) rotate(0); } 40%{ transform:translateY(-16px) rotate(-8deg); } 70%{ transform:translateY(0) rotate(6deg); } }
+  @keyframes sparkup{ 0%{ transform:translateY(0) scale(.4); opacity:0; } 30%{ opacity:1; } 100%{ transform:translateY(-38px) scale(1.1); opacity:0; } }
+  @media (prefers-reduced-motion: reduce){
+    .mascot-owl, .mascot.show .owl-wing, .mascot.celebrate .mascot-owl, .owl-eye-lid{ animation:none; }
+    .mascot{ transition:opacity .3s; transform:none; }
+  }
+  @media (max-width:520px){ .mascot-owl{ width:62px; height:62px; } .mascot-bubble{ max-width:200px; font-size:12.5px; } }
+
   /* ---------- choice / flash ---------- */
   .q{ font-size:14.5px; font-weight:600; margin-bottom:10px; }
   .choiceopts{ display:flex; flex-wrap:wrap; gap:8px; }
@@ -973,6 +1018,55 @@ _U("het bijltje erbij neerleggen","ermee stoppen / opgeven",["gaan hakken","hard
 _U("iemand blij maken met een dode mus","iemand iets waardeloos beloven",["iemand een cadeau geven","iemand troosten","iemand verrassen"])
 ];
 
+/* ---------- Extra dagelijkse zinnen voor de typ-module ---------- */
+const DATA_TYPESENT_EXTRA = [
+{group:"Dagelijkse zinnen", en:"Good morning, how are you?", nl:"Goedemorgen, hoe gaat het met je?"},
+{group:"Dagelijkse zinnen", en:"I don't understand, can you repeat that?", nl:"Ik begrijp het niet, kan je dat herhalen?"},
+{group:"Dagelijkse zinnen", en:"Can you speak a little slower, please?", nl:"Kan je een beetje trager spreken, alsjeblieft?"},
+{group:"Dagelijkse zinnen", en:"What does this word mean?", nl:"Wat betekent dit woord?"},
+{group:"Dagelijkse zinnen", en:"How do you say that in Dutch?", nl:"Hoe zeg je dat in het Nederlands?"},
+{group:"Dagelijkse zinnen", en:"I have to go now, see you tomorrow.", nl:"Ik moet nu gaan, tot morgen."},
+{group:"Dagelijkse zinnen", en:"Sorry, I am a little late.", nl:"Sorry, ik ben een beetje te laat."},
+{group:"Dagelijkse zinnen", en:"Thank you very much for your help.", nl:"Heel erg bedankt voor je hulp."},
+{group:"Dagelijkse zinnen", en:"Could you help me for a moment?", nl:"Zou je me even kunnen helpen?"},
+{group:"Dagelijkse zinnen", en:"I am learning Dutch because I live in Belgium.", nl:"Ik leer Nederlands omdat ik in België woon."},
+{group:"Dagelijkse zinnen", en:"My girlfriend speaks Dutch very well.", nl:"Mijn vriendin spreekt heel goed Nederlands."},
+{group:"Dagelijkse zinnen", en:"We are going to visit my parents this weekend.", nl:"We gaan dit weekend mijn ouders bezoeken."},
+{group:"Dagelijkse zinnen", en:"What time do we have to leave tomorrow?", nl:"Hoe laat moeten we morgen vertrekken?"},
+{group:"Dagelijkse zinnen", en:"I would like to order a coffee, please.", nl:"Ik wil graag een koffie bestellen, alsjeblieft."},
+{group:"Dagelijkse zinnen", en:"How much does this cost?", nl:"Hoeveel kost dit?"},
+{group:"Dagelijkse zinnen", en:"Can I pay by card?", nl:"Kan ik met de kaart betalen?"},
+{group:"Dagelijkse zinnen", en:"Where is the nearest station?", nl:"Waar is het dichtstbijzijnde station?"},
+{group:"Dagelijkse zinnen", en:"Excuse me, is this seat free?", nl:"Excuseer, is deze plaats vrij?"},
+{group:"Dagelijkse zinnen", en:"I think it is going to rain today.", nl:"Ik denk dat het vandaag gaat regenen."},
+{group:"Dagelijkse zinnen", en:"It was very cold this morning.", nl:"Het was heel koud vanmorgen."},
+{group:"Dagelijkse zinnen", en:"I am tired because I slept badly.", nl:"Ik ben moe omdat ik slecht geslapen heb."},
+{group:"Dagelijkse zinnen", en:"She is not at home right now.", nl:"Zij is nu niet thuis."},
+{group:"Dagelijkse zinnen", en:"We have known each other for three years.", nl:"We kennen elkaar al drie jaar."},
+{group:"Dagelijkse zinnen", en:"Can you send me the address by message?", nl:"Kan je me het adres per bericht sturen?"},
+{group:"Dagelijkse zinnen", en:"I forgot my keys at home.", nl:"Ik ben mijn sleutels thuis vergeten."},
+{group:"Dagelijkse zinnen", en:"The shop closes at six o'clock.", nl:"De winkel sluit om zes uur."},
+{group:"Dagelijkse zinnen", en:"I will call you back later.", nl:"Ik bel je later terug."},
+{group:"Dagelijkse zinnen", en:"Do you want to come with us?", nl:"Wil je met ons meekomen?"},
+{group:"Dagelijkse zinnen", en:"That is a good idea.", nl:"Dat is een goed idee."},
+{group:"Dagelijkse zinnen", en:"I am not sure yet.", nl:"Ik ben nog niet zeker."},
+{group:"Dagelijkse zinnen", en:"Let me think about it.", nl:"Laat me erover nadenken."},
+{group:"Dagelijkse zinnen", en:"We can talk about it tomorrow.", nl:"We kunnen er morgen over praten."},
+{group:"Dagelijkse zinnen", en:"I really like this city.", nl:"Ik vind deze stad heel leuk."},
+{group:"Dagelijkse zinnen", en:"The children are playing outside.", nl:"De kinderen spelen buiten."},
+{group:"Dagelijkse zinnen", en:"Dinner is ready.", nl:"Het eten is klaar."},
+{group:"Dagelijkse zinnen", en:"Could you close the window?", nl:"Zou je het raam kunnen sluiten?"},
+{group:"Dagelijkse zinnen", en:"I have a question for you.", nl:"Ik heb een vraag voor je."},
+{group:"Dagelijkse zinnen", en:"It doesn't matter.", nl:"Het maakt niet uit."},
+{group:"Dagelijkse zinnen", en:"I am happy that you are here.", nl:"Ik ben blij dat je hier bent."},
+{group:"Dagelijkse zinnen", en:"See you next week.", nl:"Tot volgende week."},
+{group:"Dagelijkse zinnen", en:"I have to work late today.", nl:"Ik moet vandaag laat werken."},
+{group:"Dagelijkse zinnen", en:"Can we meet at the station?", nl:"Kunnen we afspreken aan het station?"},
+{group:"Dagelijkse zinnen", en:"I don't feel well today.", nl:"Ik voel me vandaag niet goed."},
+{group:"Dagelijkse zinnen", en:"Everything is going to be fine.", nl:"Alles komt goed."},
+{group:"Dagelijkse zinnen", en:"What are you doing this evening?", nl:"Wat doe je vanavond?"}
+];
+
 
 /* =================== MODULES =================== */
 const MODULES = [
@@ -1441,6 +1535,7 @@ function moduleTotal(m){
     case "conjug":    return d.reduce((s, v) => s + v.f.filter(x => x !== null && x !== undefined).length, 0);
     case "separable": return d.length * 3;
     case "order":     return d.length;
+    case "type":      return d.length;
     case "choice":    return d.length;
     case "flash":     return d.length;
   }
@@ -1510,7 +1605,7 @@ function renderGate(){
     const b = el("button", "profile-btn");
     const t = totalProgressForProfile(p);
     b.innerHTML = '<span class="pname">' + esc(p) + '</span><span class="psub">' + t.done + " / " + t.total + " juist</span>";
-    b.onclick = () => { setCurrent(p); location.hash = "#/"; route(); };
+    b.onclick = () => { setCurrent(p); pendingWelcome = p; location.hash = "#/"; route(); };
     list.appendChild(b);
   });
   if(profileNames.length) wrap.appendChild(list);
@@ -1521,7 +1616,7 @@ function renderGate(){
   input.placeholder = "Jouw naam…";
   input.maxLength = 24;
   const addBtn = el("button", "btn-accent", "Beginnen");
-  addBtn.onclick = async () => { addBtn.disabled = true; if(await addProfile(input.value)){ location.hash = "#/"; route(); } else { addBtn.disabled = false; } };
+  addBtn.onclick = async () => { addBtn.disabled = true; if(await addProfile(input.value)){ pendingWelcome = getCurrent(); location.hash = "#/"; route(); } else { addBtn.disabled = false; } };
   input.addEventListener("keydown", e => { if(e.key === "Enter") addBtn.click(); });
   add.appendChild(input);
   add.appendChild(addBtn);
@@ -1542,6 +1637,11 @@ function renderGate(){
 function renderHub(){
   const cur = getCurrent();
   app.innerHTML = "";
+
+  if(pendingWelcome){
+    const nm = pendingWelcome; pendingWelcome = null;
+    setTimeout(() => mascotWelcome(nm), 450);
+  }
 
   const top = el("div", "topbar");
   const chip = el("button", "profchip");
@@ -1630,7 +1730,14 @@ function renderModule(m){
   app.appendChild(body);
 
   const total = moduleTotal(m);
-  function refreshScore(){ score.textContent = progressCount(prog) + " / " + total; }
+  let wasComplete = total > 0 && progressCount(prog) >= total;
+  function refreshScore(){
+    score.textContent = progressCount(prog) + " / " + total;
+    if(!wasComplete && total > 0 && progressCount(prog) >= total){
+      wasComplete = true;
+      mascotCelebrate("“" + m.title + "” is helemaal af!");
+    }
+  }
 
   reset.onclick = async () => {
     if(confirm("Voortgang van \"" + m.title + "\" wissen voor " + cur + "?")){
@@ -1645,7 +1752,8 @@ function renderModule(m){
 
   const renderers = {
     dehet: renderDehet, match: renderMatch, conjug: renderConjug,
-    separable: renderSeparable, order: renderOrder, choice: renderChoice, flash: renderFlash
+    separable: renderSeparable, order: renderOrder, type: renderType,
+    choice: renderChoice, flash: renderFlash
   };
   (renderers[m.type] || renderUnknown)(ctx);
   refreshScore();
@@ -1704,6 +1812,7 @@ function renderDehet(ctx){
         } else {
           btn.classList.add("incorrect");
           setTimeout(() => btn.classList.remove("incorrect"), 500);
+          bumpStruggle("dehet:" + key, 3, "Denk aan de regels bovenaan: verkleinwoorden op -je, talen, metalen en windrichtingen zijn altijd 'het'.");
         }
       }
       deB.onclick = () => attempt("de", deB);
@@ -1807,6 +1916,7 @@ function conjCard(v, prog, save){
         prog[key] = true; save();
       } else {
         sel.classList.add("incorrect");
+        bumpStruggle("conj:" + v.nl, 3, "'t kofschip: eindigt de stam op t, k, f, s, ch of p? Dan -te / -t. Anders -de / -d.");
       }
     });
     wrap.appendChild(sel);
@@ -1862,6 +1972,7 @@ function sepSelect(key, correct, options, prog, save){
       prog[key] = true; save();
     } else {
       sel.classList.add("incorrect");
+      bumpStruggle("sep:" + key, 3, "In de hoofdzin springt het losse voorvoegsel (op, aan, uit, weg…) helemaal naar het einde van de zin.");
     }
   });
   return sel;
@@ -1969,6 +2080,7 @@ function renderMatch(ctx){
     } else {
       slot.classList.add("incorrect");
       setTimeout(() => slot.classList.remove("incorrect"), 500);
+      bumpStruggle("match:" + String(key).split("::")[0], 4, "Twijfel je? Sla een moeilijke over en kom er later op terug — of denk aan een woord dat erop lijkt.");
     }
   }
 
@@ -2103,6 +2215,7 @@ function orderCard(item, prog, save){
       hint.className = "orderhint bad";
       target.classList.add("shake");
       setTimeout(() => target.classList.remove("shake"), 400);
+      bumpStruggle("ord:" + key, 2, "Woordvolgorde: in een gewone zin staat het werkwoord op de 2e plaats; in een vraag helemaal vooraan.");
     }
   }
   function redraw(){
@@ -2157,6 +2270,7 @@ function renderChoice(ctx){
         } else {
           b.classList.add("incorrect");
           setTimeout(() => b.classList.remove("incorrect"), 500);
+          bumpStruggle("ch:" + key, 3, "Lees de zin nog eens rustig — welk woord hoort hier vast bij? Twijfel je tussen twee? Kies de meest gebruikte.");
         }
       };
       opts.appendChild(b);
@@ -2207,6 +2321,328 @@ function renderFlash(ctx){
     card.appendChild(actions);
     body.appendChild(card);
   });
+}
+
+/* =================== TYPE-MODULES: data uit bestaande vertaalde paren ===== */
+function buildTypeWords(){
+  const seen = {};
+  function add(en, nl, group){
+    en = String(en == null ? "" : en).trim();
+    nl = String(nl == null ? "" : nl).trim();
+    if(!en || !nl) return;
+    const k = en.toLowerCase();
+    if(!seen[k]) seen[k] = { en: en, nls: [], group: group };
+    if(seen[k].nls.indexOf(nl) < 0) seen[k].nls.push(nl);
+  }
+  (typeof DATA_MATCH !== "undefined" ? DATA_MATCH : []).forEach(r => r.words.forEach(w => add(w[0], w[1], "Woordenschat — " + r.topic)));
+  (typeof DATA_WOORDXL !== "undefined" ? DATA_WOORDXL : []).forEach(r => r.words.forEach(w => add(w[0], w[1], "Woordenschat XL — " + r.topic)));
+  (typeof DATA_DEHET !== "undefined" ? DATA_DEHET : []).forEach(c => c.words.forEach(w => add(w[0], w[1], "Lidwoord-woorden — " + c.topic)));
+  let list = Object.keys(seen).map(k => {
+    const s = seen[k];
+    return { en: s.en, nl: s.nls[0], alts: s.nls.slice(1), group: s.group };
+  });
+  if(list.length > 520){                       // gelijkmatig uitdunnen, alle thema's behouden
+    const step = list.length / 500, out = [];
+    for(let i = 0; i < list.length; i += step) out.push(list[Math.floor(i)]);
+    list = out;
+  }
+  return list;
+}
+function buildTypeSent(){
+  const out = [], seen = {};
+  function add(nl, en, group){
+    nl = String(nl == null ? "" : nl).trim();
+    en = String(en == null ? "" : en).trim();
+    if(!nl || !en) return;
+    const k = nl.toLowerCase();
+    if(seen[k]) return;
+    seen[k] = 1;
+    out.push({ en: en, nl: nl, group: group });
+  }
+  (typeof DATA_TYPESENT_EXTRA !== "undefined" ? DATA_TYPESENT_EXTRA : []).forEach(s => add(s.nl, s.en, s.group || "Dagelijkse zinnen"));
+  (typeof DATA_ZINNEN !== "undefined" ? DATA_ZINNEN : []).forEach(z => add(Array.isArray(z.nl) ? z.nl[0] : z.nl, z.en, "Zinnen — " + (z.group || "").replace(/^\d+\s*·\s*/, "")));
+  (typeof DATA_CONJUG !== "undefined" ? DATA_CONJUG : []).forEach(v => { if(v.ex && v.ex.length >= 2) add(v.ex[0], v.ex[1], "Voorbeeldzinnen met werkwoorden"); });
+  return out;
+}
+
+MODULES.splice(5, 0,
+  {
+    id: "typwoorden",
+    title: "Woorden typen",
+    emoji: "⌨️",
+    subtitle: "Engels woord → typ het Nederlands",
+    type: "type",
+    mode: "word",
+    data: buildTypeWords(),
+    intro: "Je ziet een Engels woord. <b>Typ het Nederlandse woord</b> en klik Nakijken.<br>" +
+           "<b style=\"color:var(--good)\">Groen</b> = juist (of 90%+). <b style=\"color:var(--nl)\">Geel</b> = 70%+ juist — meestal een typfout of een ander woord. <b style=\"color:var(--bad)\">Rood</b> = fout, probeer opnieuw.<br>" +
+           "Een lidwoord (de/het/een) ervoor mag, maar hoeft niet.<br>" +
+           "<span style=\"color:var(--text-dim)\">Type the Dutch word for the English one.</span>"
+  },
+  {
+    id: "typzinnen",
+    title: "Zinnen typen",
+    emoji: "📝",
+    subtitle: "Engelse zin → typ ze in het Nederlands",
+    type: "type",
+    mode: "sentence",
+    data: buildTypeSent(),
+    intro: "Je ziet een Engelse zin. <b>Typ de volledige Nederlandse zin</b> en klik Nakijken.<br>" +
+           "<b style=\"color:var(--good)\">Groen</b> = juist of 90%+ (de juiste zin verschijnt eronder). <b style=\"color:var(--nl)\">Geel</b> = 70%+ — typfouten of een paar andere woorden. <b style=\"color:var(--bad)\">Rood</b> = probeer opnieuw.<br>" +
+           "Hoofdletters, punten en accenten tellen <b>niet</b> mee — het gaat om de woorden en de volgorde.<br>" +
+           "<span style=\"color:var(--text-dim)\">Type the full Dutch translation of the English sentence.</span>"
+  }
+);
+
+/* ---- fuzzy nakijken ---- */
+function normText(s){
+  return String(s == null ? "" : s).toLowerCase()
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/[.,!?;:'"()’‘“”]/g, "")
+    .replace(/\s+/g, " ").trim();
+}
+function lev(a, b){
+  const m = a.length, n = b.length;
+  if(!m) return n;
+  if(!n) return m;
+  const d = [];
+  for(let j = 0; j <= n; j++) d[j] = j;
+  for(let i = 1; i <= m; i++){
+    let prev = d[0];
+    d[0] = i;
+    for(let j = 1; j <= n; j++){
+      const tmp = d[j];
+      d[j] = Math.min(d[j] + 1, d[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1));
+      prev = tmp;
+    }
+  }
+  return d[n];
+}
+function fuzzyWordEq(x, w){ return x === w || lev(x, w) <= Math.max(1, Math.floor(w.length * 0.34)); }
+function lcsWords(u, c){
+  const m = u.length, n = c.length;
+  const dp = [];
+  for(let i = 0; i <= m; i++) dp.push(new Array(n + 1).fill(0));
+  for(let i = 1; i <= m; i++){
+    for(let j = 1; j <= n; j++){
+      dp[i][j] = fuzzyWordEq(u[i - 1], c[j - 1]) ? dp[i - 1][j - 1] + 1 : Math.max(dp[i - 1][j], dp[i][j - 1]);
+    }
+  }
+  return dp[m][n];
+}
+function simOne(u, a){
+  u = normText(u); a = normText(a);
+  if(!u) return 0;
+  if(u === a) return 1;
+  const cs = 1 - lev(u, a) / Math.max(u.length, a.length);
+  const aw = a.split(" "), uw = u.split(" ");
+  if(aw.length <= 1) return cs;               // enkel woord: teken-gelijkenis
+  let matched = 0;
+  const pool = uw.slice();
+  aw.forEach(w => {
+    let bi = -1, bd = 1e9;
+    pool.forEach((x, i) => { const dd = lev(x, w); if(dd < bd){ bd = dd; bi = i; } });
+    if(bi >= 0 && bd <= Math.max(1, Math.floor(w.length * 0.34))){ matched++; pool.splice(bi, 1); }
+  });
+  const ws = matched / aw.length;                       // juiste woorden (volgorde-blind)
+  const os = lcsWords(uw, aw) / aw.length;              // juiste woorden in juiste volgorde
+  const lenr = Math.min(uw.length, aw.length) / Math.max(uw.length, aw.length);
+  const blend = cs * 0.34 + os * 0.46 + ws * 0.12 + lenr * 0.08;
+  return cs >= 0.97 ? Math.max(cs, blend) : blend;
+}
+function stripArt(s){ return String(s).replace(/^\s*(de|het|een)\s+/i, ""); }
+function gradeText(user, answers, wordMode){
+  let best = 0;
+  answers.forEach(a => {
+    best = Math.max(best, simOne(user, a));
+    if(wordMode){
+      best = Math.max(best, simOne(stripArt(user), a));
+      best = Math.max(best, simOne(user, stripArt(a)));
+      best = Math.max(best, simOne(stripArt(user), stripArt(a)));
+    }
+  });
+  return best;
+}
+function typeTip(user, correct, level){
+  const u = normText(user).split(" ").filter(Boolean);
+  const c = normText(correct).split(" ").filter(Boolean);
+  if(c.length <= 1){
+    return "Hint: het begint met “" + correct.trim()[0].toLowerCase() + "” en heeft " +
+      correct.replace(/\s/g, "").length + " letters.";
+  }
+  for(let i = 0; i < c.length; i++){
+    if(u[i] !== c[i]){
+      if(u[i] && lev(u[i], c[i]) <= 2) return "Kijk goed naar “" + c[i] + "” — jij schreef “" + (u[i] || "…") + "”.";
+      return "Woord " + (i + 1) + " klopt niet: het moet “" + c[i] + "” zijn.";
+    }
+  }
+  if(u.length !== c.length) return "De zin heeft " + c.length + " woorden — jij hebt er " + u.length + ".";
+  return "Bijna! Let op de woordvolgorde: het werkwoord staat op de tweede plaats.";
+}
+
+/* =================== TYPE: renderer =================== */
+function renderType(ctx){
+  const { body, prog, save } = ctx;
+  const wordMode = ctx.m.mode === "word";
+  let lastGroup = null;
+  ctx.m.data.forEach(item => {
+    if(item.group && item.group !== lastGroup){
+      lastGroup = item.group;
+      body.appendChild(el("h2", "section", item.group));
+    }
+    body.appendChild(typeCard(item, prog, save, wordMode));
+  });
+}
+function typeCard(item, prog, save, wordMode){
+  const answers = [item.nl].concat(item.alts || []);
+  const key = item.nl;
+  const card = el("div", "card");
+  card.appendChild(el("div", "c-en", "🇬🇧 " + item.en));
+
+  const row = el("div", "typerow");
+  const inp = document.createElement("input");
+  inp.type = "text";
+  inp.className = "typeinput";
+  inp.placeholder = wordMode ? "Nederlands woord…" : "Typ de Nederlandse zin…";
+  inp.setAttribute("autocapitalize", "off");
+  inp.setAttribute("autocorrect", "off");
+  inp.setAttribute("autocomplete", "off");
+  inp.spellcheck = false;
+  const btn = el("button", "typebtn", "Nakijken");
+  row.appendChild(inp);
+  row.appendChild(btn);
+  card.appendChild(row);
+  const fb = el("div", "typefb");
+  card.appendChild(fb);
+
+  function lockGreen(silent){
+    inp.disabled = true;
+    btn.disabled = true;
+    inp.classList.remove("yellow", "red");
+    inp.classList.add("green");
+    fb.className = "typefb green";
+    fb.textContent = "✓ Juist — " + item.nl;
+    if(!prog[key]){ prog[key] = true; save(); }
+  }
+  if(prog[key]){ inp.value = item.nl; lockGreen(true); return card; }
+
+  let tries = 0, revealShown = false, idleTimer = null;
+  function revealBtn(){
+    if(revealShown) return;
+    revealShown = true;
+    const rb = el("button", "typebtn ghost", "Toon oplossing");
+    rb.onclick = () => { inp.value = item.nl; lockGreen(); rb.remove(); };
+    card.appendChild(rb);
+  }
+  function check(){
+    if(!inp.value.trim()) return;
+    tries++;
+    const r = gradeText(inp.value, answers, wordMode);
+    inp.classList.remove("green", "yellow", "red");
+    if(r >= 0.9){ lockGreen(); return; }
+    if(r >= 0.7){
+      inp.classList.add("yellow");
+      fb.className = "typefb yellow";
+      fb.textContent = "≈ Bijna (" + Math.round(r * 100) + "%) — typfout of een ander woord. Probeer opnieuw.";
+      if(tries >= 2){ revealBtn(); mascotStruggle(typeTip(inp.value, item.nl, "yellow")); }
+    } else {
+      inp.classList.add("red");
+      fb.className = "typefb red";
+      fb.textContent = "✗ Nog niet juist — probeer opnieuw.";
+      if(tries >= 2) revealBtn();
+      if(tries >= 3) mascotStruggle(typeTip(inp.value, item.nl, "red"));
+    }
+  }
+  btn.onclick = check;
+  inp.addEventListener("keydown", e => { if(e.key === "Enter") check(); });
+  inp.addEventListener("focus", () => {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      if(!inp.disabled && !inp.value.trim()) mascotStruggle("Twijfel je? " + typeTip("", item.nl, "red"));
+    }, 14000);
+  });
+  inp.addEventListener("blur", () => clearTimeout(idleTimer));
+  return card;
+}
+
+/* =================== MASCOTTE (uiltje) =================== */
+let pendingWelcome = null;
+let _mascotEl = null, _mascotTimer = null, _lastMascot = 0, _mascotCount = 0;
+const OWL_SVG =
+  '<svg viewBox="0 0 100 104" xmlns="http://www.w3.org/2000/svg">' +
+  '<path d="M28 24 L20 5 L40 19 Z" fill="#8b6df0"/><path d="M72 24 L80 5 L60 19 Z" fill="#8b6df0"/>' +
+  '<ellipse cx="50" cy="58" rx="35" ry="37" fill="#a78bfa"/>' +
+  '<ellipse cx="50" cy="66" rx="22" ry="25" fill="#efeafe"/>' +
+  '<ellipse class="owl-wing owl-wl" cx="16" cy="60" rx="9" ry="19" fill="#8b6df0"/>' +
+  '<ellipse class="owl-wing owl-wr" cx="84" cy="60" rx="9" ry="19" fill="#8b6df0"/>' +
+  '<circle cx="38" cy="48" r="14" fill="#fff"/><circle cx="62" cy="48" r="14" fill="#fff"/>' +
+  '<circle cx="38" cy="49" r="6.5" fill="#2b2440"/><circle cx="62" cy="49" r="6.5" fill="#2b2440"/>' +
+  '<circle cx="40.5" cy="46" r="2.2" fill="#fff"/><circle cx="64.5" cy="46" r="2.2" fill="#fff"/>' +
+  '<ellipse class="owl-eye-lid" cx="38" cy="48" rx="14.5" ry="14.5" fill="#a78bfa"/>' +
+  '<ellipse class="owl-eye-lid" cx="62" cy="48" rx="14.5" ry="14.5" fill="#a78bfa"/>' +
+  '<path d="M50 54 l-6 9 h12 Z" fill="#fbbf24"/>' +
+  '<path d="M41 94 v6 M37 100 h8 M59 94 v6 M55 100 h8" stroke="#fbbf24" stroke-width="3.4" stroke-linecap="round" fill="none"/>' +
+  '</svg>';
+
+function ensureMascot(){
+  if(_mascotEl) return _mascotEl;
+  const m = el("div", "mascot");
+  m.innerHTML =
+    '<div class="mascot-bubble"><span class="mascot-text"></span>' +
+    '<button class="mascot-x" aria-label="sluiten">×</button></div>' +
+    '<div class="mascot-owl">' + OWL_SVG + '</div>';
+  m.querySelector(".mascot-x").onclick = hideMascot;
+  m.querySelector(".mascot-owl").onclick = hideMascot;
+  document.body.appendChild(m);
+  _mascotEl = m;
+  return m;
+}
+function hideMascot(){
+  if(_mascotEl){ _mascotEl.classList.remove("show", "celebrate"); }
+  clearTimeout(_mascotTimer);
+}
+function mascotSay(text, opts){
+  opts = opts || {};
+  const m = ensureMascot();
+  // herstart binnenkomst-animatie
+  m.classList.remove("show");
+  void m.offsetWidth;
+  m.querySelector(".mascot-text").textContent = text;
+  m.classList.toggle("celebrate", !!opts.celebrate);
+  m.classList.add("show");
+  if(opts.celebrate) sparkle(m);
+  clearTimeout(_mascotTimer);
+  _mascotTimer = setTimeout(hideMascot, opts.duration || (opts.celebrate ? 6500 : 5200));
+}
+function mascotWelcome(name){
+  mascotSay("Welkom" + (name ? ", " + name : "") + "! Veel leerplezier! 🌟", { duration: 5200 });
+}
+function mascotCelebrate(what){
+  mascotSay("Proficiat! 🎉 " + (what ? what + " " : "") + "Op naar het volgende level!", { celebrate: true });
+}
+function mascotStruggle(tip){
+  const now = Date.now();
+  if(now - _lastMascot < 20000) return;
+  if(_mascotCount >= 10) return;
+  _lastMascot = now;
+  _mascotCount++;
+  mascotSay(tip || "Neem rustig je tijd — jij kan dit! 💪", { duration: 6800 });
+}
+function sparkle(m){
+  for(let i = 0; i < 6; i++){
+    const s = el("span", "spark", "✨");
+    s.style.left = (10 + Math.random() * 60) + "px";
+    s.style.bottom = (20 + Math.random() * 40) + "px";
+    s.style.animationDelay = (Math.random() * 0.35) + "s";
+    m.appendChild(s);
+    setTimeout(() => s.remove(), 1200);
+  }
+}
+/* algemene "twijfel"-haak voor de andere oefeningen */
+const _struggleCounters = {};
+function bumpStruggle(id, threshold, tip){
+  _struggleCounters[id] = (_struggleCounters[id] || 0) + 1;
+  if(_struggleCounters[id] >= threshold){ _struggleCounters[id] = 0; mascotStruggle(tip); }
 }
 
 /* =================== START =================== */
