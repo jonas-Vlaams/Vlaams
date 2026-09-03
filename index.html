@@ -2592,51 +2592,50 @@ let _mascotEl = null, _mascotTimer = null, _lastMascot = 0, _mascotCount = 0;
 let _masLang = (lsGet(NS + "_masclang", "nl") === "en") ? "en" : "nl";
 let _masMsg = { nl: "", en: "" };
 
-// Samoyed "Beau" — pluizige witte hond met naamplaatje
-const DOG_SVG =
-  '<svg viewBox="0 0 104 120" xmlns="http://www.w3.org/2000/svg">' +
-  '<ellipse cx="53" cy="114" rx="30" ry="5.5" fill="#000" opacity=".2"/>' +
-  '<g class="dog-tail">' +
-    '<path d="M24 58 q-24 -6 -16 -34 q26 2 30 27 q-5 9 -14 7 Z" fill="#e7ecf3"/>' +
-    '<path d="M12 30 q6 10 12 16 M9 39 q8 8 15 12 M11 47 q9 6 16 8" stroke="#d3dae6" stroke-width="1.5" fill="none" stroke-linecap="round"/>' +
-  '</g>' +
-  '<ellipse cx="54" cy="89" rx="32" ry="25" fill="#e6ebf3"/>' +
-  '<ellipse cx="54" cy="87" rx="30" ry="23" fill="#f6f8fc"/>' +
-  '<ellipse cx="54" cy="93" rx="19" ry="15" fill="#ffffff" opacity=".65"/>' +
-  '<path d="M24 85 l-5 -3 l4 6 Z M27 99 l-6 1 l5 4 Z M83 83 l6 -3 l-4 6 Z M81 99 l7 1 l-6 4 Z" fill="#f6f8fc"/>' +
-  '<ellipse cx="42" cy="109" rx="9" ry="6" fill="#eef2f8"/><ellipse cx="67" cy="109" rx="9" ry="6" fill="#eef2f8"/>' +
-  '<path d="M39 106 v6 M42 106 v6 M45 106 v6 M64 106 v6 M67 106 v6 M70 106 v6" stroke="#d7dee9" stroke-width="1.1" stroke-linecap="round"/>' +
-  '<path d="M27 62 q26 20 53 0 q-4 11 -11 14 q-16 8 -31 0 q-7 -3 -11 -14 Z" fill="#eef2f8"/>' +
-  '<path d="M29 60 l-4 -4 l1 6 Z M37 67 l-3 -5 l0 6 Z M77 60 l4 -4 l-1 6 Z M69 67 l3 -5 l0 6 Z" fill="#eef2f8"/>' +
-  '<g class="dog-ear dog-ear-l">' +
-    '<path d="M31 24 L20 1 L47 18 Z" fill="#eef2f8"/><path d="M33 22 L28 7 L42 19 Z" fill="#f3ccd7"/>' +
-    '<path d="M31 24 q-3 -4 -6 -3 M47 18 q3 -3 3 -6" stroke="#dfe5ee" stroke-width="1.3" fill="none" stroke-linecap="round"/>' +
-  '</g>' +
-  '<g class="dog-ear dog-ear-r">' +
-    '<path d="M73 24 L84 1 L57 18 Z" fill="#eef2f8"/><path d="M71 22 L76 7 L62 19 Z" fill="#f3ccd7"/>' +
-    '<path d="M73 24 q3 -4 6 -3 M57 18 q-3 -3 -3 -6" stroke="#dfe5ee" stroke-width="1.3" fill="none" stroke-linecap="round"/>' +
-  '</g>' +
-  '<circle cx="52" cy="44" r="27" fill="#f7f9fc"/>' +
-  '<path d="M25 46 l-6 -2 l5 6 Z M25 39 l-6 -4 l6 3 Z M79 46 l6 -2 l-5 6 Z M79 39 l6 -4 l-6 3 Z" fill="#f7f9fc"/>' +
-  '<ellipse cx="52" cy="40" rx="22" ry="18" fill="#ffffff" opacity=".5"/>' +
-  '<path d="M40 34 q3 -3 7 -1 M64 34 q-3 -3 -7 -1" stroke="#dfe5ee" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-  '<ellipse cx="37" cy="50" rx="4" ry="2.6" fill="#f6b8c6" opacity=".5"/>' +
-  '<ellipse cx="67" cy="50" rx="4" ry="2.6" fill="#f6b8c6" opacity=".5"/>' +
-  '<ellipse cx="42" cy="42" rx="3.9" ry="5" fill="#26262b"/><ellipse cx="62" cy="42" rx="3.9" ry="5" fill="#26262b"/>' +
-  '<circle cx="43.4" cy="39.8" r="1.4" fill="#fff"/><circle cx="63.4" cy="39.8" r="1.4" fill="#fff"/>' +
-  '<rect class="dog-lid" x="37.4" y="34" width="9.4" height="11" rx="4.7" fill="#f7f9fc"/>' +
-  '<rect class="dog-lid" x="57.4" y="34" width="9.4" height="11" rx="4.7" fill="#f7f9fc"/>' +
-  '<ellipse cx="52" cy="52" rx="12" ry="9" fill="#ffffff"/>' +
-  '<ellipse cx="52" cy="50" rx="5" ry="3.7" fill="#26262b"/>' +
-  '<circle cx="50.4" cy="48.5" r="1.1" fill="#fff" opacity=".85"/>' +
-  '<path d="M52 53 v3.4 M52 56.4 q-9 8 -14 -1 M52 56.4 q9 8 14 -1" stroke="#26262b" stroke-width="2.1" fill="none" stroke-linecap="round"/>' +
-  '<path class="dog-tongue" d="M48 58 q4 8 8 0 Z" fill="#f2889b"/>' +
-  '<path d="M30 62 q22 15 44 0" stroke="#a78bfa" stroke-width="5.4" fill="none" stroke-linecap="round"/>' +
-  '<path d="M30 62 q22 15 44 0" stroke="#8b6df0" stroke-width="1.3" fill="none" stroke-linecap="round" opacity=".55"/>' +
-  '<circle cx="52" cy="70" r="2" fill="none" stroke="#c9a24a" stroke-width="1.3"/>' +
-  '<rect x="37" y="70.5" width="30" height="14.5" rx="4" fill="#fbbf24" stroke="#dca62f" stroke-width="1"/>' +
-  '<text x="52" y="80.9" text-anchor="middle" font-family="system-ui,-apple-system,Arial,sans-serif" font-size="9" font-weight="800" fill="#5b3d0b">Beau</text>' +
-  '</svg>';
+// Samoyed "Beau" — schoon vormgegeven: pluizige silhouet uit gelijke bolletjes
+const DOG_SVG = (function(){
+  function fluff(cx, cy, R, n, r, fill, start){
+    let s = "";
+    for(let i = 0; i < n; i++){
+      const a = (i / n) * Math.PI * 2 + (start || 0);
+      s += '<circle cx="' + (cx + R * Math.cos(a)).toFixed(1) +
+           '" cy="' + (cy + R * Math.sin(a)).toFixed(1) +
+           '" r="' + r + '" fill="' + fill + '"/>';
+    }
+    return s;
+  }
+  const SHADE = "#e4ebf4", SOFT = "#f8fafc", WHITE = "#ffffff";
+  return '<svg viewBox="0 0 108 124" xmlns="http://www.w3.org/2000/svg">' +
+    '<ellipse cx="54" cy="118" rx="30" ry="4.5" fill="#000" opacity=".16"/>' +
+    '<g class="dog-tail">' + fluff(19, 62, 8, 5, 8, SHADE) + fluff(20, 61, 7, 5, 7.5, SOFT) + '</g>' +
+    fluff(56, 92, 27, 9, 11.5, SHADE, -0.2) +
+    fluff(56, 90, 26, 9, 11.5, SOFT, -0.2) +
+    '<ellipse cx="56" cy="92" rx="24" ry="20" fill="' + WHITE + '"/>' +
+    '<g class="dog-ear dog-ear-l"><path d="M35 27 Q30 5 45 16 Q47 25 40 31 Z" fill="' + SOFT + '"/>' +
+      '<path d="M37 26 Q34 13 42 18 Q43 24 39 28 Z" fill="#f6c9d6"/></g>' +
+    '<g class="dog-ear dog-ear-r"><path d="M73 27 Q78 5 63 16 Q61 25 68 31 Z" fill="' + SOFT + '"/>' +
+      '<path d="M71 26 Q74 13 66 18 Q65 24 69 28 Z" fill="#f6c9d6"/></g>' +
+    fluff(54, 46, 25, 13, 10, SHADE, -1.7) +
+    fluff(54, 45, 24, 13, 10, SOFT, -1.7) +
+    '<circle cx="54" cy="46" r="22.5" fill="' + WHITE + '"/>' +
+    '<ellipse cx="44" cy="44" rx="3.6" ry="4.7" fill="#2a2a30"/>' +
+    '<ellipse cx="64" cy="44" rx="3.6" ry="4.7" fill="#2a2a30"/>' +
+    '<circle cx="45.2" cy="41.9" r="1.35" fill="#fff"/><circle cx="65.2" cy="41.9" r="1.35" fill="#fff"/>' +
+    '<rect class="dog-lid" x="39.9" y="36" width="8.4" height="10" rx="4.2" fill="' + WHITE + '"/>' +
+    '<rect class="dog-lid" x="59.9" y="36" width="8.4" height="10" rx="4.2" fill="' + WHITE + '"/>' +
+    '<ellipse cx="40" cy="51.5" rx="3.6" ry="2.3" fill="#f6b8c6" opacity=".5"/>' +
+    '<ellipse cx="68" cy="51.5" rx="3.6" ry="2.3" fill="#f6b8c6" opacity=".5"/>' +
+    '<ellipse cx="54" cy="53" rx="10.5" ry="8" fill="' + WHITE + '"/>' +
+    '<ellipse cx="54" cy="51" rx="4.4" ry="3.2" fill="#2a2a30"/>' +
+    '<circle cx="52.6" cy="49.7" r="1" fill="#fff" opacity=".85"/>' +
+    '<path d="M54 54.2 v3 M54 57.2 Q47 63.5 43.5 56.7 M54 57.2 Q61 63.5 64.5 56.7" stroke="#2a2a30" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+    '<path class="dog-tongue" d="M50.5 58.8 q3.5 6 7 0 Z" fill="#f2889b"/>' +
+    '<path d="M34 63 Q54 75 74 63" stroke="#8b6df0" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+    '<circle cx="54" cy="71" r="1.7" fill="none" stroke="#c99a2e" stroke-width="1.3"/>' +
+    '<rect x="40" y="71" width="28" height="13" rx="4" fill="#f5b833" stroke="#d99f2b" stroke-width="1"/>' +
+    '<text x="54" y="80.5" text-anchor="middle" font-family="system-ui,-apple-system,Arial,sans-serif" font-size="8.4" font-weight="800" fill="#6b4a0e">Beau</text>' +
+    '</svg>';
+})();
 
 function ensureMascot(){
   if(_mascotEl) return _mascotEl;
