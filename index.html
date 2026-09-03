@@ -1,0 +1,2223 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0f1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nederlands">
+<title>Nederlands leren</title>
+<style>
+  :root{
+    --bg:#0f1117; --panel:#1a1d29; --panel2:#1f2333;
+    --border:#2c3142; --border-soft:#252a3a;
+    --text:#e7e9f2; --text-dim:#9aa0b8;
+    --en:#7dd3fc; --nl:#fbbf24;
+    --good:#4ade80; --bad:#f87171;
+    --good-bg:rgba(74,222,128,0.14); --bad-bg:rgba(248,113,113,0.14);
+    --accent:#a78bfa;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5; -webkit-text-size-adjust:100%; -webkit-tap-highlight-color:transparent;
+    padding-bottom:60px;
+  }
+  #app{max-width:960px; margin:0 auto;}
+  button{font-family:inherit;}
+  .dim{color:var(--text-dim); font-size:14px;}
+
+  /* ---------- gate ---------- */
+  .gate{ padding:40px 20px; text-align:center; max-width:460px; margin:0 auto; }
+  .gate-logo{ font-size:44px; }
+  .gate h1{ font-size:24px; margin:6px 0 4px; }
+  .profile-list{ display:flex; flex-direction:column; gap:10px; margin:22px 0 16px; }
+  .profile-btn{
+    display:flex; flex-direction:column; align-items:flex-start; gap:2px;
+    background:var(--panel); border:1px solid var(--border); border-radius:12px;
+    padding:14px 16px; color:var(--text); cursor:pointer; width:100%;
+  }
+  .profile-btn:hover{ border-color:var(--accent); }
+  .profile-btn .pname{ font-size:16px; font-weight:700; }
+  .profile-btn .psub{ font-size:12px; color:var(--text-dim); }
+  .addrow{ display:flex; gap:8px; }
+  .addrow input{ flex:1; min-width:0; }
+  input[type=text],input:not([type]){
+    background:var(--panel2); border:1px solid var(--border); border-radius:10px;
+    padding:11px 12px; color:var(--text); font-size:16px;
+  }
+  .btn-accent{
+    background:var(--accent); color:#160e2e; border:none; border-radius:10px;
+    padding:11px 14px; font-size:14px; font-weight:700; cursor:pointer; white-space:nowrap;
+  }
+  .iorow{ margin-top:18px; }
+  .linkbtn{
+    background:none; border:none; color:var(--text-dim); font-size:13px; cursor:pointer;
+    text-decoration:underline; padding:6px;
+  }
+  .linkbtn:hover{ color:var(--accent); }
+
+  /* ---------- topbar / hub ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:10px;
+    justify-content:space-between; padding:10px 16px;
+    background:rgba(15,17,23,0.96); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--border);
+  }
+  .profchip{
+    display:flex; align-items:center; gap:7px; background:var(--panel2);
+    border:1px solid var(--border); border-radius:20px; padding:6px 12px;
+    color:var(--text); font-size:13px; font-weight:600; cursor:pointer;
+  }
+  .profchip .chev{ color:var(--text-dim); }
+  .toptotal{ font-size:13px; color:var(--text-dim); }
+  .hubhead{ padding:18px 20px 4px; }
+  .hubhead h1{ font-size:20px; margin:0; }
+  .hub-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; padding:16px 20px; }
+  .mcard{
+    display:flex; flex-direction:column; align-items:stretch; gap:6px; text-align:left;
+    background:var(--panel); border:1px solid var(--border); border-radius:14px;
+    padding:16px; color:var(--text); cursor:pointer;
+  }
+  .mcard:hover{ border-color:var(--accent); }
+  .mtop{ display:flex; align-items:center; gap:9px; }
+  .memoji{ font-size:20px; }
+  .mtitle{ font-size:15.5px; font-weight:700; }
+  .msub{ font-size:12.5px; color:var(--text-dim); min-height:17px; }
+  .bar{ height:8px; border-radius:6px; background:var(--border); overflow:hidden; margin-top:6px; }
+  .fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--accent),var(--good)); transition:width .25s; }
+  .mmeta{ font-size:12px; color:var(--text-dim); margin-top:2px; }
+  .hubfoot{ padding:10px 20px 30px; text-align:center; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+
+  /* ---------- module bar ---------- */
+  .mbar{
+    position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:10px;
+    padding:10px 14px; background:rgba(15,17,23,0.97);
+    -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); border-bottom:1px solid var(--border);
+  }
+  .backbtn{ background:var(--panel2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:7px 11px; font-size:13px; cursor:pointer; }
+  .mbartitle{ flex:1; font-size:14px; font-weight:700; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .mbarscore{ font-size:13px; color:var(--text-dim); }
+  .resetbtn{ background:var(--panel2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:7px 11px; font-size:13px; cursor:pointer; }
+  .resetbtn:hover{ border-color:var(--bad); color:var(--bad); }
+  .mbody{ padding:18px 20px; }
+
+  /* ---------- intro / rules ---------- */
+  .introbox{ margin-bottom:20px; }
+  .introtext{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px 16px; font-size:13.5px; color:var(--text-dim); margin-bottom:12px; }
+  .introtext b{ color:var(--text); }
+  .rulebox{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:13px 15px; margin-bottom:10px; }
+  .rulebox h3{ margin:0 0 7px; font-size:14px; color:var(--accent); }
+  .r-en{ border-left:3px solid var(--en); padding-left:11px; font-size:13px; margin-bottom:6px; }
+  .r-nl{ border-left:3px solid var(--nl); padding-left:11px; font-size:12.5px; color:var(--text-dim); }
+  .rulebox .note{ margin-top:8px; font-size:12.5px; color:var(--text-dim); background:var(--panel2); padding:8px 10px; border-radius:8px; }
+
+  h2.section{ font-size:17px; margin:26px 0 12px; padding-bottom:7px; border-bottom:2px solid var(--border); display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .badge{ font-size:11px; font-weight:400; color:var(--text-dim); background:var(--panel2); padding:2px 9px; border-radius:20px; }
+
+  /* ---------- de/het list ---------- */
+  .list{ background:var(--panel); border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  .rowitem{ display:grid; grid-template-columns:1fr 1fr auto; align-items:center; gap:10px; padding:10px 14px; border-bottom:1px solid var(--border-soft); }
+  .rowitem:last-child{ border-bottom:none; }
+  .w-en{ color:var(--en); font-weight:600; font-size:14px; }
+  .w-nl{ color:var(--nl); font-weight:700; font-size:14px; }
+  .btns{ display:flex; gap:6px; }
+  .btns button{ background:var(--panel2); color:var(--text); border:2px solid var(--border); border-radius:8px; padding:6px 12px; font-size:13px; font-weight:700; cursor:pointer; min-width:50px; touch-action:manipulation; }
+  .btns button:hover{ border-color:var(--accent); }
+  .btns button.correct{ border-color:var(--good); background:var(--good-bg); color:var(--good); }
+  .btns button.incorrect{ border-color:var(--bad); background:var(--bad-bg); color:var(--bad); }
+  .btns button:disabled{ cursor:default; opacity:.65; }
+  @media (max-width:520px){ .rowitem{ grid-template-columns:1fr 1fr; } .btns{ grid-column:1/-1; margin-top:2px; } }
+
+  /* ---------- cards (conjug + separable) ---------- */
+  .card{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:15px 16px; margin-bottom:13px; }
+  .c-top{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px; }
+  .c-en{ color:var(--en); font-weight:600; font-size:14.5px; }
+  .arr{ color:var(--text-dim); }
+  .c-nl{ color:var(--nl); font-weight:700; font-size:15.5px; }
+  .c-nl u{ text-decoration-color:var(--accent); text-decoration-thickness:2px; }
+  .aux{ font-size:11px; color:var(--text-dim); border:1px solid var(--border-soft); padding:1px 7px; border-radius:10px; }
+  .c-note{ font-size:12px; color:var(--accent); margin-top:8px; }
+  .cgrid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-top:10px; }
+  .field label{ display:block; font-size:11px; color:var(--text-dim); margin-bottom:4px; text-transform:uppercase; letter-spacing:.03em; }
+  select{ width:100%; padding:8px 9px; border-radius:8px; border:2px solid var(--border); background:var(--panel2); color:var(--text); font-size:16px; touch-action:manipulation; }
+  select.correct{ border-color:var(--good); background:var(--good-bg); color:var(--good); }
+  select.incorrect{ border-color:var(--bad); background:var(--bad-bg); color:var(--bad); }
+  select.placeholder{ color:var(--text-dim); }
+  select:disabled{ opacity:.85; }
+  .cex{ margin-top:11px; font-size:13px; border-top:1px dashed var(--border-soft); padding-top:9px; }
+  .exnl{ color:var(--nl); } .exen{ color:var(--en); font-style:italic; font-size:12px; display:block; margin-top:2px; }
+
+  /* separable */
+  .srow{ margin-top:11px; font-size:14px; line-height:2.2; }
+  .srow .lbl{ display:block; font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.03em; margin-bottom:2px; }
+  select.inline{ display:inline-block; width:auto; min-width:66px; margin:0 3px; padding:5px 8px; font-size:15px; font-weight:700; }
+  .subclause{ margin-top:10px; padding-top:9px; border-top:1px dashed var(--border-soft); font-size:13px; color:var(--text-dim); }
+  .subclause .lbl2{ text-transform:uppercase; font-size:11px; }
+
+  /* ---------- match game ---------- */
+  .matchnav{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+  .roundtitle{ font-size:16px; font-weight:700; }
+  .roundtitle .tag{ font-size:11px; font-weight:400; color:var(--text-dim); border:1px solid var(--border-soft); padding:2px 8px; border-radius:20px; margin-left:6px; }
+  .roundpicker{ width:auto; max-width:230px; font-size:15px; }
+  .board{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:16px; }
+  .mrow{ display:flex; align-items:center; gap:12px; padding:7px 0; border-bottom:1px solid var(--border-soft); }
+  .mrow:last-child{ border-bottom:none; }
+  .w-en2{ flex:1; color:var(--en); font-weight:600; font-size:14.5px; }
+  .slot{ flex:1; min-height:38px; border:2px dashed var(--border); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:14px; color:var(--text-dim); transition:border-color .15s, background .15s; }
+  .slot.correct{ border:2px solid var(--good); background:var(--good-bg); color:var(--nl); font-weight:700; }
+  .slot.incorrect{ border-color:var(--bad); background:var(--bad-bg); }
+  .slot.dragover{ border-color:var(--accent); }
+  .bank{ margin-top:18px; padding-top:14px; border-top:1px dashed var(--border-soft); display:flex; flex-wrap:wrap; gap:9px; min-height:44px; }
+  .chip{ background:var(--panel2); border:2px solid var(--nl); color:var(--nl); font-weight:700; padding:8px 13px; border-radius:20px; cursor:grab; font-size:14px; touch-action:manipulation; user-select:none; }
+  .chip.sel{ background:var(--nl); color:#1a1200; box-shadow:0 0 0 3px rgba(251,191,36,.35); }
+  .donebar{ margin-top:12px; text-align:center; font-size:13px; color:var(--good); font-weight:600; min-height:18px; }
+  .matchbtns{ display:flex; gap:10px; justify-content:center; margin-top:14px; }
+  .matchbtns button{ background:var(--panel2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:8px 14px; font-size:13px; cursor:pointer; }
+  .matchbtns button:disabled{ opacity:.35; cursor:default; }
+  @media (max-width:480px){ .mrow{ flex-direction:column; align-items:stretch; gap:6px; } }
+
+  /* ---------- order (zinnen bouwen) ---------- */
+  .ordertarget{ min-height:46px; border:2px dashed var(--border); border-radius:10px; padding:8px; display:flex; flex-wrap:wrap; gap:6px; margin-top:11px; align-items:center; }
+  .ordertarget.done{ border:2px solid var(--good); background:var(--good-bg); }
+  .ordertarget.shake{ animation:shake .4s; }
+  @keyframes shake{ 0%,100%{transform:translateX(0)} 20%{transform:translateX(-5px)} 40%{transform:translateX(5px)} 60%{transform:translateX(-3px)} 80%{transform:translateX(3px)} }
+  .orderbank{ display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
+  .otok{ background:var(--panel2); border:2px solid var(--accent); color:var(--text); border-radius:8px; padding:7px 11px; font-size:14px; cursor:pointer; user-select:none; touch-action:manipulation; }
+  .otok.bankchip{ border-color:var(--nl); color:var(--nl); font-weight:600; }
+  .otok.fixed{ border-color:var(--good); color:var(--good); cursor:default; }
+  .orderplaceholder{ color:var(--text-dim); font-size:13px; }
+  .orderhint{ font-size:12.5px; margin-top:7px; min-height:16px; }
+  .orderhint.good{ color:var(--good); font-weight:600; }
+  .orderhint.bad{ color:var(--bad); }
+  .c-en{ color:var(--en); font-weight:600; font-size:14.5px; }
+
+  /* ---------- choice / flash ---------- */
+  .q{ font-size:14.5px; font-weight:600; margin-bottom:10px; }
+  .choiceopts{ display:flex; flex-wrap:wrap; gap:8px; }
+  .choicebtn{ background:var(--panel2); border:2px solid var(--border); color:var(--text); border-radius:8px; padding:8px 13px; font-size:14px; font-weight:600; cursor:pointer; }
+  .choicebtn.correct{ border-color:var(--good); background:var(--good-bg); color:var(--good); }
+  .choicebtn.incorrect{ border-color:var(--bad); background:var(--bad-bg); color:var(--bad); }
+  .flashcard{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:15px 16px; margin-bottom:12px; }
+  .flashcard.known{ border-color:var(--good); }
+  .flashfront{ font-size:15px; font-weight:700; color:var(--en); }
+  .flashback{ font-size:15px; color:var(--nl); font-weight:700; margin-top:8px; }
+  .flashactions{ display:flex; gap:8px; margin-top:10px; }
+  .fbtn{ background:var(--panel2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:7px 12px; font-size:13px; cursor:pointer; }
+  .fbtn.good{ border-color:var(--good); color:var(--good); }
+
+  /* ---------- modal ---------- */
+  .modal-back{ position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; z-index:50; padding:20px; }
+  .modal{ background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:18px; width:100%; max-width:340px; }
+  .modal h2{ font-size:16px; margin:0 0 12px; }
+  .mbtn{ display:block; width:100%; text-align:left; background:var(--panel2); border:1px solid var(--border); color:var(--text); border-radius:9px; padding:11px 13px; font-size:14px; cursor:pointer; margin-bottom:8px; }
+  .mbtn:hover{ border-color:var(--accent); }
+  .mbtn.danger:hover{ border-color:var(--bad); color:var(--bad); }
+  .mbtn.ghost{ background:none; text-align:center; color:var(--text-dim); }
+  .modal p.dim{ margin:0 0 10px; }
+  .iobox{ width:100%; height:120px; resize:vertical; background:var(--panel2); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; padding:8px; margin-bottom:10px; }
+  .modalrow{ display:flex; gap:8px; margin-bottom:8px; }
+  .modalrow .btn-accent{ flex:1; }
+  .storenote{ text-align:center; font-size:11.5px; color:var(--text-dim); padding:16px 20px 4px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+<script>
+/* ============================================================
+   NEDERLANDS LEREN  -  alles in 1 bestand
+   Werkt op Mac en iPhone (open in Safari of "Zet op beginscherm").
+
+   VOORTGANG: standaard lokaal (per toestel, in de browser).
+   Vul FIREBASE_CONFIG hieronder in (zoek op "FIREBASE_CONFIG")
+   om de voortgang online te bewaren zodat ze op elk toestel
+   terugkomt onder dezelfde profielnaam. Zie FIREBASE-instellen.md.
+
+   -------- NIEUWE MODULE TOEVOEGEN --------
+   Voeg 1 object toe aan de MODULES-lijst hieronder.
+   Verplicht : id (uniek, nooit meer veranderen), title, type, data
+   Optioneel : emoji, subtitle, intro (mag HTML), rules [{h,en,nl,note}]
+
+   type "dehet"      data: [{topic, words:[[en, nl, "de"|"het"], ...]}, ...]
+   type "match"      data: [{topic, level, words:[[en, nl], ...]}, ...]
+   type "conjug"     data: [{en, nl, aux, note?, group?("t"/"d"/"irr"/"hard"),
+                             f:[ik, jij, hijzij, wij, verlEnk, verlMv, voltDw],
+                             ex:[nl, en]}, ...]   (een veld mag null zijn)
+   type "separable"  data: [{en, nl, prefix, stemIk, part, aux, note?,
+                             tpl:"... {V} ... {P}.", tplEN,
+                             sub, subEN, perfTpl:"... {PART}.", perfEN}, ...]
+   type "order"      data: [{en, nl:"De juiste volledige zin.", group?, note?}, ...]
+                     (nl mag ook een lijst zijn van meerdere juiste zinnen)
+   type "choice"     data: [{q, options:[...], answer, note?}, ...]
+   type "flash"      data: [{front, back, note?}, ...]
+
+   Voortgang wordt bijgehouden op de WOORDEN/ZINNEN zelf (op naam, niet op
+   volgorde). Je mag dus veilig nieuwe items toevoegen zonder dat bestaande
+   voortgang verschuift. Verander wel nooit de "id" van een module.
+   ============================================================ */
+
+const DATA_DEHET = [
+{topic:"Huis & meubels", words:[["table","tafel","de"],["chair","stoel","de"],["lamp","lamp","de"],["cupboard","kast","de"],["mirror","spiegel","de"],["bed","bed","het"],["house","huis","het"],["window","raam","het"],["door","deur","de"],["wall","muur","de"]]},
+{topic:"Kamers", words:[["kitchen","keuken","de"],["bathroom","badkamer","de"],["bedroom","slaapkamer","de"],["living room","woonkamer","de"],["toilet","toilet","het"],["attic","zolder","de"],["basement","kelder","de"],["hallway","gang","de"],["balcony","balkon","het"],["garage","garage","de"]]},
+{topic:"Familie & mensen", words:[["mother","moeder","de"],["father","vader","de"],["brother","broer","de"],["sister","zus","de"],["child","kind","het"],["boy","jongen","de"],["girl","meisje","het"],["friend","vriend","de"],["neighbour","buur","de"],["baby","baby","de"]]},
+{topic:"Dieren", words:[["dog","hond","de"],["cat","kat","de"],["horse","paard","het"],["cow","koe","de"],["rabbit","konijn","het"],["bird","vogel","de"],["fish","vis","de"],["pig","varken","het"],["chicken","kip","de"],["mouse","muis","de"]]},
+{topic:"Eten & drinken", words:[["bread","brood","het"],["cheese","kaas","de"],["milk","melk","de"],["water","water","het"],["apple","appel","de"],["egg","ei","het"],["meat","vlees","het"],["wine","wijn","de"],["coffee","koffie","de"],["sugar","suiker","de"]]},
+{topic:"Vervoer", words:[["car","auto","de"],["bike","fiets","de"],["train","trein","de"],["bus","bus","de"],["plane","vliegtuig","het"],["boat","boot","de"],["tram","tram","de"],["engine / motorbike","motor","de"],["road","weg","de"],["station","station","het"]]},
+{topic:"Natuur", words:[["tree","boom","de"],["flower","bloem","de"],["grass","gras","het"],["mountain","berg","de"],["river","rivier","de"],["sea","zee","de"],["beach","strand","het"],["forest","bos","het"],["sky / air","lucht","de"],["earth","aarde","de"]]},
+{topic:"Weer & seizoenen", words:[["weather","weer","het"],["rain","regen","de"],["wind","wind","de"],["snow","sneeuw","de"],["cloud","wolk","de"],["storm","storm","de"],["year","jaar","het"],["season","seizoen","het"],["summer","zomer","de"],["winter","winter","de"]]},
+{topic:"Lichaam", words:[["head","hoofd","het"],["hand","hand","de"],["foot","voet","de"],["eye","oog","het"],["ear","oor","het"],["nose","neus","de"],["mouth","mond","de"],["arm","arm","de"],["leg","been","het"],["belly","buik","de"]]},
+{topic:"Werk & school", words:[["work","werk","het"],["school","school","de"],["office","kantoor","het"],["boss","baas","de"],["colleague","collega","de"],["teacher","leraar","de"],["student","student","de"],["book","boek","het"],["pen","pen","de"],["computer","computer","de"]]},
+{topic:"Steden & plaatsen", words:[["city","stad","de"],["village","dorp","het"],["country","land","het"],["world","wereld","de"],["square","plein","het"],["market","markt","de"],["shop","winkel","de"],["restaurant","restaurant","het"],["park","park","het"],["bridge","brug","de"]]},
+{topic:"Gebouwen", words:[["castle","kasteel","het"],["building","gebouw","het"],["hospital","ziekenhuis","het"],["hotel","hotel","het"],["church","kerk","de"],["museum","museum","het"],["library","bibliotheek","de"],["bank / bench","bank","de"],["factory","fabriek","de"],["theatre","theater","het"]]},
+{topic:"Emoties & gevoelens", words:[["happiness","geluk","het"],["sadness","verdriet","het"],["love","liefde","de"],["fear","angst","de"],["hope","hoop","de"],["joy","vreugde","de"],["fun / pleasure","plezier","het"],["anger","woede","de"],["trust","vertrouwen","het"],["jealousy","jaloezie","de"]]},
+{topic:"Abstracte begrippen", words:[["problem","probleem","het"],["solution","oplossing","de"],["idea","idee","het"],["feeling","gevoel","het"],["difference","verschil","het"],["result","resultaat","het"],["possibility","mogelijkheid","de"],["experience","ervaring","de"],["memory","herinnering","de"],["habit","gewoonte","de"]]},
+{topic:"Business & werk (gevorderd)", words:[["company","bedrijf","het"],["customer","klant","de"],["invoice","factuur","de"],["report","rapport","het"],["strategy","strategie","de"],["goal","doel","het"],["cooperation","samenwerking","de"],["enterprise","onderneming","de"],["budget","budget","het"],["contract","contract","het"]]},
+{topic:"Technologie", words:[["phone","telefoon","de"],["internet","internet","het"],["password","wachtwoord","het"],["battery","batterij","de"],["screen","scherm","het"],["keyboard","toetsenbord","het"],["app","applicatie","de"],["website","website","de"],["email","e-mail","de"],["file","bestand","het"]]},
+{topic:"Talen — regel: altijd HET", words:[["Dutch","Nederlands","het"],["English","Engels","het"],["French","Frans","het"],["German","Duits","het"],["Spanish","Spaans","het"],["Italian","Italiaans","het"],["Portuguese","Portugees","het"],["Latin","Latijn","het"],["Chinese","Chinees","het"],["Arabic","Arabisch","het"]]},
+{topic:"Metalen & windrichtingen — regel: altijd HET", words:[["gold","goud","het"],["silver","zilver","het"],["iron","ijzer","het"],["lead","lood","het"],["north","noorden","het"],["south","zuiden","het"],["east","oosten","het"],["west","westen","het"],["bronze","brons","het"],["steel","staal","het"]]},
+{topic:"Verkleinwoorden (-je) — regel: altijd HET", words:[["little house","huisje","het"],["little book","boekje","het"],["little dog","hondje","het"],["little cup","kopje","het"],["little table","tafeltje","het"],["little ball","balletje","het"],["a little bit","beetje","het"],["little hand","handje","het"],["little sheep","schaapje","het"],["little bird","vogeltje","het"]]},
+{topic:"Werkwoord-als-znw & lastige woorden", words:[["food / eating","eten","het"],["life","leven","het"],["memory (faculty)","geheugen","het"],["news","nieuws","het"],["answer","antwoord","het"],["level","niveau","het"],["system","systeem","het"],["moment","moment","het"],["fact","feit","het"],["case","geval","het"]]},
+
+{topic:"Meer eten & keuken", words:[["vegetable","groente","de"],["fruit","fruit","het"],["rice","rijst","de"],["pasta","pasta","de"],["soup","soep","de"],["sauce","saus","de"],["pepper","peper","de"],["salt","zout","het"],["oil","olie","de"],["vinegar","azijn","de"]]},
+{topic:"Fruit & groenten", words:[["banana","banaan","de"],["pear","peer","de"],["grape","druif","de"],["strawberry","aardbei","de"],["tomato","tomaat","de"],["carrot","wortel","de"],["onion","ui","de"],["garlic","knoflook","de"],["bell pepper","paprika","de"],["lettuce","sla","de"]]},
+{topic:"Huishoudapparaten", words:[["washing machine","wasmachine","de"],["dryer","droogkast","de"],["vacuum cleaner","stofzuiger","de"],["iron","strijkijzer","het"],["mixer","mixer","de"],["kettle","waterkoker","de"],["toaster","broodrooster","het"],["dishwasher","vaatwasser","de"],["hairdryer","föhn","de"],["sewing machine","naaimachine","de"]]},
+{topic:"Schoolspullen", words:[["notebook","schrift","het"],["pencil","potlood","het"],["eraser","gum","het"],["ruler","liniaal","de"],["backpack","rugzak","de"],["blackboard","schoolbord","het"],["chalk","krijt","het"],["folder","map","de"],["stapler","nietmachine","de"],["scissors","schaar","de"]]},
+{topic:"Winkelen & geld", words:[["money","geld","het"],["price","prijs","de"],["discount","korting","de"],["checkout","kassa","de"],["bill","rekening","de"],["wallet","portemonnee","de"],["coin","munt","de"],["banknote","biljet","het"],["receipt","bon","de"],["shopping cart","winkelwagen","de"]]},
+{topic:"Reizen & vakantie", words:[["passport","paspoort","het"],["suitcase","koffer","de"],["visa","visum","het"],["guidebook","reisgids","de"],["sunglasses","zonnebril","de"],["hotel room","hotelkamer","de"],["beach towel","strandhanddoek","de"],["campsite","camping","de"],["travel insurance","reisverzekering","de"],["souvenir","souvenir","het"]]},
+{topic:"Restaurant", words:[["menu","menu","het"],["waiter","kelner","de"],["tip","fooi","de"],["starter","voorgerecht","het"],["main course","hoofdgerecht","het"],["dessert","nagerecht","het"],["cutlery","bestek","het"],["napkin","servet","het"],["reservation","reservering","de"],["chef","keukenchef","de"]]},
+{topic:"Muziekinstrumenten", words:[["guitar","gitaar","de"],["piano","piano","de"],["drum","drum","de"],["violin","viool","de"],["flute","fluit","de"],["trumpet","trompet","de"],["saxophone","saxofoon","de"],["microphone","microfoon","de"],["headphones","koptelefoon","de"],["speaker","luidspreker","de"]]},
+{topic:"Vormen", words:[["circle","cirkel","de"],["square","vierkant","het"],["triangle","driehoek","de"],["rectangle","rechthoek","de"],["star","ster","de"],["heart","hart","het"],["oval","ovaal","het"],["diamond","ruit","de"],["cube","kubus","de"],["sphere","bol","de"]]},
+{topic:"Materialen", words:[["wood","hout","het"],["plastic","plastic","het"],["glass","glas","het"],["metal","metaal","het"],["paper","papier","het"],["stone","steen","de"],["leather","leer","het"],["cotton","katoen","het"],["wool","wol","de"],["rubber","rubber","het"]]},
+{topic:"Autodelen", words:[["steering wheel","stuur","het"],["wheel","wiel","het"],["gearbox","versnellingsbak","de"],["brake","rem","de"],["gas pedal","gaspedaal","het"],["trunk","kofferbak","de"],["mirror","spiegel","de"],["tire","band","de"],["fuel","benzine","de"],["horn","claxon","de"]]},
+{topic:"Computeronderdelen", words:[["laptop","laptop","de"],["mouse","muis","de"],["printer","printer","de"],["charger","oplader","de"],["memory","geheugen","het"],["hard drive","harde schijf","de"],["camera","camera","de"],["router","router","de"],["power outlet","stopcontact","het"],["cable","kabel","de"]]},
+{topic:"Sport specifiek", words:[["ball","bal","de"],["goal","doelpunt","het"],["referee","scheidsrechter","de"],["match","wedstrijd","de"],["team","team","het"],["coach","trainer","de"],["field","veld","het"],["fan","supporter","de"],["medal","medaille","de"],["champion","kampioen","de"]]},
+{topic:"Emoties uitgebreid", words:[["amazement","verbazing","de"],["excitement","opwinding","de"],["boredom","verveling","de"],["curiosity","nieuwsgierigheid","de"],["contentment","tevredenheid","de"],["unease","onrust","de"],["calm","kalmte","de"],["frustration","frustratie","de"],["enthusiasm","enthousiasme","het"],["self-confidence","zelfvertrouwen","het"]]},
+{topic:"Gezondheid & welzijn", words:[["energy","energie","de"],["rest","rust","de"],["fitness","conditie","de"],["strength","kracht","de"],["resistance","weerstand","de"],["health","gezondheid","de"],["movement","beweging","de"],["nutrition","voeding","de"],["sleep","slaap","de"],["balance","evenwicht","het"]]},
+{topic:"Beroepen uitgebreid", words:[["architect","architect","de"],["journalist","journalist","de"],["actor","acteur","de"],["singer","zanger","de"],["writer","schrijver","de"],["photographer","fotograaf","de"],["interpreter","tolk","de"],["pilot","piloot","de"],["captain","kapitein","de"],["entrepreneur","ondernemer","de"]]},
+{topic:"Feest-benodigdheden", words:[["gift","cadeau","het"],["cake","taart","de"],["balloon","ballon","de"],["fireworks","vuurwerk","het"],["invitation","uitnodiging","de"],["candle","kaars","de"],["confetti","confetti","de"],["ribbon","lint","het"],["wish","wens","de"],["surprise","verrassing","de"]]},
+{topic:"Tijd — abstracter", words:[["past","verleden","het"],["present","heden","het"],["future","toekomst","de"],["period","periode","de"],["century","eeuw","de"],["decade","decennium","het"],["era","tijdperk","het"],["progress","vooruitgang","de"],["history","geschiedenis","de"],["instant / moment","ogenblik","het"]]},
+{topic:"Weer uitgebreid", words:[["thunderstorm","onweer","het"],["hail","hagel","de"],["fog","mist","de"],["frost","vorst","de"],["thaw","dooi","de"],["climate","klimaat","het"],["hurricane","orkaan","de"],["rainbow","regenboog","de"],["shadow","schaduw","de"],["wave","golf","de"]]},
+{topic:"Politiek & maatschappij", words:[["government","regering","de"],["law","wet","de"],["election","verkiezing","de"],["citizen","burger","de"],["society","samenleving","de"],["community","gemeenschap","de"],["tax","belasting","de"],["court","rechtbank","de"],["democracy","democratie","de"],["constitution","grondwet","de"]]},
+
+{topic:"Extra moeilijk — '-zicht' & samenstellingen (regel: altijd HET)", words:[["insight","inzicht","het"],["prospect","vooruitzicht","het"],["view","uitzicht","het"],["overview","overzicht","het"],["aspect","aspect","het"],["given / fact","gegeven","het"],["element","element","het"],["component","onderdeel","het"],["connection / bandage","verband","het"],["consequence","gevolg","het"]]},
+{topic:"Extra moeilijk — verrassende DE-woorden", words:[["deed / act","daad","de"],["demand","eis","de"],["power","macht","de"],["issue / matter","kwestie","de"],["reaction","reactie","de"],["conclusion","conclusie","de"],["emotion","emotie","de"],["property / trait","eigenschap","de"],["opinion","mening","de"],["question","vraag","de"]]},
+];
+
+const DATA_MATCH = [
+{topic:"Getallen", level:"makkelijk", words:[["one","een"],["two","twee"],["three","drie"],["four","vier"],["five","vijf"],["six","zes"],["seven","zeven"],["eight","acht"],["nine","negen"],["ten","tien"]]},
+{topic:"Kleuren", level:"makkelijk", words:[["red","rood"],["blue","blauw"],["yellow","geel"],["green","groen"],["white","wit"],["black","zwart"],["orange","oranje"],["purple","paars"],["pink","roze"],["grey","grijs"]]},
+{topic:"Familie", level:"makkelijk", words:[["mother","moeder"],["father","vader"],["brother","broer"],["sister","zus"],["grandpa","opa"],["grandma","oma"],["son","zoon"],["daughter","dochter"],["aunt","tante"],["uncle","oom"]]},
+{topic:"Dagen & tijd", level:"makkelijk", words:[["Monday","maandag"],["Tuesday","dinsdag"],["Wednesday","woensdag"],["Thursday","donderdag"],["Friday","vrijdag"],["Saturday","zaterdag"],["Sunday","zondag"],["today","vandaag"],["tomorrow","morgen"],["yesterday","gisteren"]]},
+{topic:"Lichaam", level:"makkelijk", words:[["head","hoofd"],["hand","hand"],["foot","voet"],["eye","oog"],["ear","oor"],["nose","neus"],["mouth","mond"],["arm","arm"],["leg","been"],["belly","buik"]]},
+{topic:"Kleding", level:"makkelijk", words:[["trousers","broek"],["shirt","hemd"],["coat","jas"],["shoes","schoenen"],["beanie","muts"],["scarf","sjaal"],["skirt","rok"],["sweater","trui"],["socks","kousen"],["gloves","handschoenen"]]},
+{topic:"Eten & drinken", level:"makkelijk", words:[["bread","brood"],["cheese","kaas"],["milk","melk"],["water","water"],["apple","appel"],["egg","ei"],["meat","vlees"],["fish","vis"],["coffee","koffie"],["tea","thee"]]},
+{topic:"Huis & meubels", level:"makkelijk", words:[["house","huis"],["kitchen","keuken"],["bathroom","badkamer"],["bedroom","slaapkamer"],["table","tafel"],["chair","stoel"],["bed","bed"],["door","deur"],["window","raam"],["garden","tuin"]]},
+{topic:"Dieren", level:"makkelijk", words:[["dog","hond"],["cat","kat"],["bird","vogel"],["horse","paard"],["cow","koe"],["pig","varken"],["chicken","kip"],["rabbit","konijn"],["mouse","muis"],["elephant","olifant"]]},
+{topic:"Weer", level:"middel", words:[["sun","zon"],["rain","regen"],["wind","wind"],["snow","sneeuw"],["cloud","wolk"],["storm","storm"],["warm","warm"],["cold","koud"],["wet","nat"],["dry","droog"]]},
+{topic:"Tijd (klok)", level:"middel", words:[["hour","uur"],["minute","minuut"],["second","seconde"],["morning","ochtend"],["afternoon","middag"],["evening","avond"],["night","nacht"],["year","jaar"],["month","maand"],["week","week"]]},
+{topic:"Vervoer", level:"middel", words:[["car","auto"],["bike","fiets"],["train","trein"],["bus","bus"],["plane","vliegtuig"],["boat","boot"],["tram","tram"],["motorbike","motor"],["road","weg"],["street","straat"]]},
+{topic:"Werk & school", level:"middel", words:[["work","werk"],["school","school"],["office","kantoor"],["boss","baas"],["colleague","collega"],["teacher","leraar"],["student","student"],["book","boek"],["pen","pen"],["computer","computer"]]},
+{topic:"Keuken (items)", level:"middel", words:[["pan","pan"],["knife","mes"],["fork","vork"],["spoon","lepel"],["plate","bord"],["glass","glas"],["oven","oven"],["fridge","koelkast"],["microwave","magnetron"],["cutting board","snijplank"]]},
+{topic:"Eenvoudige bijvoeglijke naamwoorden", level:"middel", words:[["big","groot"],["small","klein"],["beautiful","mooi"],["ugly","lelijk"],["fast","snel"],["slow","traag"],["happy","blij"],["angry","boos"],["tired","moe"],["hungry","hongerig"]]},
+{topic:"Natuur", level:"middel", words:[["tree","boom"],["flower","bloem"],["grass","gras"],["mountain","berg"],["river","rivier"],["sea","zee"],["beach","strand"],["forest","bos"],["sky","lucht"],["earth / soil","aarde"]]},
+{topic:"Plaatsen", level:"middel", words:[["city","stad"],["village","dorp"],["country","land"],["world","wereld"],["square","plein"],["market","markt"],["shop","winkel"],["restaurant","restaurant"],["park","park"],["bridge","brug"]]},
+{topic:"Richting & plaats", level:"middel", words:[["left","links"],["right","rechts"],["straight ahead","rechtdoor"],["above","boven"],["under","onder"],["next to","naast"],["between","tussen"],["behind","achter"],["in front of","voor"],["inside","binnen"]]},
+{topic:"Beroepen", level:"middel", words:[["doctor","dokter"],["nurse","verpleegkundige"],["police officer","politieagent"],["firefighter","brandweerman"],["baker","bakker"],["cook","kok"],["engineer","ingenieur"],["lawyer","advocaat"],["farmer","boer"],["hairdresser","kapper"]]},
+{topic:"Sport & vrije tijd", level:"moeilijk", words:[["football","voetbal"],["tennis","tennis"],["swimming","zwemmen"],["cycling","fietsen"],["music","muziek"],["dancing","dansen"],["reading","lezen"],["painting","schilderen"],["traveling","reizen"],["game","spelletje"]]},
+{topic:"Technologie", level:"moeilijk", words:[["phone","telefoon"],["internet","internet"],["password","wachtwoord"],["battery","batterij"],["screen","scherm"],["keyboard","toetsenbord"],["app","applicatie"],["wifi","wifi"],["email","e-mail"],["file","bestand"]]},
+{topic:"Persoonlijkheid", level:"moeilijk", words:[["friendly","vriendelijk"],["honest","eerlijk"],["funny","grappig"],["shy","verlegen"],["stubborn","koppig"],["patient","geduldig"],["curious","nieuwsgierig"],["confident","zelfverzekerd"],["spontaneous","spontaan"],["caring","zorgzaam"]]},
+{topic:"Gevoelens (basis)", level:"moeilijk", words:[["love","liefde"],["happiness","geluk"],["sadness","verdriet"],["fear","angst"],["surprise","verrassing"],["trust","vertrouwen"],["hope","hoop"],["joy","vreugde"],["loneliness","eenzaamheid"],["jealousy","jaloezie"]]},
+{topic:"Gevoelens (gevorderd)", level:"moeilijk", words:[["relief","opluchting"],["disappointment","teleurstelling"],["pride","trots"],["homesickness","heimwee"],["satisfaction","voldoening"],["longing","verlangen"],["despair","wanhoop"],["wonder / amazement","verwondering"],["gratitude","dankbaarheid"],["determination","vastberadenheid"]]},
+{topic:"Abstracte woorden", level:"moeilijk", words:[["freedom","vrijheid"],["justice","gerechtigheid"],["responsibility","verantwoordelijkheid"],["possibility","mogelijkheid"],["experience","ervaring"],["memory","herinnering"],["habit","gewoonte"],["opportunity","gelegenheid"],["challenge","uitdaging"],["development","ontwikkeling"]]},
+{topic:"Bijwoorden & connectoren", level:"moeilijk", words:[["actually","eigenlijk"],["probably","waarschijnlijk"],["apparently","blijkbaar"],["meanwhile","ondertussen"],["finally / after all","tenslotte"],["by the way / incidentally","overigens"],["by the way / anyway","trouwens"],["although","hoewel"],["as if","alsof"],["as soon as","zodra"]]},
+{topic:"Business & werk (gevorderd)", level:"moeilijk", words:[["meeting","vergadering"],["customer","klant"],["invoice","factuur"],["report","rapport"],["strategy","strategie"],["goal","doelstelling"],["cooperation","samenwerking"],["enterprise","onderneming"],["budget","budget"],["contract","contract"]]},
+
+{topic:"Meer eten & keuken", level:"middel", words:[["vegetable","groente"],["fruit","fruit"],["rice","rijst"],["pasta","pasta"],["soup","soep"],["sauce","saus"],["pepper","peper"],["salt","zout"],["oil","olie"],["vinegar","azijn"]]},
+{topic:"Fruit & groenten", level:"middel", words:[["banana","banaan"],["pear","peer"],["grape","druif"],["strawberry","aardbei"],["tomato","tomaat"],["carrot","wortel"],["onion","ui"],["garlic","knoflook"],["bell pepper","paprika"],["lettuce","sla"]]},
+{topic:"Huishoudapparaten", level:"middel", words:[["washing machine","wasmachine"],["dryer","droogkast"],["vacuum cleaner","stofzuiger"],["iron","strijkijzer"],["mixer","mixer"],["kettle","waterkoker"],["toaster","broodrooster"],["dishwasher","vaatwasser"],["hairdryer","föhn"],["sewing machine","naaimachine"]]},
+{topic:"Schoolspullen", level:"middel", words:[["notebook","schrift"],["pencil","potlood"],["eraser","gum"],["ruler","liniaal"],["backpack","rugzak"],["blackboard","schoolbord"],["chalk","krijt"],["folder","map"],["stapler","nietmachine"],["scissors","schaar"]]},
+{topic:"Winkelen & geld", level:"middel", words:[["money","geld"],["price","prijs"],["discount","korting"],["checkout","kassa"],["bill","rekening"],["wallet","portemonnee"],["coin","munt"],["banknote","biljet"],["receipt","bon"],["shopping cart","winkelwagen"]]},
+{topic:"Reizen & vakantie", level:"middel", words:[["passport","paspoort"],["suitcase","koffer"],["visa","visum"],["guidebook","reisgids"],["sunglasses","zonnebril"],["hotel room","hotelkamer"],["beach towel","strandhanddoek"],["campsite","camping"],["travel insurance","reisverzekering"],["souvenir","souvenir"]]},
+{topic:"Restaurant", level:"middel", words:[["menu","menu"],["waiter","kelner"],["tip","fooi"],["starter","voorgerecht"],["main course","hoofdgerecht"],["dessert","nagerecht"],["cutlery","bestek"],["napkin","servet"],["reservation","reservering"],["chef","keukenchef"]]},
+{topic:"Muziekinstrumenten", level:"middel", words:[["guitar","gitaar"],["piano","piano"],["drum","drum"],["violin","viool"],["flute","fluit"],["trumpet","trompet"],["saxophone","saxofoon"],["microphone","microfoon"],["headphones","koptelefoon"],["speaker","luidspreker"]]},
+{topic:"Vormen", level:"middel", words:[["circle","cirkel"],["square","vierkant"],["triangle","driehoek"],["rectangle","rechthoek"],["star","ster"],["heart","hart"],["oval","ovaal"],["diamond","ruit"],["cube","kubus"],["sphere","bol"]]},
+{topic:"Materialen", level:"middel", words:[["wood","hout"],["plastic","plastic"],["glass","glas"],["metal","metaal"],["paper","papier"],["stone","steen"],["leather","leer"],["cotton","katoen"],["wool","wol"],["rubber","rubber"]]},
+{topic:"Autodelen", level:"moeilijk", words:[["steering wheel","stuur"],["wheel","wiel"],["gearbox","versnellingsbak"],["brake","rem"],["gas pedal","gaspedaal"],["trunk","kofferbak"],["mirror","spiegel"],["tire","band"],["fuel","benzine"],["horn","claxon"]]},
+{topic:"Computeronderdelen", level:"moeilijk", words:[["laptop","laptop"],["mouse","muis"],["printer","printer"],["charger","oplader"],["memory","geheugen"],["hard drive","harde schijf"],["camera","camera"],["router","router"],["power outlet","stopcontact"],["cable","kabel"]]},
+{topic:"Sport specifiek", level:"moeilijk", words:[["ball","bal"],["goal","doelpunt"],["referee","scheidsrechter"],["match","wedstrijd"],["team","team"],["coach","trainer"],["field","veld"],["fan","supporter"],["medal","medaille"],["champion","kampioen"]]},
+{topic:"Emoties uitgebreid", level:"moeilijk", words:[["amazement","verbazing"],["excitement","opwinding"],["boredom","verveling"],["curiosity","nieuwsgierigheid"],["contentment","tevredenheid"],["unease","onrust"],["calm","kalmte"],["frustration","frustratie"],["enthusiasm","enthousiasme"],["self-confidence","zelfvertrouwen"]]},
+{topic:"Gezondheid & welzijn (algemeen)", level:"moeilijk", words:[["energy","energie"],["rest","rust"],["fitness","conditie"],["strength","kracht"],["resistance","weerstand"],["health","gezondheid"],["movement","beweging"],["nutrition","voeding"],["sleep","slaap"],["balance","evenwicht"]]},
+{topic:"Persoonlijkheid uitgebreid", level:"moeilijk", words:[["optimistic","optimistisch"],["pessimistic","pessimistisch"],["loyal","loyaal"],["reliable","betrouwbaar"],["independent","onafhankelijk"],["flexible","flexibel"],["ambitious","ambitieus"],["modest","bescheiden"],["extroverted","extravert"],["introverted","introvert"]]},
+{topic:"Beroepen uitgebreid", level:"moeilijk", words:[["architect","architect"],["journalist","journalist"],["actor","acteur"],["singer","zanger"],["writer","schrijver"],["photographer","fotograaf"],["interpreter","tolk"],["pilot","piloot"],["captain","kapitein"],["entrepreneur","ondernemer"]]},
+{topic:"Feest-benodigdheden", level:"moeilijk", words:[["gift","cadeau"],["cake","taart"],["balloon","ballon"],["fireworks","vuurwerk"],["invitation","uitnodiging"],["candle","kaars"],["confetti","confetti"],["ribbon","lint"],["wish","wens"],["surprise","verrassing"]]},
+{topic:"Tijd — abstracter", level:"moeilijk", words:[["past","verleden"],["present","heden"],["future","toekomst"],["period","periode"],["century","eeuw"],["decade","decennium"],["moment","moment"],["era","tijdperk"],["progress","vooruitgang"],["history","geschiedenis"]]},
+{topic:"Weer uitgebreid", level:"moeilijk", words:[["thunderstorm","onweer"],["hail","hagel"],["fog","mist"],["frost","vorst"],["thaw","dooi"],["temperature","temperatuur"],["climate","klimaat"],["hurricane","orkaan"],["rainbow","regenboog"],["shadow","schaduw"]]},
+{topic:"Politiek & maatschappij", level:"moeilijk", words:[["government","regering"],["law","wet"],["election","verkiezing"],["citizen","burger"],["society","samenleving"],["community","gemeenschap"],["tax","belasting"],["court","rechtbank"],["democracy","democratie"],["constitution","grondwet"]]},
+{topic:"Wetenschap", level:"moeilijk", words:[["experiment","experiment"],["theory","theorie"],["evidence","bewijs"],["research","onderzoek"],["discovery","ontdekking"],["invention","uitvinding"],["laboratory","laboratorium"],["microscope","microscoop"],["molecule","molecuul"],["gravity","zwaartekracht"]]},
+{topic:"Connectoren (gevorderd 2)", level:"moeilijk", words:[["nevertheless","desondanks"],["nonetheless","niettemin"],["on the other hand","daarentegen"],["mainly","voornamelijk"],["consequently","bijgevolg"],["because of that","daardoor"],["before that","daarvoor"],["after that","daarna"],["in the meantime","inmiddels"],["obviously","uiteraard"]]},
+{topic:"Filosofie & abstract", level:"moeilijk", words:[["consciousness","bewustzijn"],["truth","waarheid"],["reality","werkelijkheid"],["value","waarde"],["principle","principe"],["perspective","perspectief"],["identity","identiteit"],["morality","moraal"],["logic","logica"],["intuition","intuïtie"]]},
+{topic:"Juridisch & formeel", level:"moeilijk", words:[["agreement","overeenkomst"],["condition","voorwaarde"],["obligation","verplichting"],["permission","toestemming"],["liability","aansprakelijkheid"],["warranty","garantie"],["dispute","geschil"],["piece of evidence","bewijsstuk"],["witness","getuige"],["statement","verklaring"]]},
+{topic:"Economie", level:"moeilijk", words:[["market","markt"],["demand","vraag"],["supply","aanbod"],["inflation","inflatie"],["interest rate","rente"],["investment","investering"],["stock / share","aandeel"],["profit","winst"],["loss","verlies"],["competition","concurrentie"]]},
+{topic:"Milieu & duurzaamheid", level:"moeilijk", words:[["climate change","klimaatverandering"],["pollution","vervuiling"],["recycling","recycling"],["sustainability","duurzaamheid"],["renewable","hernieuwbaar"],["waste","afval"],["emissions","uitstoot"],["nature conservation","natuurbehoud"],["biodiversity","biodiversiteit"],["ecosystem","ecosysteem"]]},
+
+{topic:"Typisch Vlaams (niet 'Hollands')", level:"moeilijk", words:[["mobile phone","GSM"],["fridge","frigo"],["glad / happy","content"],["craving / desire","goesting"],["annoying","ambetant"],["wow! (surprise)","amai"],["truck","camion"],["car park","parking"],["cookie","koek"],["cool / nice","tof"]]},
+{topic:"Moeilijke woorden (gevorderd 2)", level:"moeilijk", words:[["inevitable","onvermijdelijk"],["unconscious","onbewust"],["well-considered","weloverwogen"],["obvious / self-evident","vanzelfsprekend"],["contradictory","tegenstrijdig"],["unconditional","onvoorwaardelijk"],["decisive","doorslaggevend"],["versatile","veelzijdig"],["indispensable","onmisbaar"],["stubborn / unruly","weerbarstig"]]},
+];
+
+const DATA_CONJUG = [
+// ===== GROUP T ("t kofschip") =====
+{en:"to work", nl:"werken", group:"t", aux:"heeft", f:["werk","werkt","werkt","werken","werkte","werkten","gewerkt"], ex:["Ik werk graag in de tuin.","I like to work in the garden."]},
+{en:"to make", nl:"maken", group:"t", aux:"heeft", f:["maak","maakt","maakt","maken","maakte","maakten","gemaakt"], ex:["Zij maakt elke dag koffie.","She makes coffee every day."]},
+{en:"to cook", nl:"koken", group:"t", aux:"heeft", f:["kook","kookt","kookt","koken","kookte","kookten","gekookt"], ex:["Hij kookt heerlijk pasta.","He cooks delicious pasta."]},
+{en:"to smoke", nl:"roken", group:"t", aux:"heeft", f:["rook","rookt","rookt","roken","rookte","rookten","gerookt"], ex:["Hij rookt niet meer.","He doesn't smoke anymore."]},
+{en:"to book", nl:"boeken", group:"t", aux:"heeft", f:["boek","boekt","boekt","boeken","boekte","boekten","geboekt"], ex:["We boeken de vlucht online.","We book the flight online."]},
+{en:"to talk / chat", nl:"praten", group:"t", aux:"heeft", f:["praat","praat","praat","praten","praatte","praatten","gepraat"], ex:["We praten elke avond.","We talk every evening."]},
+{en:"to wait", nl:"wachten", group:"t", aux:"heeft", f:["wacht","wacht","wacht","wachten","wachtte","wachtten","gewacht"], ex:["Ik wacht op de bus.","I'm waiting for the bus."]},
+{en:"to knock", nl:"kloppen", group:"t", aux:"heeft", f:["klop","klopt","klopt","kloppen","klopte","klopten","geklopt"], ex:["Iemand klopt op de deur.","Someone is knocking on the door."]},
+{en:"to stop", nl:"stoppen", group:"t", aux:"heeft", f:["stop","stopt","stopt","stoppen","stopte","stopten","gestopt"], ex:["De trein stopt hier niet.","The train doesn't stop here."]},
+{en:"to cost", nl:"kosten", group:"t", aux:"heeft", f:["kost","kost","kost","kosten","kostte","kostten","gekost"], ex:["Dat kost te veel geld.","That costs too much money."]},
+{en:"to fit", nl:"passen", group:"t", aux:"heeft", f:["pas","past","past","passen","paste","pasten","gepast"], ex:["Deze schoenen passen niet.","These shoes don't fit."]},
+{en:"to kiss", nl:"kussen", group:"t", aux:"heeft", f:["kus","kust","kust","kussen","kuste","kusten","gekust"], ex:["Hij kust haar gedag.","He kisses her goodbye."]},
+{en:"to cycle", nl:"fietsen", group:"t", aux:"heeft", f:["fiets","fietst","fietst","fietsen","fietste","fietsten","gefietst"], ex:["We fietsen naar school.","We cycle to school."]},
+{en:"to clean / polish", nl:"poetsen", group:"t", aux:"heeft", f:["poets","poetst","poetst","poetsen","poetste","poetsten","gepoetst"], ex:["Ze poetst elke zaterdag het huis.","She cleans the house every Saturday."]},
+{en:"to clean", nl:"kuisen", group:"t", aux:"heeft", note:"Vlaams voor 'schoonmaken'", f:["kuis","kuist","kuist","kuisen","kuiste","kuisten","gekuist"], ex:["Ik kuis mijn kamer.","I clean my room."]},
+{en:"to type / tap", nl:"tikken", group:"t", aux:"heeft", f:["tik","tikt","tikt","tikken","tikte","tikten","getikt"], ex:["Ze tikt snel op haar toetsenbord.","She types fast on her keyboard."]},
+{en:"to grab / take", nl:"pakken", group:"t", aux:"heeft", f:["pak","pakt","pakt","pakken","pakte","pakten","gepakt"], ex:["Pak je jas, het is koud.","Grab your coat, it's cold."]},
+{en:"to stick / glue", nl:"plakken", group:"t", aux:"heeft", f:["plak","plakt","plakt","plakken","plakte","plakten","geplakt"], ex:["Hij plakt de foto in het boek.","He sticks the photo in the book."]},
+{en:"to press / print", nl:"drukken", group:"t", aux:"heeft", f:["druk","drukt","drukt","drukken","drukte","drukten","gedrukt"], ex:["Ik druk op de knop.","I press the button."]},
+{en:"to dance", nl:"dansen", group:"t", aux:"heeft", f:["dans","danst","danst","dansen","danste","dansten","gedanst"], ex:["Ze dansen de hele nacht.","They dance all night."]},
+{en:"to play cards", nl:"kaarten", group:"t", aux:"heeft", f:["kaart","kaart","kaart","kaarten","kaartte","kaartten","gekaart"], ex:["Op zondag kaarten we met vrienden.","On Sundays we play cards with friends."]},
+{en:"to use", nl:"gebruiken", group:"t", aux:"heeft", note:"geen extra 'ge-' (begint al met 'ge-')", f:["gebruik","gebruikt","gebruikt","gebruiken","gebruikte","gebruikten","gebruikt"], ex:["Ik gebruik mijn telefoon veel.","I use my phone a lot."]},
+
+// ===== GROUP D (regular, incl. v/z exceptions) =====
+{en:"to live (reside)", nl:"wonen", group:"d", aux:"heeft", f:["woon","woont","woont","wonen","woonde","woonden","gewoond"], ex:["Ik woon in Gent.","I live in Ghent."]},
+{en:"to learn / teach", nl:"leren", group:"d", aux:"heeft", f:["leer","leert","leert","leren","leerde","leerden","geleerd"], ex:["Zij leert Nederlands.","She's learning Dutch."]},
+{en:"to hear", nl:"horen", group:"d", aux:"heeft", f:["hoor","hoort","hoort","horen","hoorde","hoorden","gehoord"], ex:["Hoor je dat geluid?","Do you hear that sound?"]},
+{en:"to play", nl:"spelen", group:"d", aux:"heeft", f:["speel","speelt","speelt","spelen","speelde","speelden","gespeeld"], ex:["De kinderen spelen buiten.","The children play outside."]},
+{en:"to listen", nl:"luisteren", group:"d", aux:"heeft", f:["luister","luistert","luistert","luisteren","luisterde","luisterden","geluisterd"], ex:["Ik luister naar muziek.","I listen to music."]},
+{en:"to open", nl:"openen", group:"d", aux:"heeft", f:["open","opent","opent","openen","opende","openden","geopend"], ex:["De winkel opent om negen uur.","The shop opens at nine."]},
+{en:"to try", nl:"proberen", group:"d", aux:"heeft", f:["probeer","probeert","probeert","proberen","probeerde","probeerden","geprobeerd"], ex:["Ik probeer het nog eens.","I'll try it again."]},
+{en:"to walk / stroll", nl:"wandelen", group:"d", aux:"heeft", f:["wandel","wandelt","wandelt","wandelen","wandelde","wandelden","gewandeld"], ex:["We wandelen langs het park.","We walk along the park."]},
+{en:"to vacuum", nl:"stofzuigen", group:"d", aux:"heeft", f:["stofzuig","stofzuigt","stofzuigt","stofzuigen","stofzuigde","stofzuigden","gestofzuigd"], ex:["Hij stofzuigt de woonkamer.","He vacuums the living room."]},
+{en:"to call / phone", nl:"bellen", group:"d", aux:"heeft", f:["bel","belt","belt","bellen","belde","belden","gebeld"], ex:["Ik bel je straks.","I'll call you later."]},
+{en:"to pay", nl:"betalen", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["betaal","betaalt","betaalt","betalen","betaalde","betaalden","betaald"], ex:["Wie betaalt het eten?","Who's paying for the food?"]},
+{en:"to move (house)", nl:"verhuizen", group:"d", aux:"zijn", note:"z→s blijft 'zacht' + geen 'ge-' (ver-)", f:["verhuis","verhuist","verhuist","verhuizen","verhuisde","verhuisden","verhuisd"], ex:["Ze verhuizen naar Antwerpen.","They're moving to Antwerp."]},
+{en:"to travel", nl:"reizen", group:"d", aux:"heeft", note:"z→s blijft 'zacht'", f:["reis","reist","reist","reizen","reisde","reisden","gereisd"], ex:["We reizen graag naar Spanje.","We like to travel to Spain."]},
+{en:"to live (be alive)", nl:"leven", group:"d", aux:"heeft", note:"v→f blijft 'zacht'", f:["leef","leeft","leeft","leven","leefde","leefden","geleefd"], ex:["Ze leeft gelukkig.","She lives happily."]},
+{en:"to believe", nl:"geloven", group:"d", aux:"heeft", note:"v→f blijft 'zacht'", f:["geloof","gelooft","gelooft","geloven","geloofde","geloofden","geloofd"], ex:["Ik geloof je.","I believe you."]},
+{en:"to promise", nl:"beloven", group:"d", aux:"heeft", note:"v→f + geen 'ge-' (be-)", f:["beloof","belooft","belooft","beloven","beloofde","beloofden","beloofd"], ex:["Hij belooft het te doen.","He promises to do it."]},
+{en:"to push", nl:"duwen", group:"d", aux:"heeft", f:["duw","duwt","duwt","duwen","duwde","duwden","geduwd"], ex:["Duw de deur open.","Push the door open."]},
+{en:"to build", nl:"bouwen", group:"d", aux:"heeft", f:["bouw","bouwt","bouwt","bouwen","bouwde","bouwden","gebouwd"], ex:["Ze bouwen een nieuw huis.","They're building a new house."]},
+{en:"to marry", nl:"trouwen", group:"d", aux:"zijn", f:["trouw","trouwt","trouwt","trouwen","trouwde","trouwden","getrouwd"], ex:["Ze trouwen in juni.","They're getting married in June."]},
+{en:"to grow", nl:"groeien", group:"d", aux:"zijn", f:["groei","groeit","groeit","groeien","groeide","groeiden","gegroeid"], ex:["De planten groeien snel.","The plants grow fast."]},
+{en:"to cry", nl:"huilen", group:"d", aux:"heeft", f:["huil","huilt","huilt","huilen","huilde","huilden","gehuild"], ex:["De baby huilt.","The baby is crying."]},
+{en:"to last / take (time)", nl:"duren", group:"d", aux:"heeft", f:["duur","duurt","duurt","duren","duurde","duurden","geduurd"], ex:["De film duurt twee uur.","The movie lasts two hours."]},
+{en:"to rent", nl:"huren", group:"d", aux:"heeft", f:["huur","huurt","huurt","huren","huurde","huurden","gehuurd"], ex:["We huren een appartement.","We rent an apartment."]},
+{en:"to send", nl:"sturen", group:"d", aux:"heeft", f:["stuur","stuurt","stuurt","sturen","stuurde","stuurden","gestuurd"], ex:["Ik stuur je een berichtje.","I'll send you a message."]},
+{en:"to celebrate", nl:"vieren", group:"d", aux:"heeft", f:["vier","viert","viert","vieren","vierde","vierden","gevierd"], ex:["We vieren mijn verjaardag.","We're celebrating my birthday."]},
+{en:"to answer", nl:"antwoorden", group:"d", aux:"heeft", note:"stam eindigt al op -d → dubbele d", f:["antwoord","antwoordt","antwoordt","antwoorden","antwoordde","antwoordden","geantwoord"], ex:["Hij antwoordt niet.","He doesn't answer."]},
+
+// ===== IRREGULAR / STRONG =====
+{en:"to be", nl:"zijn", group:"irr", aux:"zijn", f:["ben","bent","is","zijn","was","waren","geweest"], ex:["Ik ben moe.","I am tired."]},
+{en:"to have", nl:"hebben", group:"irr", aux:"heeft", f:["heb","hebt","heeft","hebben","had","hadden","gehad"], ex:["Zij heeft een hond.","She has a dog."]},
+{en:"to go", nl:"gaan", group:"irr", aux:"zijn", f:["ga","gaat","gaat","gaan","ging","gingen","gegaan"], ex:["We gaan naar de winkel.","We're going to the shop."]},
+{en:"to do", nl:"doen", group:"irr", aux:"heeft", f:["doe","doet","doet","doen","deed","deden","gedaan"], ex:["Wat doe je nu?","What are you doing now?"]},
+{en:"can / to be able to", nl:"kunnen", group:"irr", aux:"heeft", f:["kan",["kan","kunt"],"kan","kunnen","kon","konden","gekund"], ex:["Kan je morgen komen?","Can you come tomorrow?"]},
+{en:"may / to be allowed to", nl:"mogen", group:"irr", aux:"heeft", f:["mag","mag","mag","mogen","mocht","mochten","gemogen"], ex:["Mag ik binnenkomen?","May I come in?"]},
+{en:"must / to have to", nl:"moeten", group:"irr", aux:"heeft", f:["moet","moet","moet","moeten","moest","moesten","gemoeten"], ex:["Ik moet nu vertrekken.","I have to leave now."]},
+{en:"to want", nl:"willen", group:"irr", aux:"heeft", f:["wil",["wil","wilt"],"wil","willen",["wilde","wou"],"wilden","gewild"], ex:["Wat wil je drinken?","What do you want to drink?"]},
+{en:"shall / will", nl:"zullen", group:"irr", aux:"heeft", note:"deelwoord bijna nooit gebruikt", f:["zal",["zal","zult"],"zal","zullen","zou","zouden",null], ex:["Ik zal het doen.","I will do it."]},
+{en:"to know", nl:"weten", group:"irr", aux:"heeft", f:["weet","weet","weet","weten","wist","wisten","geweten"], ex:["Ik weet het niet.","I don't know."]},
+{en:"to buy", nl:"kopen", group:"irr", aux:"heeft", f:["koop","koopt","koopt","kopen","kocht","kochten","gekocht"], ex:["We kopen brood.","We're buying bread."]},
+{en:"to search / look for", nl:"zoeken", group:"irr", aux:"heeft", f:["zoek","zoekt","zoekt","zoeken","zocht","zochten","gezocht"], ex:["Ik zoek mijn sleutels.","I'm looking for my keys."]},
+{en:"to bring", nl:"brengen", group:"irr", aux:"heeft", f:["breng","brengt","brengt","brengen","bracht","brachten","gebracht"], ex:["Hij brengt de kinderen naar school.","He takes the kids to school."]},
+{en:"to think", nl:"denken", group:"irr", aux:"heeft", f:["denk","denkt","denkt","denken","dacht","dachten","gedacht"], ex:["Ik denk aan jou.","I'm thinking of you."]},
+{en:"to come", nl:"komen", group:"irr", aux:"zijn", f:["kom","komt","komt","komen","kwam","kwamen","gekomen"], ex:["Kom je vanavond?","Are you coming tonight?"]},
+{en:"to see", nl:"zien", group:"irr", aux:"heeft", f:["zie","ziet","ziet","zien","zag","zagen","gezien"], ex:["Ik zie je morgen.","I'll see you tomorrow."]},
+{en:"to give", nl:"geven", group:"irr", aux:"heeft", f:["geef","geeft","geeft","geven","gaf","gaven","gegeven"], ex:["Ze geeft mij een cadeau.","She gives me a present."]},
+{en:"to take", nl:"nemen", group:"irr", aux:"heeft", f:["neem","neemt","neemt","nemen","nam","namen","genomen"], ex:["Neem je de trein?","Are you taking the train?"]},
+{en:"to eat", nl:"eten", group:"irr", aux:"heeft", f:["eet","eet","eet","eten","at","aten","gegeten"], ex:["We eten om zeven uur.","We eat at seven."]},
+{en:"to drink", nl:"drinken", group:"irr", aux:"heeft", f:["drink","drinkt","drinkt","drinken","dronk","dronken","gedronken"], ex:["Hij drinkt een koffie.","He's drinking a coffee."]},
+{en:"to walk / run", nl:"lopen", group:"irr", aux:"heeft", f:["loop","loopt","loopt","lopen","liep","liepen","gelopen"], ex:["Ze loopt elke dag.","She walks every day."]},
+{en:"to sleep", nl:"slapen", group:"irr", aux:"heeft", f:["slaap","slaapt","slaapt","slapen","sliep","sliepen","geslapen"], ex:["De baby slaapt.","The baby is sleeping."]},
+{en:"to read", nl:"lezen", group:"irr", aux:"heeft", f:["lees","leest","leest","lezen","las","lazen","gelezen"], ex:["Ik lees een boek.","I'm reading a book."]},
+{en:"to write", nl:"schrijven", group:"irr", aux:"heeft", f:["schrijf","schrijft","schrijft","schrijven","schreef","schreven","geschreven"], ex:["Ze schrijft een brief.","She's writing a letter."]},
+{en:"to drive / ride", nl:"rijden", group:"irr", aux:"heeft", f:["rijd","rijdt","rijdt","rijden","reed","reden","gereden"], ex:["Hij rijdt naar Brussel.","He's driving to Brussels."]},
+{en:"to stay", nl:"blijven", group:"irr", aux:"zijn", f:["blijf","blijft","blijft","blijven","bleef","bleven","gebleven"], ex:["Blijf je thuis?","Are you staying home?"]},
+{en:"to begin / start", nl:"beginnen", group:"irr", aux:"zijn", note:"geen 'ge-' (voorvoegsel be-)", f:["begin","begint","begint","beginnen","begon","begonnen","begonnen"], ex:["De les begint om acht uur.","The class starts at eight."]},
+{en:"to sing", nl:"zingen", group:"irr", aux:"heeft", f:["zing","zingt","zingt","zingen","zong","zongen","gezongen"], ex:["Ze zingt heel mooi.","She sings beautifully."]},
+{en:"to sit", nl:"zitten", group:"irr", aux:"heeft", f:["zit","zit","zit","zitten","zat","zaten","gezeten"], ex:["Hij zit op de bank.","He's sitting on the couch."]},
+{en:"to stand", nl:"staan", group:"irr", aux:"heeft", f:["sta","staat","staat","staan","stond","stonden","gestaan"], ex:["De auto staat buiten.","The car is standing outside."]},
+{en:"to lie (down)", nl:"liggen", group:"irr", aux:"heeft", f:["lig","ligt","ligt","liggen","lag","lagen","gelegen"], ex:["De kat ligt op het bed.","The cat is lying on the bed."]},
+{en:"to find", nl:"vinden", group:"irr", aux:"heeft", f:["vind","vindt","vindt","vinden","vond","vonden","gevonden"], ex:["Ik vind dit leuk.","I find this nice / I like this."]},
+{en:"to hold / keep / like", nl:"houden", group:"irr", aux:"heeft", f:[["houd","hou"],"houdt","houdt","houden","hield","hielden","gehouden"], ex:["Ik hou van jou.","I love you."]},
+{en:"to ask", nl:"vragen", group:"irr", aux:"heeft", note:"sterke verleden tijd, maar zwak deelwoord", f:["vraag","vraagt","vraagt","vragen","vroeg","vroegen","gevraagd"], ex:["Ze vraagt hoe het gaat.","She asks how it's going."]},
+{en:"to speak", nl:"spreken", group:"irr", aux:"heeft", f:["spreek","spreekt","spreekt","spreken","sprak","spraken","gesproken"], ex:["Spreekt u Engels?","Do you speak English?"]},
+{en:"to understand", nl:"verstaan", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["versta","verstaat","verstaat","verstaan","verstond","verstonden","verstaan"], ex:["Ik versta je niet goed.","I don't understand you well."]},
+{en:"to leave / depart", nl:"vertrekken", group:"irr", aux:"zijn", note:"geen 'ge-' (voorvoegsel ver-)", f:["vertrek","vertrekt","vertrekt","vertrekken","vertrok","vertrokken","vertrokken"], ex:["De trein vertrekt zo.","The train is leaving soon."]},
+{en:"to forget", nl:"vergeten", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["vergeet","vergeet","vergeet","vergeten","vergat","vergaten","vergeten"], ex:["Ik vergeet het altijd.","I always forget it."]},
+{en:"to help", nl:"helpen", group:"irr", aux:"heeft", f:["help","helpt","helpt","helpen","hielp","hielpen","geholpen"], ex:["Kan je me helpen?","Can you help me?"]},
+{en:"to become", nl:"worden", group:"irr", aux:"zijn", f:["word","wordt","wordt","worden","werd","werden","geworden"], ex:["Hij wordt boos.","He's getting angry."]},
+{en:"to wash", nl:"wassen", group:"irr", aux:"heeft", note:"zwakke verleden tijd + sterk deelwoord", f:["was","wast","wast","wassen","waste","wasten","gewassen"], ex:["Ik was mijn handen.","I wash my hands."]},
+{en:"to laugh", nl:"lachen", group:"irr", aux:"heeft", note:"zwakke verleden tijd + sterk deelwoord", f:["lach","lacht","lacht","lachen","lachte","lachten","gelachen"], ex:["We lachen heel hard.","We're laughing really hard."]},
+{en:"to bake / fry", nl:"bakken", group:"irr", aux:"heeft", note:"zwakke verleden tijd + sterk deelwoord", f:["bak","bakt","bakt","bakken","bakte","bakten","gebakken"], ex:["Ze bakt een taart.","She's baking a cake."]},
+{en:"to be called / named", nl:"heten", group:"irr", aux:"heeft", note:"zwakke verleden tijd + sterk deelwoord", f:["heet","heet","heet","heten","heette","heetten","geheten"], ex:["Ik heet Jonas.","My name is Jonas."]},
+{en:"to fall", nl:"vallen", group:"irr", aux:"zijn", f:["val","valt","valt","vallen","viel","vielen","gevallen"], ex:["Hij valt van de fiets.","He's falling off the bike."]},
+{en:"to carry / wear", nl:"dragen", group:"irr", aux:"heeft", f:["draag","draagt","draagt","dragen","droeg","droegen","gedragen"], ex:["Ze draagt een rode jas.","She's wearing a red coat."]},
+{en:"to hit / beat", nl:"slaan", group:"irr", aux:"heeft", f:["sla","slaat","slaat","slaan","sloeg","sloegen","geslagen"], ex:["Hij slaat op de tafel.","He hits the table."]},
+{en:"to look / watch", nl:"kijken", group:"irr", aux:"heeft", f:["kijk","kijkt","kijkt","kijken","keek","keken","gekeken"], ex:["We kijken naar een film.","We're watching a movie."]},
+{en:"to call / shout", nl:"roepen", group:"irr", aux:"heeft", f:["roep","roept","roept","roepen","riep","riepen","geroepen"], ex:["Ze roept mijn naam.","She's calling my name."]},
+{en:"to close", nl:"sluiten", group:"irr", aux:"heeft", f:["sluit","sluit","sluit","sluiten","sloot","sloten","gesloten"], ex:["De winkel sluit om zes uur.","The shop closes at six."]},
+{en:"to shine / seem", nl:"schijnen", group:"irr", aux:"heeft", f:["schijn","schijnt","schijnt","schijnen","scheen","schenen","geschenen"], ex:["De zon schijnt vandaag.","The sun is shining today."]},
+{en:"to lose", nl:"verliezen", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verlies","verliest","verliest","verliezen","verloor","verloren","verloren"], ex:["We verliezen de match.","We're losing the match."]},
+{en:"to win", nl:"winnen", group:"irr", aux:"heeft", f:["win","wint","wint","winnen","won","wonnen","gewonnen"], ex:["Ze winnen elke keer.","They win every time."]},
+{en:"to choose", nl:"kiezen", group:"irr", aux:"heeft", f:["kies","kiest","kiest","kiezen","koos","kozen","gekozen"], ex:["Ik kies voor jou.","I choose you."]},
+{en:"to iron", nl:"strijken", group:"irr", aux:"heeft", f:["strijk","strijkt","strijkt","strijken","streek","streken","gestreken"], ex:["Ze strijkt haar hemden.","She irons her shirts."]},
+
+// ===== EXTRA GROUP T ("t kofschip") =====
+{en:"to skate", nl:"schaatsen", group:"t", aux:"heeft", f:["schaats","schaatst","schaatst","schaatsen","schaatste","schaatsten","geschaatst"], ex:["We schaatsen op de vijver.","We skate on the pond."]},
+{en:"to hope", nl:"hopen", group:"t", aux:"heeft", f:["hoop","hoopt","hoopt","hopen","hoopte","hoopten","gehoopt"], ex:["Ik hoop dat het lukt.","I hope it works out."]},
+{en:"to type", nl:"typen", group:"t", aux:"heeft", f:["typ","typt","typt","typen","typte","typten","getypt"], ex:["Zij typt heel snel.","She types very fast."]},
+{en:"to kick", nl:"schoppen", group:"t", aux:"heeft", f:["schop","schopt","schopt","schoppen","schopte","schopten","geschopt"], ex:["Hij schopt de bal weg.","He kicks the ball away."]},
+{en:"to stamp", nl:"stampen", group:"t", aux:"heeft", f:["stamp","stampt","stampt","stampen","stampte","stampten","gestampt"], ex:["De kinderen stampen met hun voeten.","The children stamp their feet."]},
+{en:"to cut (scissors)", nl:"knippen", group:"t", aux:"heeft", f:["knip","knipt","knipt","knippen","knipte","knipten","geknipt"], ex:["Ze knipt het papier in stukjes.","She cuts the paper into pieces."]},
+{en:"to rest", nl:"rusten", group:"t", aux:"heeft", note:"stam eindigt al op -t → jij/hij blijft 'rust'", f:["rust","rust","rust","rusten","rustte","rustten","gerust"], ex:["Ik rust vandaag een beetje.","I'm resting a bit today."]},
+{en:"to test", nl:"testen", group:"t", aux:"heeft", note:"stam eindigt al op -t → jij/hij blijft 'test'", f:["test","test","test","testen","testte","testten","getest"], ex:["We testen de nieuwe app.","We're testing the new app."]},
+{en:"to post", nl:"posten", group:"t", aux:"heeft", note:"stam eindigt al op -t → jij/hij blijft 'post'", f:["post","post","post","posten","postte","postten","gepost"], ex:["Hij post een foto online.","He posts a photo online."]},
+{en:"to wish", nl:"wensen", group:"t", aux:"heeft", f:["wens","wenst","wenst","wensen","wenste","wensten","gewenst"], ex:["Ik wens je veel geluk.","I wish you good luck."]},
+{en:"to miss", nl:"missen", group:"t", aux:"heeft", f:["mis","mist","mist","missen","miste","misten","gemist"], ex:["Ik mis je heel erg.","I miss you a lot."]},
+{en:"to hurry", nl:"haasten", group:"t", aux:"heeft", note:"stam eindigt al op -t → jij/hij blijft 'haast'", f:["haast","haast","haast","haasten","haastte","haastten","gehaast"], ex:["Hij haast zich naar de trein.","He's hurrying to the train."]},
+{en:"to toast / cheers", nl:"proosten", group:"t", aux:"heeft", note:"stam eindigt al op -t → jij/hij blijft 'proost'", f:["proost","proost","proost","proosten","proostte","proostten","geproost"], ex:["We proosten op je verjaardag.","We toast to your birthday."]},
+{en:"to crack / creak", nl:"kraken", group:"t", aux:"heeft", f:["kraak","kraakt","kraakt","kraken","kraakte","kraakten","gekraakt"], ex:["De vloer kraakt 's nachts.","The floor creaks at night."]},
+{en:"to hook / crochet", nl:"haken", group:"t", aux:"heeft", f:["haak","haakt","haakt","haken","haakte","haakten","gehaakt"], ex:["Oma haakt een sjaal.","Grandma is crocheting a scarf."]},
+{en:"to bark", nl:"blaffen", group:"t", aux:"heeft", f:["blaf","blaft","blaft","blaffen","blafte","blaften","geblaft"], ex:["De hond blaft naar de postbode.","The dog barks at the mailman."]},
+{en:"to clap / to burst", nl:"klappen", group:"t", aux:"heeft", f:["klap","klapt","klapt","klappen","klapte","klapten","geklapt"], ex:["Iedereen klapt in de handen.","Everyone claps their hands."]},
+{en:"to nod", nl:"knikken", group:"t", aux:"heeft", f:["knik","knikt","knikt","knikken","knikte","knikten","geknikt"], ex:["Hij knikt ja.","He nods yes."]},
+{en:"to lick", nl:"likken", group:"t", aux:"heeft", f:["lik","likt","likt","likken","likte","likten","gelikt"], ex:["De kat likt haar poot.","The cat licks its paw."]},
+{en:"to prick / poke", nl:"prikken", group:"t", aux:"heeft", f:["prik","prikt","prikt","prikken","prikte","prikten","geprikt"], ex:["Ze prikt met een vork in de aardappel.","She pokes the potato with a fork."]},
+{en:"to kick / pedal", nl:"trappen", group:"t", aux:"heeft", f:["trap","trapt","trapt","trappen","trapte","trapten","getrapt"], ex:["Hij trapt hard op de rem.","He stamps hard on the brake."]},
+{en:"to cut down / to stop (informal)", nl:"kappen", group:"t", aux:"heeft", f:["kap","kapt","kapt","kappen","kapte","kapten","gekapt"], ex:["Ze kappen de oude boom.","They're cutting down the old tree."]},
+{en:"to meet (by chance)", nl:"ontmoeten", group:"t", aux:"heeft", note:"geen 'ge-' (voorvoegsel ont-), stam eindigt al op -t", f:["ontmoet","ontmoet","ontmoet","ontmoeten","ontmoette","ontmoetten","ontmoet"], ex:["Ik ontmoet haar morgen.","I'm meeting her tomorrow."]},
+{en:"to expect", nl:"verwachten", group:"t", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-), stam eindigt al op -t", f:["verwacht","verwacht","verwacht","verwachten","verwachtte","verwachtten","verwacht"], ex:["Ik verwacht bezoek.","I'm expecting visitors."]},
+{en:"to discover", nl:"ontdekken", group:"t", aux:"heeft", note:"geen 'ge-' (voorvoegsel ont-)", f:["ontdek","ontdekt","ontdekt","ontdekken","ontdekte","ontdekten","ontdekt"], ex:["We ontdekken een nieuw restaurant.","We're discovering a new restaurant."]},
+
+// ===== EXTRA GROUP D (regular, incl. v/z exceptions) =====
+{en:"to wave", nl:"zwaaien", group:"d", aux:"heeft", f:["zwaai","zwaait","zwaait","zwaaien","zwaaide","zwaaiden","gezwaaid"], ex:["Ze zwaait naar de trein.","She waves at the train."]},
+{en:"to whisper", nl:"fluisteren", group:"d", aux:"heeft", f:["fluister","fluistert","fluistert","fluisteren","fluisterde","fluisterden","gefluisterd"], ex:["Hij fluistert een geheim.","He whispers a secret."]},
+{en:"to rain", nl:"regenen", group:"d", aux:"heeft", note:"onpersoonlijk werkwoord: het regent", f:["regen","regent","regent","regenen","regende","regenden","geregend"], ex:["Het regent de hele dag.","It's raining all day."]},
+{en:"to snow", nl:"sneeuwen", group:"d", aux:"heeft", note:"onpersoonlijk werkwoord: het sneeuwt", f:["sneeuw","sneeuwt","sneeuwt","sneeuwen","sneeuwde","sneeuwden","gesneeuwd"], ex:["Het sneeuwt in de winter.","It snows in winter."]},
+{en:"to blow (wind)", nl:"waaien", group:"d", aux:"heeft", f:["waai","waait","waait","waaien","waaide","waaiden","gewaaid"], ex:["De wind waait hard.","The wind is blowing hard."]},
+{en:"to paint", nl:"schilderen", group:"d", aux:"heeft", f:["schilder","schildert","schildert","schilderen","schilderde","schilderden","geschilderd"], ex:["Zij schildert een landschap.","She's painting a landscape."]},
+{en:"to draw", nl:"tekenen", group:"d", aux:"heeft", f:["teken","tekent","tekent","tekenen","tekende","tekenden","getekend"], ex:["Hij tekent een huis.","He's drawing a house."]},
+{en:"to collect / gather", nl:"verzamelen", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verzamel","verzamelt","verzamelt","verzamelen","verzamelde","verzamelden","verzameld"], ex:["Hij verzamelt postzegels.","He collects stamps."]},
+{en:"to repeat", nl:"herhalen", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel her-)", f:["herhaal","herhaalt","herhaalt","herhalen","herhaalde","herhaalden","herhaald"], ex:["Kan je dat herhalen?","Can you repeat that?"]},
+{en:"to admire", nl:"bewonderen", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["bewonder","bewondert","bewondert","bewonderen","bewonderde","bewonderden","bewonderd"], ex:["Ik bewonder haar moed.","I admire her courage."]},
+{en:"to explain", nl:"verklaren", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verklaar","verklaart","verklaart","verklaren","verklaarde","verklaarden","verklaard"], ex:["Hij verklaart de regel.","He explains the rule."]},
+{en:"to study (research)", nl:"bestuderen", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["bestudeer","bestudeert","bestudeert","bestuderen","bestudeerde","bestudeerden","bestudeerd"], ex:["Ze bestudeert het probleem.","She's studying the problem."]},
+{en:"to develop", nl:"ontwikkelen", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel ont-)", f:["ontwikkel","ontwikkelt","ontwikkelt","ontwikkelen","ontwikkelde","ontwikkelden","ontwikkeld"], ex:["Ze ontwikkelen een nieuwe app.","They're developing a new app."]},
+{en:"to take care of", nl:"verzorgen", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verzorg","verzorgt","verzorgt","verzorgen","verzorgde","verzorgden","verzorgd"], ex:["Zij verzorgt de planten.","She takes care of the plants."]},
+{en:"to congratulate", nl:"feliciteren", group:"d", aux:"heeft", f:["feliciteer","feliciteert","feliciteert","feliciteren","feliciteerde","feliciteerden","gefeliciteerd"], ex:["Ik feliciteer je met je diploma.","I congratulate you on your diploma."]},
+{en:"to check / control", nl:"controleren", group:"d", aux:"heeft", f:["controleer","controleert","controleert","controleren","controleerde","controleerden","gecontroleerd"], ex:["Hij controleert zijn werk.","He checks his work."]},
+{en:"to repair", nl:"repareren", group:"d", aux:"heeft", f:["repareer","repareert","repareert","repareren","repareerde","repareerden","gerepareerd"], ex:["Ze repareert haar fiets.","She's repairing her bike."]},
+{en:"to organise", nl:"organiseren", group:"d", aux:"heeft", f:["organiseer","organiseert","organiseert","organiseren","organiseerde","organiseerden","georganiseerd"], ex:["We organiseren een feest.","We're organising a party."]},
+{en:"to earn", nl:"verdienen", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verdien","verdient","verdient","verdienen","verdiende","verdienden","verdiend"], ex:["Hij verdient goed.","He earns well."]},
+{en:"to happen", nl:"gebeuren", group:"d", aux:"zijn", note:"geen extra 'ge-' (begint al met 'ge-')", f:["gebeur","gebeurt","gebeurt","gebeuren","gebeurde","gebeurden","gebeurd"], ex:["Wat gebeurt er?","What's happening?"]},
+{en:"to tell", nl:"vertellen", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["vertel","vertelt","vertelt","vertellen","vertelde","vertelden","verteld"], ex:["Ze vertelt een verhaal.","She's telling a story."]},
+{en:"to rent out", nl:"verhuren", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verhuur","verhuurt","verhuurt","verhuren","verhuurde","verhuurden","verhuurd"], ex:["Ze verhuren hun appartement.","They rent out their apartment."]},
+{en:"to study (university)", nl:"studeren", group:"d", aux:"heeft", f:["studeer","studeert","studeert","studeren","studeerde","studeerden","gestudeerd"], ex:["Hij studeert in Gent.","He studies in Ghent."]},
+{en:"to reserve / book", nl:"reserveren", group:"d", aux:"heeft", f:["reserveer","reserveert","reserveert","reserveren","reserveerde","reserveerden","gereserveerd"], ex:["We reserveren een tafel.","We're reserving a table."]},
+{en:"to wave (to greet)", nl:"wuiven", group:"d", aux:"heeft", note:"v→f blijft 'zacht'", f:["wuif","wuift","wuift","wuiven","wuifde","wuifden","gewuifd"], ex:["Ze wuift naar ons.","She waves at us."]},
+{en:"to know (a person / fact)", nl:"kennen", group:"d", aux:"heeft", f:["ken","kent","kent","kennen","kende","kenden","gekend"], ex:["Ik ken hem goed.","I know him well."]},
+{en:"to recognise", nl:"herkennen", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel her-)", f:["herken","herkent","herkent","herkennen","herkende","herkenden","herkend"], ex:["Ik herken haar stem.","I recognise her voice."]},
+{en:"to mean", nl:"betekenen", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["beteken","betekent","betekent","betekenen","betekende","betekenden","betekend"], ex:["Wat betekent dit woord?","What does this word mean?"]},
+{en:"to differ", nl:"verschillen", group:"d", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verschil","verschilt","verschilt","verschillen","verschilde","verschilden","verschild"], ex:["Onze meningen verschillen.","Our opinions differ."]},
+
+// ===== EXTRA IRREGULAR / STRONG =====
+{en:"to sell", nl:"verkopen", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verkoop","verkoopt","verkoopt","verkopen","verkocht","verkochten","verkocht"], ex:["Ze verkoopt haar auto.","She's selling her car."]},
+{en:"to receive", nl:"ontvangen", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel ont-)", f:["ontvang","ontvangt","ontvangt","ontvangen","ontving","ontvingen","ontvangen"], ex:["Ik ontvang een pakketje.","I'm receiving a package."]},
+{en:"to experience", nl:"ervaren", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel er-)", f:["ervaar","ervaart","ervaart","ervaren","ervoer","ervoeren","ervaren"], ex:["Ik ervaar veel steun.","I experience a lot of support."]},
+{en:"to visit", nl:"bezoeken", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["bezoek","bezoekt","bezoekt","bezoeken","bezocht","bezochten","bezocht"], ex:["We bezoeken mijn oma.","We're visiting my grandma."]},
+{en:"to rub", nl:"wrijven", group:"irr", aux:"heeft", f:["wrijf","wrijft","wrijft","wrijven","wreef","wreven","gewreven"], ex:["Hij wrijft in zijn ogen.","He rubs his eyes."]},
+{en:"to slide / push", nl:"schuiven", group:"irr", aux:"heeft", f:["schuif","schuift","schuift","schuiven","schoof","schoven","geschoven"], ex:["Ze schuift de stoel dichterbij.","She slides the chair closer."]},
+{en:"to bite", nl:"bijten", group:"irr", aux:"heeft", f:["bijt","bijt","bijt","bijten","beet","beten","gebeten"], ex:["De hond bijt niet.","The dog doesn't bite."]},
+{en:"to cut", nl:"snijden", group:"irr", aux:"heeft", f:["snijd","snijdt","snijdt","snijden","sneed","sneden","gesneden"], ex:["Ik snijd de groenten.","I'm cutting the vegetables."]},
+{en:"to fly", nl:"vliegen", group:"irr", aux:"zijn", f:["vlieg","vliegt","vliegt","vliegen","vloog","vlogen","gevlogen"], ex:["We vliegen naar Spanje.","We're flying to Spain."]},
+{en:"to move", nl:"bewegen", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["beweeg","beweegt","beweegt","bewegen","bewoog","bewogen","bewogen"], ex:["Hij beweegt niet meer.","He isn't moving anymore."]},
+{en:"to enjoy", nl:"genieten", group:"irr", aux:"heeft", note:"geen extra 'ge-' (begint al met 'ge-')", f:["geniet","geniet","geniet","genieten","genoot","genoten","genoten"], ex:["Ze geniet van de zon.","She's enjoying the sun."]},
+{en:"to spoil / go bad", nl:"bederven", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["bederf","bederft","bederft","bederven","bedierf","bedierven","bedorven"], ex:["De melk bederft snel.","The milk spoils quickly."]},
+{en:"to remember", nl:"onthouden", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel ont-)", f:["onthoud","onthoudt","onthoudt","onthouden","onthield","onthielden","onthouden"], ex:["Ik onthoud je naam.","I'll remember your name."]},
+{en:"to forbid", nl:"verbieden", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verbied","verbiedt","verbiedt","verbieden","verbood","verboden","verboden"], ex:["Dat verbied ik je.","I forbid you to do that."]},
+{en:"to freeze", nl:"bevriezen", group:"irr", aux:"zijn", note:"geen 'ge-' (voorvoegsel be-)", f:["bevries","bevriest","bevriest","bevriezen","bevroor","bevroren","bevroren"], ex:["Het water bevriest 's nachts.","The water freezes at night."]},
+{en:"to appear", nl:"verschijnen", group:"irr", aux:"zijn", note:"geen 'ge-' (voorvoegsel ver-)", f:["verschijn","verschijnt","verschijnt","verschijnen","verscheen","verschenen","verschenen"], ex:["Het boek verschijnt in mei.","The book comes out in May."]},
+{en:"to disappear", nl:"verdwijnen", group:"irr", aux:"zijn", note:"geen 'ge-' (voorvoegsel ver-)", f:["verdwijn","verdwijnt","verdwijnt","verdwijnen","verdween","verdwenen","verdwenen"], ex:["De zon verdwijnt achter de wolken.","The sun disappears behind the clouds."]},
+{en:"to arise / originate", nl:"ontstaan", group:"irr", aux:"zijn", note:"geen 'ge-' (voorvoegsel ont-)", f:["ontsta","ontstaat","ontstaat","ontstaan","ontstond","ontstonden","ontstaan"], ex:["Het probleem ontstaat door de fout.","The problem arises from the mistake."]},
+{en:"to exist", nl:"bestaan", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["besta","bestaat","bestaat","bestaan","bestond","bestonden","bestaan"], ex:["Dat woord bestaat niet.","That word doesn't exist."]},
+{en:"to pour / cast", nl:"gieten", group:"irr", aux:"heeft", f:["giet","giet","giet","gieten","goot","goten","gegoten"], ex:["Ze giet water in het glas.","She's pouring water into the glass."]},
+{en:"to offer / bid", nl:"bieden", group:"irr", aux:"heeft", f:["bied","biedt","biedt","bieden","bood","boden","geboden"], ex:["Hij biedt zijn hulp aan.","He's offering his help."]},
+{en:"to shoot", nl:"schieten", group:"irr", aux:"heeft", f:["schiet","schiet","schiet","schieten","schoot","schoten","geschoten"], ex:["Hij schiet op doel.","He shoots at the goal."]},
+{en:"to compare", nl:"vergelijken", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["vergelijk","vergelijkt","vergelijkt","vergelijken","vergeleek","vergeleken","vergeleken"], ex:["Ik vergelijk de prijzen.","I'm comparing the prices."]},
+{en:"to turn out / appear", nl:"blijken", group:"irr", aux:"zijn", f:["blijk","blijkt","blijkt","blijken","bleek","bleken","gebleken"], ex:["Het bleek een goed idee.","It turned out to be a good idea."]},
+{en:"to heal / cure", nl:"genezen", group:"irr", aux:"zijn", note:"geen extra 'ge-' (begint al met 'ge-')", f:["genees","geneest","geneest","genezen","genas","genazen","genezen"], ex:["Hij genas snel.","He recovered quickly."]},
+{en:"to weigh", nl:"wegen", group:"irr", aux:"heeft", f:["weeg","weegt","weegt","wegen","woog","wogen","gewogen"], ex:["Hoeveel weeg je?","How much do you weigh?"]},
+{en:"to lie (tell a lie)", nl:"liegen", group:"irr", aux:"heeft", f:["lieg","liegt","liegt","liegen","loog","logen","gelogen"], ex:["Hij liegt nooit.","He never lies."]},
+{en:"to deceive", nl:"bedriegen", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["bedrieg","bedriegt","bedriegt","bedriegen","bedroog","bedrogen","bedrogen"], ex:["Hij bedriegt niemand.","He deceives no one."]},
+{en:"to bind / tie", nl:"binden", group:"irr", aux:"heeft", f:["bind","bindt","bindt","binden","bond","bonden","gebonden"], ex:["Ze bindt haar veters.","She ties her shoelaces."]},
+{en:"to connect", nl:"verbinden", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verbind","verbindt","verbindt","verbinden","verbond","verbonden","verbonden"], ex:["Deze brug verbindt de twee dorpen.","This bridge connects the two villages."]},
+{en:"to send / broadcast", nl:"zenden", group:"irr", aux:"heeft", f:["zend","zendt","zendt","zenden","zond","zonden","gezonden"], ex:["Ze zenden het nieuws live uit.","They broadcast the news live."]},
+{en:"to dispatch / send off", nl:"verzenden", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verzend","verzendt","verzendt","verzenden","verzond","verzonden","verzonden"], ex:["Ik verzend het pakket morgen.","I'll send off the package tomorrow."]},
+{en:"to jump", nl:"springen", group:"irr", aux:"zijn", f:["spring","springt","springt","springen","sprong","sprongen","gesprongen"], ex:["De kikker springt in het water.","The frog jumps into the water."]},
+{en:"to swim", nl:"zwemmen", group:"irr", aux:"heeft", f:["zwem","zwemt","zwemt","zwemmen","zwom","zwommen","gezwommen"], ex:["We zwemmen elke zomer in de zee.","We swim in the sea every summer."]},
+{en:"to climb", nl:"klimmen", group:"irr", aux:"zijn", f:["klim","klimt","klimt","klimmen","klom","klommen","geklommen"], ex:["De kat klimt in de boom.","The cat climbs the tree."]},
+{en:"to sink", nl:"zinken", group:"irr", aux:"zijn", f:["zink","zinkt","zinkt","zinken","zonk","zonken","gezonken"], ex:["Het schip zinkt langzaam.","The ship sinks slowly."]},
+{en:"to force", nl:"dwingen", group:"irr", aux:"heeft", f:["dwing","dwingt","dwingt","dwingen","dwong","dwongen","gedwongen"], ex:["Niemand dwingt je.","Nobody is forcing you."]},
+{en:"to hang", nl:"hangen", group:"irr", aux:"heeft", f:["hang","hangt","hangt","hangen","hing","hingen","gehangen"], ex:["De jas hangt aan de kapstok.","The coat hangs on the rack."]},
+{en:"to catch", nl:"vangen", group:"irr", aux:"heeft", f:["vang","vangt","vangt","vangen","ving","vingen","gevangen"], ex:["Hij vangt de bal.","He catches the ball."]},
+{en:"to fight", nl:"vechten", group:"irr", aux:"heeft", note:"stam eindigt al op -t → jij/hij blijft 'vecht'", f:["vecht","vecht","vecht","vechten","vocht","vochten","gevochten"], ex:["Ze vechten voor hun rechten.","They fight for their rights."]},
+{en:"to hide (something)", nl:"verbergen", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verberg","verbergt","verbergt","verbergen","verborg","verborgen","verborgen"], ex:["Ze verbergt het cadeau.","She hides the gift."]},
+{en:"to stab / sting / put", nl:"steken", group:"irr", aux:"heeft", f:["steek","steekt","steekt","steken","stak","staken","gestoken"], ex:["Een bij steekt hem.","A bee stings him."]},
+{en:"to break", nl:"breken", group:"irr", aux:"heeft", f:["breek","breekt","breekt","breken","brak","braken","gebroken"], ex:["Het glas breekt gemakkelijk.","The glass breaks easily."]},
+{en:"to hit / meet (formal)", nl:"treffen", group:"irr", aux:"heeft", f:["tref","treft","treft","treffen","trof","troffen","getroffen"], ex:["We treffen elkaar om drie uur.","We're meeting each other at three."]},
+{en:"to bend", nl:"buigen", group:"irr", aux:"heeft", f:["buig","buigt","buigt","buigen","boog","bogen","gebogen"], ex:["De tak buigt in de wind.","The branch bends in the wind."]},
+{en:"to prove", nl:"bewijzen", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["bewijs","bewijst","bewijst","bewijzen","bewees","bewezen","bewezen"], ex:["Dat bewijst niets.","That proves nothing."]},
+{en:"to refer", nl:"verwijzen", group:"irr", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verwijs","verwijst","verwijst","verwijzen","verwees","verwezen","verwezen"], ex:["Hij verwijst naar de regels.","He refers to the rules."]},
+{en:"to rise", nl:"rijzen", group:"irr", aux:"zijn", f:["rijs","rijst","rijst","rijzen","rees","rezen","gerezen"], ex:["De vraag rijst waarom.","The question arises why."]},
+{en:"to point", nl:"wijzen", group:"irr", aux:"heeft", f:["wijs","wijst","wijst","wijzen","wees","wezen","gewezen"], ex:["Ze wijst naar de deur.","She points at the door."]},
+
+// ===== EXTRA MOEILIJK / GEVORDERD (bonus: fixed 'inseparable' exceptions + advanced vocabulary) =====
+{en:"to refuse", nl:"weigeren", group:"hard", aux:"heeft", f:["weiger","weigert","weigert","weigeren","weigerde","weigerden","geweigerd"], ex:["Hij weigert het voorstel.","He refuses the proposal."]},
+{en:"to ensure / insure", nl:"verzekeren", group:"hard", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verzeker","verzekert","verzekert","verzekeren","verzekerde","verzekerden","verzekerd"], ex:["Ik verzeker je dat het klopt.","I assure you that it's correct."]},
+{en:"to cause", nl:"veroorzaken", group:"hard", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["veroorzaak","veroorzaakt","veroorzaakt","veroorzaken","veroorzaakte","veroorzaakten","veroorzaakt"], ex:["De storm veroorzaakt schade.","The storm causes damage."]},
+{en:"to influence", nl:"beïnvloeden", group:"hard", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["beïnvloed","beïnvloedt","beïnvloedt","beïnvloeden","beïnvloedde","beïnvloedden","beïnvloed"], ex:["Reclame beïnvloedt ons gedrag.","Advertising influences our behaviour."]},
+{en:"to avoid", nl:"vermijden", group:"hard", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["vermijd","vermijdt","vermijdt","vermijden","vermeed","vermeden","vermeden"], ex:["Ik vermijd druk verkeer.","I avoid heavy traffic."]},
+{en:"to consider", nl:"overwegen", group:"hard", aux:"heeft", note:"extra uitzondering: 'over-' hier ook geen 'ge-'", f:["overweeg","overweegt","overweegt","overwegen","overwoog","overwogen","overwogen"], ex:["Ik overweeg om te verhuizen.","I'm considering moving."]},
+{en:"to decide / conclude", nl:"besluiten", group:"hard", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-), stam eindigt al op -t", f:["besluit","besluit","besluit","besluiten","besloot","besloten","besloten"], ex:["Ze besluit om te blijven.","She decides to stay."]},
+{en:"to convince", nl:"overtuigen", group:"hard", aux:"heeft", note:"extra uitzondering: 'over-' hier ook geen 'ge-'", f:["overtuig","overtuigt","overtuigt","overtuigen","overtuigde","overtuigden","overtuigd"], ex:["Hij overtuigt me altijd.","He always convinces me."]},
+{en:"to treat / handle", nl:"behandelen", group:"hard", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["behandel","behandelt","behandelt","behandelen","behandelde","behandelden","behandeld"], ex:["De dokter behandelt de patiënt.","The doctor treats the patient."]},
+{en:"to manage", nl:"beheren", group:"hard", aux:"heeft", note:"geen 'ge-' (voorvoegsel be-)", f:["beheer","beheert","beheert","beheren","beheerde","beheerden","beheerd"], ex:["Zij beheert het bedrijf.","She manages the company."]},
+{en:"to change", nl:"veranderen", group:"hard", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verander","verandert","verandert","veranderen","veranderde","veranderden","veranderd"], ex:["De wereld verandert snel.","The world is changing fast."]},
+{en:"to improve", nl:"verbeteren", group:"hard", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verbeter","verbetert","verbetert","verbeteren","verbeterde","verbeterden","verbeterd"], ex:["Ze verbetert haar Vlaams.","She's improving her Flemish."]},
+{en:"to reduce", nl:"verminderen", group:"hard", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["verminder","vermindert","vermindert","verminderen","verminderde","verminderden","verminderd"], ex:["We verminderen ons afval.","We're reducing our waste."]},
+{en:"to increase", nl:"vermeerderen", group:"hard", aux:"heeft", note:"geen 'ge-' (voorvoegsel ver-)", f:["vermeerder","vermeerdert","vermeerdert","vermeerderen","vermeerderde","vermeerderden","vermeerderd"], ex:["De prijzen vermeerderen elk jaar.","The prices increase every year."]},
+{en:"to throw", nl:"werpen", group:"hard", aux:"heeft", f:["werp","werpt","werpt","werpen","wierp","wierpen","geworpen"], ex:["Hij werpt de bal ver.","He throws the ball far."]},
+{en:"to design", nl:"ontwerpen", group:"hard", aux:"heeft", note:"geen 'ge-' (voorvoegsel ont-)", f:["ontwerp","ontwerpt","ontwerpt","ontwerpen","ontwierp","ontwierpen","ontworpen"], ex:["Ze ontwerpt een nieuwe website.","She's designing a new website."]},
+{en:"to undertake", nl:"ondernemen", group:"hard", aux:"heeft", note:"extra uitzondering: 'onder-' hier ook geen 'ge-'", f:["onderneem","onderneemt","onderneemt","ondernemen","ondernam","ondernamen","ondernomen"], ex:["Hij onderneemt actie.","He takes action."]},
+{en:"to overcome / defeat", nl:"overwinnen", group:"hard", aux:"heeft", note:"extra uitzondering: 'over-' hier ook geen 'ge-'", f:["overwin","overwint","overwint","overwinnen","overwon","overwonnen","overwonnen"], ex:["Ze overwint haar angst.","She overcomes her fear."]},
+{en:"to accept", nl:"aanvaarden", group:"hard", aux:"heeft", note:"extra uitzondering: 'aan-' hier ook geen 'ge-', stam eindigt al op -d", f:["aanvaard","aanvaardt","aanvaardt","aanvaarden","aanvaardde","aanvaardden","aanvaard"], ex:["Ik aanvaard je excuses.","I accept your apology."]},
+{en:"to reflect / mirror", nl:"weerspiegelen", group:"hard", aux:"heeft", note:"extra uitzondering: 'weer-' hier ook geen 'ge-'", f:["weerspiegel","weerspiegelt","weerspiegelt","weerspiegelen","weerspiegelde","weerspiegelden","weerspiegeld"], ex:["Het meer weerspiegelt de bergen.","The lake reflects the mountains."]},
+];
+
+const DATA_SEPARABLE = [
+{en:"to call (phone)", nl:"opbellen", prefix:"op", stemIk:"bel", part:"opgebeld", aux:"heeft",
+ tpl:"Ik {V} mijn moeder morgen {P}.", tplEN:"I'm calling my mother tomorrow.",
+ sub:"...omdat ik mijn moeder morgen opbel.", subEN:"...because I'm calling my mother tomorrow.",
+ perfTpl:"Ik heb mijn moeder gisteren {PART}.", perfEN:"I called my mother yesterday."},
+{en:"to get up", nl:"opstaan", prefix:"op", stemIk:"sta", part:"opgestaan", aux:"zijn",
+ tpl:"Ik {V} elke dag vroeg {P}.", tplEN:"I get up early every day.",
+ sub:"...omdat ik elke dag vroeg opsta.", subEN:"...because I get up early every day.",
+ perfTpl:"Ik ben vroeg {PART}.", perfEN:"I got up early."},
+{en:"to arrive", nl:"aankomen", prefix:"aan", stemIk:"kom", part:"aangekomen", aux:"zijn",
+ tpl:"Ik {V} morgen {P}.", tplEN:"I arrive tomorrow.",
+ sub:"...omdat ik morgen aankom.", subEN:"...because I arrive tomorrow.",
+ perfTpl:"Ik ben gisteren {PART}.", perfEN:"I arrived yesterday."},
+{en:"to leave / go away", nl:"weggaan", prefix:"weg", stemIk:"ga", part:"weggegaan", aux:"zijn",
+ tpl:"Ik {V} nu {P}.", tplEN:"I'm leaving now.",
+ sub:"...omdat ik nu wegga.", subEN:"...because I'm leaving now.",
+ perfTpl:"Ik ben al {PART}.", perfEN:"I've already left."},
+{en:"to go back", nl:"teruggaan", prefix:"terug", stemIk:"ga", part:"teruggegaan", aux:"zijn",
+ tpl:"Ik {V} morgen {P}.", tplEN:"I'm going back tomorrow.",
+ sub:"...omdat ik morgen terugga.", subEN:"...because I'm going back tomorrow.",
+ perfTpl:"Ik ben net {PART}.", perfEN:"I just went back."},
+{en:"to continue / go ahead", nl:"doorgaan", prefix:"door", stemIk:"ga", part:"doorgegaan", aux:"zijn",
+ tpl:"Ik {V} gewoon {P}.", tplEN:"I'll just continue.",
+ sub:"...omdat ik gewoon doorga.", subEN:"...because I'll just continue.",
+ perfTpl:"Ik ben ermee {PART}.", perfEN:"I continued with it."},
+{en:"to come in", nl:"binnenkomen", prefix:"binnen", stemIk:"kom", part:"binnengekomen", aux:"zijn",
+ tpl:"Ik {V} zonder kloppen {P}.", tplEN:"I come in without knocking.",
+ sub:"...omdat ik zonder kloppen binnenkom.", subEN:"...because I come in without knocking.",
+ perfTpl:"Ik ben zomaar {PART}.", perfEN:"I just walked in."},
+{en:"to come home", nl:"thuiskomen", prefix:"thuis", stemIk:"kom", part:"thuisgekomen", aux:"zijn",
+ tpl:"Ik {V} laat {P}.", tplEN:"I come home late.",
+ sub:"...omdat ik laat thuiskom.", subEN:"...because I come home late.",
+ perfTpl:"Ik ben laat {PART}.", perfEN:"I came home late."},
+{en:"to invite", nl:"uitnodigen", prefix:"uit", stemIk:"nodig", part:"uitgenodigd", aux:"heeft",
+ tpl:"Ik {V} mijn vrienden {P}.", tplEN:"I invite my friends.",
+ sub:"...omdat ik mijn vrienden uitnodig.", subEN:"...because I invite my friends.",
+ perfTpl:"Ik heb mijn vrienden {PART}.", perfEN:"I invited my friends."},
+{en:"to take along", nl:"meenemen", prefix:"mee", stemIk:"neem", part:"meegenomen", aux:"heeft",
+ tpl:"Ik {V} een paraplu {P}.", tplEN:"I'm taking an umbrella along.",
+ sub:"...omdat ik een paraplu meeneem.", subEN:"...because I'm taking an umbrella along.",
+ perfTpl:"Ik heb een paraplu {PART}.", perfEN:"I took an umbrella along."},
+{en:"to throw away", nl:"weggooien", prefix:"weg", stemIk:"gooi", part:"weggegooid", aux:"heeft",
+ tpl:"Ik {V} het oud papier {P}.", tplEN:"I throw away the old paper.",
+ sub:"...omdat ik het oud papier weggooi.", subEN:"...because I throw away the old paper.",
+ perfTpl:"Ik heb het papier {PART}.", perfEN:"I threw away the paper."},
+{en:"to tidy up", nl:"opruimen", prefix:"op", stemIk:"ruim", part:"opgeruimd", aux:"heeft",
+ tpl:"Ik {V} mijn kamer {P}.", tplEN:"I tidy up my room.",
+ sub:"...omdat ik mijn kamer opruim.", subEN:"...because I tidy up my room.",
+ perfTpl:"Ik heb mijn kamer {PART}.", perfEN:"I tidied up my room."},
+{en:"to arrange to meet", nl:"afspreken", prefix:"af", stemIk:"spreek", part:"afgesproken", aux:"heeft",
+ tpl:"Ik {V} met haar {P}.", tplEN:"I'm arranging to meet her.",
+ sub:"...omdat ik met haar afspreek.", subEN:"...because I'm arranging to meet her.",
+ perfTpl:"We hebben {PART}.", perfEN:"We've arranged it. / Deal!"},
+{en:"to explain", nl:"uitleggen", prefix:"uit", stemIk:"leg", part:"uitgelegd", aux:"heeft",
+ tpl:"Ik {V} de regel {P}.", tplEN:"I explain the rule.",
+ sub:"...omdat ik de regel uitleg.", subEN:"...because I explain the rule.",
+ perfTpl:"Ik heb de regel {PART}.", perfEN:"I explained the rule."},
+{en:"to propose / introduce", nl:"voorstellen", prefix:"voor", stemIk:"stel", part:"voorgesteld", aux:"heeft",
+ tpl:"Ik {V} mijn vriendin {P}.", tplEN:"I'm introducing my girlfriend.",
+ sub:"...omdat ik mijn vriendin voorstel.", subEN:"...because I'm introducing my girlfriend.",
+ perfTpl:"Ik heb haar {PART}.", perfEN:"I introduced her."},
+{en:"to put on (clothes)", nl:"aantrekken", prefix:"aan", stemIk:"trek", part:"aangetrokken", aux:"heeft",
+ tpl:"Ik {V} mijn jas {P}.", tplEN:"I put on my coat.",
+ sub:"...omdat ik mijn jas aantrek.", subEN:"...because I put on my coat.",
+ perfTpl:"Ik heb mijn jas {PART}.", perfEN:"I put on my coat."},
+{en:"to take off / switch off", nl:"uitdoen", prefix:"uit", stemIk:"doe", part:"uitgedaan", aux:"heeft",
+ tpl:"Ik {V} het licht {P}.", tplEN:"I turn off the light.",
+ sub:"...omdat ik het licht uitdoe.", subEN:"...because I turn off the light.",
+ perfTpl:"Ik heb het licht {PART}.", perfEN:"I turned off the light."},
+{en:"to put on / switch on", nl:"aandoen", prefix:"aan", stemIk:"doe", part:"aangedaan", aux:"heeft",
+ tpl:"Ik {V} het licht {P}.", tplEN:"I turn on the light.",
+ sub:"...omdat ik het licht aandoe.", subEN:"...because I turn on the light.",
+ perfTpl:"Ik heb het licht {PART}.", perfEN:"I turned on the light."},
+{en:"to look up", nl:"opzoeken", prefix:"op", stemIk:"zoek", part:"opgezocht", aux:"heeft",
+ tpl:"Ik {V} het woord {P}.", tplEN:"I look up the word.",
+ sub:"...omdat ik het woord opzoek.", subEN:"...because I look up the word.",
+ perfTpl:"Ik heb het woord {PART}.", perfEN:"I looked up the word."},
+{en:"to prepare", nl:"voorbereiden", prefix:"voor", stemIk:"bereid", part:"voorbereid", aux:"heeft", note:"dubbele uitzondering: 'bereiden' begint al met be-, dus ook hier geen 'ge-'",
+ tpl:"Ik {V} het examen {P}.", tplEN:"I prepare for the exam.",
+ sub:"...omdat ik het examen voorbereid.", subEN:"...because I prepare for the exam.",
+ perfTpl:"Ik heb het examen {PART}.", perfEN:"I prepared for the exam."},
+{en:"to pick out / figure out", nl:"uitzoeken", prefix:"uit", stemIk:"zoek", part:"uitgezocht", aux:"heeft",
+ tpl:"Ik {V} een cadeau {P}.", tplEN:"I pick out a gift.",
+ sub:"...omdat ik een cadeau uitzoek.", subEN:"...because I pick out a gift.",
+ perfTpl:"Ik heb een cadeau {PART}.", perfEN:"I picked out a gift."},
+{en:"to pack", nl:"inpakken", prefix:"in", stemIk:"pak", part:"ingepakt", aux:"heeft",
+ tpl:"Ik {V} mijn koffer {P}.", tplEN:"I pack my suitcase.",
+ sub:"...omdat ik mijn koffer inpak.", subEN:"...because I pack my suitcase.",
+ perfTpl:"Ik heb mijn koffer {PART}.", perfEN:"I packed my suitcase."},
+{en:"to unpack", nl:"uitpakken", prefix:"uit", stemIk:"pak", part:"uitgepakt", aux:"heeft",
+ tpl:"Ik {V} mijn koffer {P}.", tplEN:"I unpack my suitcase.",
+ sub:"...omdat ik mijn koffer uitpak.", subEN:"...because I unpack my suitcase.",
+ perfTpl:"Ik heb mijn koffer {PART}.", perfEN:"I unpacked my suitcase."},
+{en:"to open (a door)", nl:"opendoen", prefix:"open", stemIk:"doe", part:"opengedaan", aux:"heeft",
+ tpl:"Ik {V} de deur {P}.", tplEN:"I open the door.",
+ sub:"...omdat ik de deur opendoe.", subEN:"...because I open the door.",
+ perfTpl:"Ik heb de deur {PART}.", perfEN:"I opened the door."},
+{en:"to close (a door)", nl:"dichtdoen", prefix:"dicht", stemIk:"doe", part:"dichtgedaan", aux:"heeft",
+ tpl:"Ik {V} de deur {P}.", tplEN:"I close the door.",
+ sub:"...omdat ik de deur dichtdoe.", subEN:"...because I close the door.",
+ perfTpl:"Ik heb de deur {PART}.", perfEN:"I closed the door."},
+{en:"to wash the dishes", nl:"afwassen", prefix:"af", stemIk:"was", part:"afgewassen", aux:"heeft", note:"'wassen' heeft een sterk deelwoord: gewassen → afgewassen",
+ tpl:"Ik {V} de vaat {P}.", tplEN:"I wash the dishes.",
+ sub:"...omdat ik de vaat afwas.", subEN:"...because I wash the dishes.",
+ perfTpl:"Ik heb de vaat {PART}.", perfEN:"I washed the dishes."},
+{en:"to rest / relax", nl:"uitrusten", prefix:"uit", stemIk:"rust", part:"uitgerust", aux:"heeft", note:"stam eindigt al op -t → 'rust' blijft 'rust'",
+ tpl:"Ik {V} in het weekend {P}.", tplEN:"I rest at the weekend.",
+ sub:"...omdat ik in het weekend uitrust.", subEN:"...because I rest at the weekend.",
+ perfTpl:"Ik ben goed {PART}.", perfEN:"I'm well-rested."},
+{en:"to read aloud", nl:"voorlezen", prefix:"voor", stemIk:"lees", part:"voorgelezen", aux:"heeft",
+ tpl:"Ik {V} een verhaal {P}.", tplEN:"I read a story aloud.",
+ sub:"...omdat ik een verhaal voorlees.", subEN:"...because I read a story aloud.",
+ perfTpl:"Ik heb een verhaal {PART}.", perfEN:"I read a story aloud."},
+{en:"to join in", nl:"meedoen", prefix:"mee", stemIk:"doe", part:"meegedaan", aux:"heeft",
+ tpl:"Ik {V} graag {P}.", tplEN:"I like to join in.",
+ sub:"...omdat ik graag meedoe.", subEN:"...because I like to join in.",
+ perfTpl:"Ik heb graag {PART}.", perfEN:"I gladly joined in."},
+{en:"to run into / encounter", nl:"tegenkomen", prefix:"tegen", stemIk:"kom", part:"tegengekomen", aux:"zijn",
+ tpl:"Ik {V} een oude vriend {P}.", tplEN:"I run into an old friend.",
+ sub:"...omdat ik een oude vriend tegenkom.", subEN:"...because I run into an old friend.",
+ perfTpl:"Ik ben een oude vriend {PART}.", perfEN:"I ran into an old friend."},
+];
+
+
+/* ===================================================================
+   EXTRA MODULES  (data)  — voegt 4 grote modules toe
+   =================================================================== */
+
+/* ---------- MODULE 5 : Woordenschat XL  (type "match") ---------- */
+const DATA_WOORDXL = [
+{topic:"Werkwoorden – ochtendroutine", level:"middel", words:[
+ ["to wake up","wakker worden"],["to get up","opstaan"],["to shower","douchen"],["to get dressed","aankleden"],
+ ["to brush teeth","tanden poetsen"],["to have breakfast","ontbijten"],["to leave (home)","vertrekken"],
+ ["to hurry","zich haasten"],["to rest","uitrusten"],["to fall asleep","in slaap vallen"]]},
+{topic:"Werkwoorden – communicatie", level:"middel", words:[
+ ["to say","zeggen"],["to tell","vertellen"],["to ask","vragen"],["to answer","antwoorden"],["to explain","uitleggen"],
+ ["to repeat","herhalen"],["to understand","begrijpen"],["to mean","bedoelen"],["to agree","akkoord gaan"],["to disagree","het oneens zijn"]]},
+{topic:"Werkwoorden – beweging", level:"middel", words:[
+ ["to walk","stappen"],["to run","lopen"],["to jump","springen"],["to climb","klimmen"],["to fall","vallen"],
+ ["to turn","draaien"],["to push","duwen"],["to pull","trekken"],["to carry","dragen"],["to throw","gooien"]]},
+{topic:"Werkwoorden – denken & voelen", level:"moeilijk", words:[
+ ["to think","denken"],["to believe","geloven"],["to doubt","twijfelen"],["to decide","beslissen"],["to hope","hopen"],
+ ["to expect","verwachten"],["to remember","zich herinneren"],["to forget","vergeten"],["to notice","merken"],["to realise","beseffen"]]},
+{topic:"Karakter", level:"middel", words:[
+ ["kind","vriendelijk"],["honest","eerlijk"],["brave","moedig"],["lazy","lui"],["hard-working","ijverig"],
+ ["polite","beleefd"],["rude","onbeleefd"],["generous","gul"],["stingy","gierig"],["patient","geduldig"]]},
+{topic:"Dingen beschrijven", level:"middel", words:[
+ ["heavy","zwaar"],["light (weight)","licht"],["hard","hard"],["soft","zacht"],["sharp","scherp"],
+ ["blunt","bot"],["smooth","glad"],["rough","ruw"],["tight","strak"],["loose","los"]]},
+{topic:"Meningen geven", level:"moeilijk", words:[
+ ["great","geweldig"],["boring","saai"],["strange","vreemd"],["useful","nuttig"],["useless","nutteloos"],
+ ["dangerous","gevaarlijk"],["safe","veilig"],["cheap","goedkoop"],["expensive","duur"],["worth it","de moeite waard"]]},
+{topic:"In de supermarkt", level:"middel", words:[
+ ["shopping list","boodschappenlijst"],["trolley","winkelkarretje"],["aisle","gang"],["shelf","rek"],["checkout","kassa"],
+ ["receipt","kassabon"],["change (money)","wisselgeld"],["special offer","aanbieding"],["best-before date","houdbaarheidsdatum"],["reusable bag","herbruikbare zak"]]},
+{topic:"Bij de dokter", level:"moeilijk", words:[
+ ["appointment","afspraak"],["complaint (symptom)","klacht"],["fever","koorts"],["cough","hoest"],["sore throat","keelpijn"],
+ ["headache","hoofdpijn"],["prescription","voorschrift"],["pharmacy","apotheek"],["painkiller","pijnstiller"],["sick note","ziektebriefje"]]},
+{topic:"Op restaurant", level:"middel", words:[
+ ["to reserve","reserveren"],["table for two","tafel voor twee"],["menu (card)","menukaart"],["starter","voorgerecht"],["main course","hoofdgerecht"],
+ ["dessert","nagerecht"],["the bill","de rekening"],["tip","fooi"],["still water","plat water"],["sparkling water","bruiswater"]]},
+{topic:"Telefoneren & mailen", level:"moeilijk", words:[
+ ["to call","bellen"],["to hang up","ophangen"],["voicemail","voicemail"],["to text","sms'en"],["attachment","bijlage"],
+ ["subject (email)","onderwerp"],["to reply","beantwoorden"],["to forward","doorsturen"],["engaged (line)","bezet"],["wrong number","verkeerd nummer"]]},
+{topic:"Het weer", level:"middel", words:[
+ ["sunny","zonnig"],["cloudy","bewolkt"],["rainy","regenachtig"],["foggy","mistig"],["windy","winderig"],
+ ["freezing","vriezend"],["mild","zacht"],["humid","vochtig"],["heatwave","hittegolf"],["shower (rain)","bui"]]},
+{topic:"Wonen & huren", level:"moeilijk", words:[
+ ["landlord","huisbaas"],["tenant","huurder"],["rent","huur"],["deposit","waarborg"],["lease","huurcontract"],
+ ["ground floor","gelijkvloers"],["attic","zolder"],["basement","kelder"],["next-door neighbour","buur"],["house move","verhuis"]]},
+{topic:"Op kantoor", level:"moeilijk", words:[
+ ["meeting","vergadering"],["deadline","deadline"],["colleague","collega"],["manager","leidinggevende"],["salary","loon"],
+ ["leave (holiday)","verlof"],["overtime","overuren"],["working from home","telewerk"],["coffee break","koffiepauze"],["staff member","medewerker"]]},
+{topic:"Geld & bank", level:"moeilijk", words:[
+ ["account","rekening"],["savings","spaargeld"],["debit card","bankkaart"],["to transfer","overschrijven"],["invoice","factuur"],
+ ["cash","contant geld"],["loan","lening"],["interest","intrest"],["to withdraw","afhalen"],["balance","saldo"]]},
+{topic:"Reizen & station", level:"middel", words:[
+ ["ticket","ticket"],["platform","perron"],["delay","vertraging"],["connection","aansluiting"],["luggage","bagage"],
+ ["backpack","rugzak"],["passport","paspoort"],["boarding pass","instapkaart"],["gate","gate"],["customs","douane"]]},
+{topic:"Emoties", level:"middel", words:[
+ ["happy","blij"],["sad","verdrietig"],["angry","boos"],["scared","bang"],["surprised","verrast"],
+ ["proud","trots"],["jealous","jaloers"],["nervous","nerveus"],["relieved","opgelucht"],["disappointed","teleurgesteld"]]},
+{topic:"Tijd & frequentie", level:"middel", words:[
+ ["now","nu"],["later","later"],["soon","binnenkort"],["immediately","onmiddellijk"],["on time","op tijd"],
+ ["early","vroeg"],["late","laat"],["always","altijd"],["never","nooit"],["sometimes","soms"]]},
+{topic:"Typisch Vlaams", level:"moeilijk", words:[
+ ["nice / cool","tof"],["annoying","ambetant"],["in a moment","seffens"],["to feel like (doing)","goesting hebben"],["cosy","gezellig"],
+ ["a lot of","een hoop"],["mobile phone","gsm"],["fridge","frigo"],["cookie / biscuit","koekje"],["chips / fries","frieten"]]},
+{topic:"Verkeer & op de weg", level:"moeilijk", words:[
+ ["traffic jam","file"],["roundabout","rotonde"],["crossroads","kruispunt"],["traffic light","verkeerslicht"],["pedestrian","voetganger"],
+ ["cyclist","fietser"],["speed limit","snelheidsbeperking"],["fine","boete"],["diversion","omleiding"],["parking space","parkeerplaats"]]},
+{topic:"Koken", level:"middel", words:[
+ ["to cut","snijden"],["to peel","schillen"],["to stir","roeren"],["to fry","bakken"],["to boil","koken"],
+ ["to roast","roosteren"],["to taste","proeven"],["to add","toevoegen"],["recipe","recept"],["ingredient","ingrediënt"]]},
+{topic:"Natuur & milieu", level:"moeilijk", words:[
+ ["environment","milieu"],["climate","klimaat"],["waste","afval"],["to recycle","recycleren"],["pollution","vervuiling"],
+ ["renewable","hernieuwbaar"],["solar panel","zonnepaneel"],["litter","zwerfvuil"],["sustainable","duurzaam"],["species","soort"]]}
+];
+
+/* ---------- MODULE 6 : Zinnen bouwen  (type "order") ----------
+   nl mag een string zijn OF een lijst van aanvaarde zinnen. */
+const DATA_ZINNEN = [
+// 1 · gewone zin — werkwoord op de tweede plaats
+{group:"1 · Gewone zin — werkwoord op plaats 2", en:"I drink coffee every morning.", nl:"Ik drink elke ochtend koffie."},
+{group:"1 · Gewone zin — werkwoord op plaats 2", en:"She lives in Ghent.", nl:"Zij woont in Gent."},
+{group:"1 · Gewone zin — werkwoord op plaats 2", en:"We are going to the cinema tonight.", nl:"Wij gaan vanavond naar de cinema."},
+{group:"1 · Gewone zin — werkwoord op plaats 2", en:"He works at a big company.", nl:"Hij werkt bij een groot bedrijf."},
+{group:"1 · Gewone zin — werkwoord op plaats 2", en:"The children are playing in the garden.", nl:"De kinderen spelen in de tuin."},
+{group:"1 · Gewone zin — werkwoord op plaats 2", en:"I would like a glass of water.", nl:"Ik wil graag een glas water."},
+{group:"1 · Gewone zin — werkwoord op plaats 2", en:"My sister has two cats.", nl:"Mijn zus heeft twee katten."},
+{group:"1 · Gewone zin — werkwoord op plaats 2", en:"They are watching a film.", nl:"Zij kijken naar een film."},
+// 2 · inversie
+{group:"2 · Inversie — zin begint niet met het onderwerp", en:"Tomorrow I'm going to work.", nl:"Morgen ga ik werken."},
+{group:"2 · Inversie — zin begint niet met het onderwerp", en:"Today it is very cold.", nl:"Vandaag is het heel koud."},
+{group:"2 · Inversie — zin begint niet met het onderwerp", en:"In the summer we often go to the sea.", nl:"In de zomer gaan we vaak naar zee."},
+{group:"2 · Inversie — zin begint niet met het onderwerp", en:"Unfortunately I can't come.", nl:"Jammer genoeg kan ik niet komen."},
+{group:"2 · Inversie — zin begint niet met het onderwerp", en:"After dinner we watch television.", nl:"Na het eten kijken we televisie."},
+{group:"2 · Inversie — zin begint niet met het onderwerp", en:"Every day she cycles to school.", nl:"Elke dag fietst zij naar school."},
+{group:"2 · Inversie — zin begint niet met het onderwerp", en:"This evening my parents are coming over.", nl:"Vanavond komen mijn ouders langs."},
+// 3 · vraag
+{group:"3 · Vraag", en:"Do you speak Dutch?", nl:"Spreek jij Nederlands?"},
+{group:"3 · Vraag", en:"Where do you live?", nl:"Waar woon je?"},
+{group:"3 · Vraag", en:"When does the train leave?", nl:"Wanneer vertrekt de trein?"},
+{group:"3 · Vraag", en:"Why are you laughing?", nl:"Waarom lach je?"},
+{group:"3 · Vraag", en:"Can you help me?", nl:"Kan jij mij helpen?"},
+{group:"3 · Vraag", en:"How much does this cost?", nl:"Hoeveel kost dit?"},
+{group:"3 · Vraag", en:"Are they coming tonight?", nl:"Komen zij vanavond?"},
+{group:"3 · Vraag", en:"What are you doing this weekend?", nl:"Wat doe jij dit weekend?"},
+// 4 · voltooid verleden tijd
+{group:"4 · Voltooid verleden tijd (perfect)", en:"I have eaten too much.", nl:"Ik heb te veel gegeten."},
+{group:"4 · Voltooid verleden tijd (perfect)", en:"She has bought a new car.", nl:"Zij heeft een nieuwe auto gekocht."},
+{group:"4 · Voltooid verleden tijd (perfect)", en:"We went to Spain last year.", nl:"Wij zijn vorig jaar naar Spanje gegaan."},
+{group:"4 · Voltooid verleden tijd (perfect)", en:"Have you seen my keys?", nl:"Heb jij mijn sleutels gezien?"},
+{group:"4 · Voltooid verleden tijd (perfect)", en:"He has forgotten his umbrella.", nl:"Hij heeft zijn paraplu vergeten."},
+{group:"4 · Voltooid verleden tijd (perfect)", en:"This morning I got up early.", nl:"Vanmorgen ben ik vroeg opgestaan."},
+{group:"4 · Voltooid verleden tijd (perfect)", en:"I have already called her.", nl:"Ik heb haar al gebeld."},
+// 5 · bijzin
+{group:"5 · Bijzin (omdat / dat / als …)", en:"I'm staying home because I am sick.", nl:"Ik blijf thuis omdat ik ziek ben."},
+{group:"5 · Bijzin (omdat / dat / als …)", en:"She says that she has no time.", nl:"Zij zegt dat ze geen tijd heeft."},
+{group:"5 · Bijzin (omdat / dat / als …)", en:"I don't know where he lives.", nl:"Ik weet niet waar hij woont."},
+{group:"5 · Bijzin (omdat / dat / als …)", en:"We're happy that you are coming.", nl:"Wij zijn blij dat je komt."},
+{group:"5 · Bijzin (omdat / dat / als …)", en:"He is late because he missed the bus.", nl:"Hij is te laat omdat hij de bus gemist heeft."},
+{group:"5 · Bijzin (omdat / dat / als …)", en:"I will call you when I arrive.", nl:"Ik bel je als ik aankom."},
+// 6 · scheidbare werkwoorden in de zin
+{group:"6 · Scheidbare werkwoorden in de zin", en:"I call my mother every day.", nl:"Ik bel mijn moeder elke dag op."},
+{group:"6 · Scheidbare werkwoorden in de zin", en:"She gets up at seven o'clock.", nl:"Zij staat om zeven uur op."},
+{group:"6 · Scheidbare werkwoorden in de zin", en:"We are inviting the neighbours.", nl:"Wij nodigen de buren uit."},
+{group:"6 · Scheidbare werkwoorden in de zin", en:"Turn off the light please.", nl:"Doe het licht uit alsjeblieft."},
+{group:"6 · Scheidbare werkwoorden in de zin", en:"The train arrives soon.", nl:"De trein komt zo aan."},
+{group:"6 · Scheidbare werkwoorden in de zin", en:"I am throwing away the old newspapers.", nl:"Ik gooi de oude kranten weg."}
+];
+
+/* ---------- MODULE 7 : Vaste voorzetsels  (type "choice") ---------- */
+function _P(zin, goed, fout){ return {q:zin, options:[goed].concat(fout), answer:goed, note:zin.replace("___", goed)}; }
+const DATA_VOORZETSELS = [
+_P("Ik wacht ___ de bus.","op",["aan","voor","naar"]),
+_P("Ik denk vaak ___ jou.","aan",["op","over","van"]),
+_P("Ik hou ___ chocolade.","van",["aan","over","met"]),
+_P("Zij luistert ___ muziek.","naar",["op","aan","van"]),
+_P("We kijken ___ een film.","naar",["op","aan","voor"]),
+_P("Hij vraagt ___ de weg.","naar",["om","aan","voor"]),
+_P("Ik zoek ___ een oplossing.","naar",["voor","op","aan"]),
+_P("We praten ___ het weer.","over",["van","op","met"]),
+_P("Ik wil ___ de manager spreken.","met",["aan","tegen","bij"]),
+_P("Ze is bang ___ spinnen.","voor",["van","op","aan"]),
+_P("Hij is trots ___ zijn dochter.","op",["van","over","met"]),
+_P("Ik ben tevreden ___ het resultaat.","over",["van","met","op"]),
+_P("Ze is boos ___ mij.","op",["tegen","aan","met"]),
+_P("Hij is verliefd ___ zijn buurvrouw.","op",["van","met","aan"]),
+_P("Ik ben geïnteresseerd ___ geschiedenis.","in",["voor","aan","op"]),
+_P("Zij is goed ___ wiskunde.","in",["op","met","voor"]),
+_P("Het team bestaat ___ vijf mensen.","uit",["van","met","in"]),
+_P("Hij lijdt ___ diabetes.","aan",["van","met","op"]),
+_P("We nemen deel ___ de wedstrijd.","aan",["op","in","met"]),
+_P("Ik begin ___ mijn huiswerk.","aan",["met","op","in"]),
+_P("Hij is gestopt ___ roken.","met",["van","op","aan"]),
+_P("Ik twijfel ___ zijn verhaal.","aan",["over","van","op"]),
+_P("We genieten ___ de zon.","van",["op","aan","met"]),
+_P("Ze lacht ___ mijn grap.","om",["op","met","aan"]),
+_P("We hopen ___ mooi weer.","op",["voor","aan","naar"]),
+_P("Je kan ___ mij rekenen.","op",["aan","met","voor"]),
+_P("Let ___ je woorden!","op",["aan","voor","naar"]),
+_P("Hij reageert niet ___ mijn bericht.","op",["aan","naar","met"]),
+_P("Ik bedank je ___ je hulp.","voor",["om","van","met"]),
+_P("Zij zorgt ___ de kinderen.","voor",["om","van","over"]),
+_P("Ik kies ___ de veilige optie.","voor",["om","van","op"]),
+_P("Ik vertrouw ___ mijn gevoel.","op",["aan","in","met"]),
+_P("Ze gelooft ___ zichzelf.","in",["op","aan","van"]),
+_P("Hij is geslaagd ___ zijn examen.","voor",["op","in","aan"]),
+_P("Ze is gezakt ___ haar rijexamen.","voor",["op","in","door"]),
+_P("Dat hangt ___ het weer af.","van",["op","aan","met"]),
+_P("Deze sok hoort ___ die andere.","bij",["aan","met","op"]),
+_P("Die das past niet ___ je hemd.","bij",["met","aan","op"]),
+_P("Je lijkt ___ je moeder.","op",["naar","aan","met"]),
+_P("Het ruikt hier ___ verf.","naar",["van","als","op"]),
+_P("Ik verlang ___ de vakantie.","naar",["aan","op","voor"]),
+_P("Je moet ___ het klimaat wennen.","aan",["op","met","voor"]),
+_P("Ik erger me ___ dat geluid.","aan",["op","van","over"]),
+_P("Concentreer je ___ je werk.","op",["aan","in","met"]),
+_P("We bereiden ons voor ___ het gesprek.","op",["aan","voor","tot"]),
+_P("Bemoei je niet ___ mijn zaken.","met",["in","aan","over"]),
+_P("Ik schrok ___ het lawaai.","van",["voor","op","door"]),
+_P("Ze profiteert ___ de korting.","van",["op","met","door"]),
+_P("Hij verwijst ___ de handleiding.","naar",["op","aan","tot"]),
+_P("Deze jas beschermt ___ de regen.","tegen",["voor","van","bij"]),
+_P("Ze protesteren ___ de nieuwe wet.","tegen",["voor","over","van"]),
+_P("Hij maakt altijd ruzie ___ zijn broer.","met",["tegen","aan","over"]),
+_P("Ik feliciteer je ___ je verjaardag.","met",["voor","om","op"]),
+_P("We zijn ___ de trein gestapt.","op",["in","aan","bij"]),
+_P("Zij is ___ de auto gestapt.","in",["op","aan","bij"])
+];
+
+/* ---------- MODULE 8 : Uitdrukkingen & spreektaal  (type "choice") ---------- */
+function _U(uitdr, goed, fout){ return {q:"Wat betekent: “"+uitdr+"”?", options:[goed].concat(fout), answer:goed}; }
+const DATA_UITDRUKKINGEN = [
+_U("iets onder de knie hebben","iets goed kunnen / geleerd hebben",["iets vergeten zijn","ergens geen zin in hebben","iets kapotmaken"]),
+_U("de kat uit de boom kijken","eerst afwachten voor je iets doet",["heel nieuwsgierig zijn","snel beslissen","iemand negeren"]),
+_U("geen blad voor de mond nemen","recht voor de raap zeggen wat je denkt",["heel stil zijn","altijd liegen","beleefd blijven"]),
+_U("iemand in de bloemetjes zetten","iemand vieren en eren",["iemand pesten","iemand negeren","iemand betalen"]),
+_U("een kat in een zak kopen","iets kopen dat tegenvalt",["een koopje doen","een dier adopteren","iets tweedehands kopen"]),
+_U("het regent pijpenstelen","het regent heel hard",["het motregent","het onweert","het hagelt"]),
+_U("iets voor een appel en een ei kopen","iets heel goedkoop kopen",["iets ruilen","iets op afbetaling kopen","iets duur betalen"]),
+_U("met de deur in huis vallen","meteen ter zake komen",["onbeleefd binnenkomen","je huissleutel vergeten","hard vallen"]),
+_U("de puntjes op de i zetten","de laatste details afwerken",["een fout maken","opnieuw beginnen","alles uitvegen"]),
+_U("iemand om de tuin leiden","iemand misleiden / bedriegen",["iemand rondleiden","iemand helpen","iemand volgen"]),
+_U("boter bij de vis","meteen (contant) betalen, geen uitstel",["een lekker etentje","een goede deal","samen koken"]),
+_U("nu komt de aap uit de mouw","nu wordt de echte bedoeling duidelijk",["nu wordt het grappig","nu is het te laat","nu begint het pas"]),
+_U("ergens geen kaas van gegeten hebben","er niets van kennen",["er honger van krijgen","er expert in zijn","er genoeg van hebben"]),
+_U("een hart onder de riem steken","iemand moed inspreken",["iemand pijn doen","iemand omhelzen","iemand uitlachen"]),
+_U("het hoofd koel houden","kalm en rustig blijven",["ziek worden","boos worden","naar buiten gaan"]),
+_U("van een mug een olifant maken","iets kleins enorm overdrijven",["iets groots negeren","goed opletten","een dier tekenen"]),
+_U("de handdoek in de ring gooien","opgeven",["gaan sporten","winnen","je klaarmaken"]),
+_U("iets op de lange baan schuiven","iets steeds uitstellen",["iets snel doen","iets weggooien","iets herhalen"]),
+_U("goesting hebben","zin hebben (in iets)",["honger hebben","moe zijn","gelijk hebben"]),
+_U("iets niet zien zitten","er geen vertrouwen in hebben",["het niet vinden","gaan zitten","het niet begrijpen"]),
+_U("content zijn","tevreden / blij zijn",["klaar zijn","aanwezig zijn","akkoord gaan"]),
+_U("het is ambetant","het is vervelend / lastig",["het is grappig","het is duur","het is ver"]),
+_U("seffens","straks / dadelijk",["gisteren","nooit","nu meteen"]),
+_U("een pintje pakken","een biertje gaan drinken",["iemand vastpakken","stelen","snel vertrekken"]),
+_U("kuisen","schoonmaken / poetsen",["kussen","kiezen","koken"]),
+_U("iets rechttrekken","iets rechtzetten / in orde brengen",["iets scheeftrekken","iets uittekenen","iets afbreken"]),
+_U("het niet breed hebben","weinig geld hebben",["dik zijn","het druk hebben","veel ruimte hebben"]),
+_U("zijn kat sturen","niet komen opdagen",["een boodschap sturen","een huisdier kopen","iemand wegsturen"]),
+_U("met lange tanden eten","zonder veel zin eten",["heel snel eten","veel eten","netjes eten"]),
+_U("een blok aan het been","een blijvende last of hindernis",["een sterke steun","een goed idee","een zware schoen"]),
+_U("over koetjes en kalfjes praten","over onbelangrijke dingen babbelen",["over het werk praten","ruzie maken","over dieren praten"]),
+_U("de daad bij het woord voegen","meteen doen wat je zegt",["veel beloven","stil blijven","het woord nemen"]),
+_U("iets uit je duim zuigen","iets verzinnen",["iets goed onthouden","nadenken","zenuwachtig zijn"]),
+_U("geen vuiltje aan de lucht","geen enkel probleem",["slecht weer","veel stof","een klein probleem"]),
+_U("de bloemetjes buiten zetten","uitbundig feesten",["de tuin doen","vroeg slapen","opruimen"]),
+_U("in de puree zitten","in de problemen zitten",["honger hebben","aan het koken zijn","lui zijn"]),
+_U("iemand de loef afsteken","iemand overtreffen / verslaan",["iemand helpen","iemand nadoen","iemand groeten"]),
+_U("de knoop doorhakken","eindelijk een beslissing nemen",["iets kapotknippen","twijfelen","een touw maken"]),
+_U("het over een andere boeg gooien","het op een andere manier proberen",["stoppen","harder werken","opnieuw beginnen"]),
+_U("aan de bak komen","aan het werk of aan de beurt komen",["honger krijgen","te laat zijn","gaan zwemmen"]),
+_U("dat kan niet door de beugel","dat is onaanvaardbaar",["dat past niet","dat is te duur","dat is verboden te zeggen"]),
+_U("de kop in het zand steken","de problemen niet onder ogen willen zien",["gaan slapen","hard werken","je verstoppen voor de zon"]),
+_U("het bijltje erbij neerleggen","ermee stoppen / opgeven",["gaan hakken","hard doorgaan","een pauze nemen"]),
+_U("iemand blij maken met een dode mus","iemand iets waardeloos beloven",["iemand een cadeau geven","iemand troosten","iemand verrassen"])
+];
+
+
+/* =================== MODULES =================== */
+const MODULES = [
+  {
+    id: "dehet",
+    title: "DE of HET?",
+    emoji: "🔑",
+    subtitle: "Kies het juiste lidwoord",
+    type: "dehet",
+    data: DATA_DEHET,
+    intro: "Klik voor elk woord op <b>DE</b> of <b>HET</b>. Juist wordt groen en blijft staan. " +
+           "Fout knippert even rood — probeer opnieuw.<br><span style=\"color:var(--text-dim)\">" +
+           "For every word, tap <b>DE</b> or <b>HET</b>. Correct turns green and locks in.</span>",
+    rules: [
+      { h: "5 handige regels / 5 helpful rules",
+        en: "1. Most nouns are <b>de</b>-words — many everyday <b>het</b>-words (huis, boek, kind…) must simply be memorised.<br>" +
+            "2. Diminutives ending in <b>-je / -tje / -pje</b> are always <b>het</b>.<br>" +
+            "3. Languages, metals and compass directions are always <b>het</b>.<br>" +
+            "4. A verb used as a noun (infinitive) is always <b>het</b> (het eten, het leven).<br>" +
+            "5. Words ending in <b>-heid, -ing, -tie/-sie, -ie, -teit</b> are (almost) always <b>de</b>.",
+        nl: "1. De meeste zelfstandige naamwoorden zijn <b>de</b>-woorden — veel dagelijkse <b>het</b>-woorden moet je gewoon van buiten leren.<br>" +
+            "2. Verkleinwoorden op <b>-je / -tje / -pje</b> zijn altijd <b>het</b>.<br>" +
+            "3. Talen, metalen en windrichtingen zijn altijd <b>het</b>.<br>" +
+            "4. Een werkwoord dat als zelfstandig naamwoord gebruikt wordt, is altijd <b>het</b>.<br>" +
+            "5. Woorden op <b>-heid, -ing, -tie/-sie, -ie, -teit</b> zijn (bijna) altijd <b>de</b>." }
+    ]
+  },
+  {
+    id: "woordenschat",
+    title: "Woordenschat",
+    emoji: "🧩",
+    subtitle: "Sleep het juiste Vlaamse woord",
+    type: "match",
+    data: DATA_MATCH,
+    intro: "Sleep (of tik) het juiste Vlaamse woord naar het vakje naast de Engelse vertaling. " +
+           "Juist = groen. Fout = rood en het woord springt terug.<br><span style=\"color:var(--text-dim)\">" +
+           "Drag or tap the correct Flemish word onto the box next to its English translation.</span>"
+  },
+  {
+    id: "werkwoorden",
+    title: "Werkwoorden vervoegen",
+    emoji: "🔀",
+    subtitle: "Alle vervoegingen oefenen",
+    type: "conjug",
+    data: DATA_CONJUG,
+    intro: "Kies voor elk werkwoord de juiste vorm in elke lijst. Groen = juist (en vergrendeld), rood = fout.<br>" +
+           "<span style=\"color:var(--text-dim)\">Pick the correct form from each dropdown. Green locks in, red = try again.</span>",
+    rules: [
+      { h: "Regel 1 — 't kofschip (verleden tijd & deelwoord)",
+        en: "Look at the last letter of the stem (infinitive minus <i>-en</i>). If it is one of <b>t, k, f, s, ch, p</b> " +
+            "(<i>'t kofschip</i> / \"soft ketchup\") → <b>-te/-ten</b> and <b>ge-…-t</b>. Otherwise <b>-de/-den</b> and <b>ge-…-d</b>.",
+        nl: "Kijk naar de laatste letter van de stam. Is dat een van <b>t, k, f, s, ch, p</b> ('t kofschip) → <b>-te/-ten</b> en <b>ge-…-t</b>. Anders <b>-de/-den</b> en <b>ge-…-d</b>.",
+        note: "Uitzondering: een <b>v</b> of <b>z</b> die in de stam <b>f/s</b> wordt (leven→leef, reizen→reis) telt toch als 'zacht' → -de/-d." },
+      { h: "Regel 2 — de 'DT'-regel (tegenwoordige tijd)",
+        en: "<b>Ik</b> = bare stem. <b>Jij/je</b>, <b>hij/zij/het</b>, polite <b>u</b> = stem <b>+ t</b>. <b>Wij / jullie / zij</b> = full infinitive. When <b>jij</b> comes after the verb (a question), drop the t.",
+        nl: "<b>Ik</b> = kale stam. <b>Jij/je</b>, <b>hij/zij/het</b>, beleefd <b>u</b> = stam <b>+ t</b>. <b>Wij / jullie / zij</b> = volledige infinitief. Komt <b>jij</b> na het werkwoord (vraag), dan valt de t weg." },
+      { h: "Regel 3 — geen extra 'ge-'",
+        en: "Verbs starting with <b>be-, ge-, ver-, ont-, her-, er-</b> never get an extra 'ge-' in the participle: <i>betalen → betaald</i>.",
+        nl: "Werkwoorden met <b>be-, ge-, ver-, ont-, her-, er-</b> krijgen nooit een extra 'ge-' in het voltooid deelwoord: <i>betalen → betaald</i>." }
+    ]
+  },
+  {
+    id: "scheidbaar",
+    title: "Scheidbare werkwoorden",
+    emoji: "✂️",
+    subtitle: "opbellen, aankomen, uitnodigen…",
+    type: "separable",
+    data: DATA_SEPARABLE,
+    intro: "Vul de lijstjes in de hoofdzin in (het werkwoordsdeel, dan het losse voorvoegsel op het einde), " +
+           "en daarna het voltooid deelwoord. Groen = juist en vergrendeld.<br>" +
+           "<span style=\"color:var(--text-dim)\">Fill the dropdowns in the main sentence, then the participle.</span>",
+    rules: [
+      { h: "Regel 1 — het voorvoegsel springt naar het einde",
+        en: "In a main clause a separable verb splits: the conjugated verb stays in position 2, the prefix (op, aan, uit, weg…) jumps to the <b>end</b>: \"Ik <b>bel</b> mijn moeder <b>op</b>.\"",
+        nl: "In de hoofdzin splitst het werkwoord: het vervoegde deel blijft op plaats 2, het voorvoegsel springt naar het <b>einde</b>: \"Ik <b>bel</b> mijn moeder <b>op</b>.\"" },
+      { h: "Regel 2 — in een bijzin blijft het aan elkaar",
+        en: "After <i>dat, omdat, als, terwijl</i> the whole verb goes to the end and stays <b>one word</b>: \"…omdat ik mijn moeder opbel.\"",
+        nl: "Na <i>dat, omdat, als, terwijl</i> gaat het hele werkwoord naar het einde en blijft het <b>één woord</b>: \"…omdat ik mijn moeder opbel.\"" },
+      { h: "Regel 3 — 'ge-' en 'te' in het midden",
+        en: "In the participle, <b>ge-</b> goes between prefix and stem: op + <b>ge</b> + beld = <b>opgebeld</b>. Same with \"te\": \"Ik beloof je op te bellen.\"",
+        nl: "In het voltooid deelwoord komt <b>ge-</b> tussen voorvoegsel en stam: op + <b>ge</b> + beld = <b>opgebeld</b>. Idem met \"te\": \"Ik beloof je op te bellen.\"" }
+    ]
+  },
+  {
+    id: "woordxl",
+    title: "Woordenschat XL",
+    emoji: "📚",
+    subtitle: "22 extra thema's — situaties & werkwoorden",
+    type: "match",
+    data: DATA_WOORDXL,
+    intro: "Zelfde spel als Woordenschat, maar met extra thema's: dagelijkse situaties (dokter, restaurant, kantoor, station…), " +
+           "veelgebruikte werkwoorden en bijvoeglijke naamwoorden, en typisch Vlaamse woorden.<br>" +
+           "<span style=\"color:var(--text-dim)\">Drag or tap the correct Flemish word next to its English translation.</span>"
+  },
+  {
+    id: "zinnen",
+    title: "Zinnen bouwen",
+    emoji: "🧱",
+    subtitle: "Zet de woorden in de juiste volgorde",
+    type: "order",
+    data: DATA_ZINNEN,
+    intro: "Tik de woorden aan in de <b>juiste volgorde</b> om de Nederlandse zin te bouwen. " +
+           "Tik een geplaatst woord aan om het terug te zetten. Groen = juist en vergrendeld.<br>" +
+           "<span style=\"color:var(--text-dim)\">Tap the words in the correct order to build the Dutch sentence.</span>",
+    rules: [
+      { h: "De belangrijkste regels",
+        en: "• In a normal statement the <b>verb is the second element</b>.<br>" +
+            "• If the sentence starts with something else (time, place…), the subject moves <b>after</b> the verb (inversion).<br>" +
+            "• In a question the verb comes <b>first</b> (or right after the question word).<br>" +
+            "• In a sub-clause (omdat, dat, als…) the verb goes to the <b>end</b>.<br>" +
+            "• Perfect tense: <i>hebben/zijn</i> in position 2, past participle at the <b>end</b>.",
+        nl: "• In een gewone mededeling staat het <b>werkwoord op de tweede plaats</b>.<br>" +
+            "• Begint de zin met iets anders (tijd, plaats…), dan komt het onderwerp <b>na</b> het werkwoord (inversie).<br>" +
+            "• In een vraag staat het werkwoord <b>vooraan</b> (of net na het vraagwoord).<br>" +
+            "• In een bijzin (omdat, dat, als…) gaat het werkwoord naar het <b>einde</b>.<br>" +
+            "• Voltooide tijd: <i>hebben/zijn</i> op plaats 2, voltooid deelwoord op het <b>einde</b>." }
+    ]
+  },
+  {
+    id: "voorzetsels",
+    title: "Vaste voorzetsels",
+    emoji: "🔗",
+    subtitle: "wachten óp, denken áán, houden ván…",
+    type: "choice",
+    data: DATA_VOORZETSELS,
+    intro: "Veel werkwoorden en bijvoeglijke naamwoorden gaan <b>vast samen met één voorzetsel</b>. " +
+           "Kies het juiste. Juist wordt groen en vergrendeld; onder de zin zie je dan de vaste combinatie.<br>" +
+           "<span style=\"color:var(--text-dim)\">Pick the fixed preposition that goes with the verb.</span>"
+  },
+  {
+    id: "uitdrukkingen",
+    title: "Uitdrukkingen & spreektaal",
+    emoji: "💬",
+    subtitle: "Wat betekent…? — met Vlaamse woorden",
+    type: "choice",
+    data: DATA_UITDRUKKINGEN,
+    intro: "Kies de juiste betekenis van de uitdrukking of het (Vlaamse) spreektaalwoord. " +
+           "Handig om te begrijpen wat mensen echt zeggen.<br>" +
+           "<span style=\"color:var(--text-dim)\">Choose the correct meaning of each idiom or colloquial word.</span>"
+  }
+];
+
+/* =================== STORAGE =================== */
+/* ------------------------------------------------------------------
+   ONLINE VOORTGANG (optioneel) — vul FIREBASE_CONFIG in om de
+   voortgang van elk profiel in de cloud te bewaren, zodat ze op
+   elk toestel terugkomt onder dezelfde naam.
+   Zolang dit op "PLAK_HIER" staat, werkt alles gewoon lokaal
+   (voortgang blijft dan per toestel in de browser bewaard).
+   Zie het bestand FIREBASE-instellen.md voor de 5 stappen.
+   ------------------------------------------------------------------ */
+var FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyBlP6MHJwR1v65l5PUUVlp9aKV1kEWBLa4",
+  authDomain:        "nederlands-leren-ddd55.firebaseapp.com",
+  projectId:         "nederlands-leren-ddd55",
+  storageBucket:     "nederlands-leren-ddd55.firebasestorage.app",
+  messagingSenderId: "193037491464",
+  appId:             "1:193037491464:web:c5036e779ea0b617d760bd"
+};
+
+const NS = "ndl_v1";
+function lsGet(k, def){ try{ const v = localStorage.getItem(k); return v == null ? def : JSON.parse(v); } catch(e){ return def; } }
+function lsSet(k, val){ try{ localStorage.setItem(k, JSON.stringify(val)); } catch(e){} }
+function lsDel(k){ try{ localStorage.removeItem(k); } catch(e){} }
+
+let STORE = "local";            // "local" | "cloud"
+let fdb = null;                  // Firestore handle
+const cache = {};               // { profileName: { moduleId: {key:true} } }
+let profileNames = [];
+let currentProfile = null;
+const flushTimers = {};
+
+function slugify(name){
+  const s = String(name).trim();
+  let base = s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+/, "").replace(/-+$/, "").slice(0, 80);
+  if(!base) base = "p";
+  let h = 0;
+  for(let i = 0; i < s.length; i++){ h = (h * 31 + s.charCodeAt(i)) >>> 0; }
+  return base + "-" + h.toString(36);
+}
+function blankProgress(){ const o = {}; MODULES.forEach(m => { o[m.id] = {}; }); return o; }
+function cloudConfigured(){
+  try {
+    return FIREBASE_CONFIG && typeof FIREBASE_CONFIG === "object" &&
+      ["apiKey","projectId","appId"].every(k => typeof FIREBASE_CONFIG[k] === "string" &&
+        FIREBASE_CONFIG[k] && FIREBASE_CONFIG[k].indexOf("PLAK") < 0);
+  } catch(e){ return false; }
+}
+
+async function storeInit(){
+  currentProfile = lsGet(NS + "_current", null);
+  if(cloudConfigured() && typeof firebase !== "undefined" && firebase.firestore){
+    try {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      fdb = firebase.firestore();
+      try { await fdb.enablePersistence({ synchronizeTabs: true }); } catch(e){}
+      STORE = "cloud";
+    } catch(e){
+      console.warn("Firebase niet beschikbaar — lokale opslag wordt gebruikt.", e);
+      STORE = "local";
+    }
+  }
+  await loadProfileList();
+  window.addEventListener("pagehide", () => { if(currentProfile && STORE === "cloud") flushNow(currentProfile); });
+  window.addEventListener("beforeunload", () => { if(currentProfile && STORE === "cloud") flushNow(currentProfile); });
+}
+
+async function loadProfileList(){
+  if(STORE === "cloud"){
+    try {
+      const snap = await fdb.collection("profielen").get();
+      profileNames = [];
+      snap.forEach(d => {
+        const x = d.data() || {};
+        const nm = x.name || d.id;
+        profileNames.push(nm);
+        cache[nm] = normaliseProgress(x.progress);
+      });
+      return;
+    } catch(e){
+      console.warn("Profielen laden mislukt — lokale opslag wordt gebruikt.", e);
+      STORE = "local";
+    }
+  }
+  profileNames = lsGet(NS + "_profiles", []) || [];
+  profileNames.forEach(n => { if(!cache[n]) cache[n] = loadLocalProfile(n); });
+}
+
+// In de cloud bewaren we per module een LIJST van afgeronde sleutels
+// (Firestore-map-sleutels mogen geen "." bevatten; zinnen wél). In het
+// geheugen blijft het een {sleutel:true}-object voor de renderers.
+function normaliseProgress(p){
+  const o = blankProgress();
+  if(p && typeof p === "object"){
+    MODULES.forEach(m => {
+      const v = p[m.id];
+      if(Array.isArray(v)) v.forEach(k => { if(k != null) o[m.id][String(k)] = true; });
+      else if(v && typeof v === "object") Object.keys(v).forEach(k => { if(v[k] === true) o[m.id][k] = true; });
+    });
+  }
+  return o;
+}
+function progressToArrays(prog){
+  const o = {};
+  MODULES.forEach(m => { o[m.id] = Object.keys(prog[m.id] || {}).filter(k => prog[m.id][k] === true); });
+  return o;
+}
+function loadLocalProfile(name){
+  const o = blankProgress();
+  MODULES.forEach(m => { o[m.id] = lsGet(NS + "_p_" + name + "_" + m.id, {}) || {}; });
+  return o;
+}
+
+async function ensureLoaded(name){
+  if(cache[name]) return;
+  if(STORE === "cloud"){
+    try {
+      const d = await fdb.collection("profielen").doc(slugify(name)).get();
+      cache[name] = d.exists ? normaliseProgress((d.data() || {}).progress) : blankProgress();
+    } catch(e){ cache[name] = blankProgress(); }
+  } else {
+    cache[name] = loadLocalProfile(name);
+  }
+}
+
+function getCurrent(){ return currentProfile; }
+function setCurrent(n){ currentProfile = n; if(n == null) lsDel(NS + "_current"); else lsSet(NS + "_current", n); }
+function getProfiles(){ return profileNames.slice(); }
+
+function getProgress(name, moduleId){
+  if(!cache[name]) cache[name] = blankProgress();
+  if(!cache[name][moduleId]) cache[name][moduleId] = {};
+  return cache[name][moduleId];
+}
+
+function scheduleFlush(name, moduleId){
+  if(STORE === "local"){
+    lsSet(NS + "_p_" + name + "_" + moduleId, cache[name][moduleId]);
+    return;
+  }
+  clearTimeout(flushTimers[name]);
+  flushTimers[name] = setTimeout(() => flushNow(name), 700);
+}
+async function flushNow(name){
+  if(STORE !== "cloud" || !cache[name]) return;
+  clearTimeout(flushTimers[name]);
+  try {
+    await fdb.collection("profielen").doc(slugify(name)).set({
+      name: name, progress: progressToArrays(cache[name]), updated: Date.now()
+    });
+  } catch(e){ console.warn("Online opslaan mislukt — wordt opnieuw geprobeerd bij de volgende wijziging.", e); }
+}
+
+async function addProfile(name){
+  name = (name || "").trim();
+  if(!name) return false;
+  const existing = profileNames.find(p => p.toLowerCase() === name.toLowerCase());
+  if(existing){ setCurrent(existing); await ensureLoaded(existing); return true; }
+  profileNames.push(name);
+  cache[name] = blankProgress();
+  if(STORE === "cloud"){ await flushNow(name); }
+  else { lsSet(NS + "_profiles", profileNames); }
+  setCurrent(name);
+  return true;
+}
+async function renameProfile(oldName, newName){
+  newName = (newName || "").trim();
+  if(!newName || newName === oldName) return;
+  if(profileNames.some(p => p.toLowerCase() === newName.toLowerCase() && p !== oldName)){ alert("Die naam bestaat al."); return; }
+  await ensureLoaded(oldName);
+  const i = profileNames.indexOf(oldName);
+  if(i < 0) return;
+  profileNames[i] = newName;
+  cache[newName] = cache[oldName] || blankProgress();
+  delete cache[oldName];
+  if(STORE === "cloud"){
+    await flushNow(newName);
+    try { await fdb.collection("profielen").doc(slugify(oldName)).delete(); } catch(e){}
+  } else {
+    MODULES.forEach(m => {
+      lsSet(NS + "_p_" + newName + "_" + m.id, cache[newName][m.id] || {});
+      lsDel(NS + "_p_" + oldName + "_" + m.id);
+    });
+    lsSet(NS + "_profiles", profileNames);
+  }
+  if(getCurrent() === oldName) setCurrent(newName);
+}
+async function deleteProfile(name){
+  profileNames = profileNames.filter(p => p !== name);
+  delete cache[name];
+  if(STORE === "cloud"){
+    try { await fdb.collection("profielen").doc(slugify(name)).delete(); } catch(e){}
+  } else {
+    MODULES.forEach(m => lsDel(NS + "_p_" + name + "_" + m.id));
+    lsSet(NS + "_profiles", profileNames);
+  }
+  if(getCurrent() === name) setCurrent(profileNames[0] || null);
+}
+async function resetModule(name, moduleId){
+  if(!cache[name]) cache[name] = blankProgress();
+  cache[name][moduleId] = {};
+  if(STORE === "cloud"){ await flushNow(name); }
+  else { lsSet(NS + "_p_" + name + "_" + moduleId, {}); }
+}
+
+function buildExportString(){
+  const profiles = profileNames.map(n => ({ name: n, progress: cache[n] || blankProgress() }));
+  return JSON.stringify({ app: "nederlands-leren", version: 2, exported: new Date().toISOString(), profiles: profiles }, null, 2);
+}
+async function applyExportString(text){
+  const parsed = JSON.parse(text);
+  let n = 0;
+  if(parsed && Array.isArray(parsed.profiles)){
+    for(const pr of parsed.profiles){
+      if(!pr || !pr.name) continue;
+      const nm = String(pr.name);
+      cache[nm] = normaliseProgress(pr.progress);
+      if(profileNames.indexOf(nm) < 0) profileNames.push(nm);
+      if(STORE === "cloud"){ await flushNow(nm); }
+      else {
+        MODULES.forEach(m => lsSet(NS + "_p_" + nm + "_" + m.id, cache[nm][m.id] || {}));
+      }
+      n++;
+    }
+    if(STORE !== "cloud") lsSet(NS + "_profiles", profileNames);
+    return n;
+  }
+  // oude backup (versie 1): losse localStorage-sleutels
+  const data = parsed && parsed.data ? parsed.data : parsed;
+  Object.keys(data || {}).forEach(k => {
+    if(k.indexOf(NS) === 0){ try { localStorage.setItem(k, data[k]); n++; } catch(e){} }
+  });
+  return n;
+}
+function modalShell(titleText){
+  const back = el("div", "modal-back");
+  const box = el("div", "modal");
+  box.appendChild(el("h2", null, titleText));
+  back.appendChild(box);
+  back.onclick = e => { if(e.target === back) back.remove(); };
+  document.body.appendChild(back);
+  return { back: back, box: box };
+}
+function exportAll(){
+  const text = buildExportString();
+  const { back, box } = modalShell("Voortgang exporteren");
+  box.appendChild(el("p", "dim", "Dit is een backup van álle profielen. Kopieer de tekst en bewaar ze, of stuur ze naar een ander toestel en plak ze daar bij \"importeren\"."));
+  const ta = document.createElement("textarea");
+  ta.className = "iobox";
+  ta.readOnly = true;
+  ta.value = text;
+  box.appendChild(ta);
+  const row = el("div", "modalrow");
+  const copy = el("button", "btn-accent", "📋 Kopieer");
+  copy.onclick = () => {
+    ta.focus(); ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch(e){}
+    if(navigator.clipboard){ navigator.clipboard.writeText(text).then(() => {}, () => {}); ok = true; }
+    copy.textContent = ok ? "✓ Gekopieerd" : "Selecteer alles en kopieer";
+  };
+  row.appendChild(copy);
+  box.appendChild(row);
+  // "Save as file" only makes sense outside the artifact viewer (real browser tab / local file)
+  var isArtifact = !!(typeof window !== "undefined" && window.claude && window.claude.use);
+  if(!isArtifact){
+    const dl = document.createElement("a");
+    dl.className = "mbtn ghost";
+    dl.textContent = "⤓ Als bestand opslaan";
+    dl.style.textDecoration = "none";
+    try {
+      dl.href = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+      dl.download = "nederlands-voortgang.json";
+      box.appendChild(dl);
+    } catch(e){}
+  }
+  const close = el("button", "mbtn ghost", "Sluiten");
+  close.onclick = () => back.remove();
+  box.appendChild(close);
+  setTimeout(() => { ta.focus(); ta.select(); }, 50);
+}
+function importPrompt(){
+  const { back, box } = modalShell("Voortgang importeren");
+  box.appendChild(el("p", "dim", "Plak hier de backup-tekst die je eerder kopieerde, of kies een backup-bestand. Bestaande profielen met dezelfde naam worden overschreven."));
+  const ta = document.createElement("textarea");
+  ta.className = "iobox";
+  ta.placeholder = "Plak hier je backup…";
+  box.appendChild(ta);
+  const file = document.createElement("input");
+  file.type = "file";
+  file.accept = ".json,application/json";
+  file.style.margin = "6px 0 10px";
+  file.onchange = () => {
+    if(!file.files[0]) return;
+    const r = new FileReader();
+    r.onload = () => { ta.value = r.result; };
+    r.readAsText(file.files[0]);
+  };
+  box.appendChild(file);
+  const load = el("button", "btn-accent", "Laden");
+  load.onclick = async () => {
+    load.disabled = true;
+    try {
+      const n = await applyExportString(ta.value.trim());
+      if(!n){ alert("Geen voortgang gevonden in deze tekst."); load.disabled = false; return; }
+      alert("Voortgang geladen (" + n + " profiel(en)). De app wordt opnieuw geladen.");
+      location.reload();
+    } catch(e){
+      alert("Kon dit niet lezen. Controleer of je de volledige backup-tekst plakte.");
+      load.disabled = false;
+    }
+  };
+  const close = el("button", "mbtn ghost", "Annuleren");
+  close.onclick = () => back.remove();
+  box.appendChild(load);
+  box.appendChild(close);
+  setTimeout(() => ta.focus(), 50);
+}
+
+/* =================== COUNTING =================== */
+function moduleTotal(m){
+  const d = m.data || [];
+  switch(m.type){
+    case "dehet":     return d.reduce((s, c) => s + c.words.length, 0);
+    case "match":     return d.reduce((s, c) => s + c.words.length, 0);
+    case "conjug":    return d.reduce((s, v) => s + v.f.filter(x => x !== null && x !== undefined).length, 0);
+    case "separable": return d.length * 3;
+    case "order":     return d.length;
+    case "choice":    return d.length;
+    case "flash":     return d.length;
+  }
+  return 0;
+}
+function progressCount(prog){ return Object.keys(prog || {}).filter(k => prog[k] === true).length; }
+function totalProgressForProfile(p){
+  let done = 0, total = 0;
+  const c = cache[p] || {};
+  MODULES.forEach(m => { total += moduleTotal(m); done += progressCount(c[m.id]); });
+  return { done, total };
+}
+
+/* =================== HELPERS =================== */
+const app = document.getElementById("app");
+function el(tag, cls, text){
+  const e = document.createElement(tag);
+  if(cls) e.className = cls;
+  if(text != null) e.textContent = text;
+  return e;
+}
+function esc(s){
+  return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+}
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+function toArr(x){ return Array.isArray(x) ? x : [x]; }
+
+/* =================== ROUTER =================== */
+async function route(){
+  const h = location.hash.replace(/^#\/?/, "");
+  const cur = getCurrent();
+  if(!cur || profileNames.indexOf(cur) < 0){ renderGate(); return; }
+  await ensureLoaded(cur);
+  if(h.indexOf("m/") === 0){
+    const m = MODULES.find(x => x.id === h.slice(2));
+    if(m){ renderModule(m); return; }
+  }
+  renderHub();
+}
+window.addEventListener("hashchange", route);
+
+function storageNote(){
+  const n = el("div", "storenote");
+  n.textContent = STORE === "cloud"
+    ? "☁ Voortgang wordt online bewaard — ze komt op elk toestel terug onder je naam."
+    : "• Voortgang wordt op dit toestel bewaard.";
+  return n;
+}
+
+/* =================== GATE =================== */
+function renderGate(){
+  app.innerHTML = "";
+  const wrap = el("div", "gate");
+  wrap.appendChild(el("div", "gate-logo", "🇧🇪"));
+  wrap.appendChild(el("h1", null, "Nederlands leren"));
+  wrap.appendChild(el("p", "dim", "Kies je profiel — je voortgang wordt per persoon bewaard."));
+
+  const list = el("div", "profile-list");
+  profileNames.forEach(p => {
+    const b = el("button", "profile-btn");
+    const t = totalProgressForProfile(p);
+    b.innerHTML = '<span class="pname">' + esc(p) + '</span><span class="psub">' + t.done + " / " + t.total + " juist</span>";
+    b.onclick = () => { setCurrent(p); location.hash = "#/"; route(); };
+    list.appendChild(b);
+  });
+  if(profileNames.length) wrap.appendChild(list);
+
+  const add = el("div", "addrow");
+  const input = el("input");
+  input.type = "text";
+  input.placeholder = "Jouw naam…";
+  input.maxLength = 24;
+  const addBtn = el("button", "btn-accent", "Beginnen");
+  addBtn.onclick = async () => { addBtn.disabled = true; if(await addProfile(input.value)){ location.hash = "#/"; route(); } else { addBtn.disabled = false; } };
+  input.addEventListener("keydown", e => { if(e.key === "Enter") addBtn.click(); });
+  add.appendChild(input);
+  add.appendChild(addBtn);
+  wrap.appendChild(add);
+
+  const io = el("div", "iorow");
+  const impL = el("button", "linkbtn", "⤵ Voortgang importeren van een backup");
+  impL.onclick = importPrompt;
+  io.appendChild(impL);
+  wrap.appendChild(io);
+
+  wrap.appendChild(storageNote());
+
+  app.appendChild(wrap);
+}
+
+/* =================== HUB =================== */
+function renderHub(){
+  const cur = getCurrent();
+  app.innerHTML = "";
+
+  const top = el("div", "topbar");
+  const chip = el("button", "profchip");
+  chip.innerHTML = "👤 " + esc(cur) + ' <span class="chev">▾</span>';
+  chip.onclick = openProfileMenu;
+  top.appendChild(chip);
+  const t = totalProgressForProfile(cur);
+  top.appendChild(el("span", "toptotal", t.done + " / " + t.total));
+  app.appendChild(top);
+
+  const head = el("div", "hubhead");
+  head.appendChild(el("h1", null, "Kies een oefening"));
+  app.appendChild(head);
+
+  const grid = el("div", "hub-grid");
+  MODULES.forEach(m => {
+    const prog = getProgress(cur, m.id);
+    const done = progressCount(prog);
+    const total = moduleTotal(m);
+    const pct = total ? Math.round(100 * done / total) : 0;
+    const card = el("button", "mcard");
+    card.innerHTML =
+      '<div class="mtop"><span class="memoji">' + (m.emoji || "📘") + '</span>' +
+      '<span class="mtitle">' + esc(m.title) + '</span></div>' +
+      '<div class="msub">' + esc(m.subtitle || "") + '</div>' +
+      '<div class="bar"><div class="fill" style="width:' + pct + '%"></div></div>' +
+      '<div class="mmeta">' + done + " / " + total + " juist" + (total > 0 && done >= total ? "  ✓" : "") + '</div>';
+    card.onclick = () => { location.hash = "#/m/" + m.id; };
+    grid.appendChild(card);
+  });
+  app.appendChild(grid);
+
+  const foot = el("div", "hubfoot");
+  const exp = el("button", "linkbtn", "⤴ Voortgang exporteren (backup)");
+  exp.onclick = exportAll;
+  const impL = el("button", "linkbtn", "⤵ Voortgang importeren");
+  impL.onclick = importPrompt;
+  foot.appendChild(exp);
+  foot.appendChild(impL);
+  app.appendChild(foot);
+  app.appendChild(storageNote());
+
+  window.scrollTo(0, 0);
+}
+
+function openProfileMenu(){
+  const cur = getCurrent();
+  const back = el("div", "modal-back");
+  const box = el("div", "modal");
+  box.appendChild(el("h2", null, "Profiel: " + cur));
+
+  const b1 = el("button", "mbtn", "🔄  Wissel van profiel");
+  b1.onclick = () => { back.remove(); setCurrent(null); location.hash = "#/"; renderGate(); };
+  const b2 = el("button", "mbtn", "✏️  Naam wijzigen");
+  b2.onclick = async () => { const n = prompt("Nieuwe naam:", cur); if(n){ await renameProfile(cur, n); back.remove(); route(); } };
+  const b3 = el("button", "mbtn danger", "🗑  Profiel verwijderen");
+  b3.onclick = async () => { if(confirm("Profiel '" + cur + "' en alle voortgang verwijderen?")){ await deleteProfile(cur); back.remove(); location.hash = "#/"; route(); } };
+  const b4 = el("button", "mbtn ghost", "Sluiten");
+  b4.onclick = () => back.remove();
+
+  [b1, b2, b3, b4].forEach(b => box.appendChild(b));
+  back.appendChild(box);
+  back.onclick = e => { if(e.target === back) back.remove(); };
+  document.body.appendChild(back);
+}
+
+/* =================== MODULE SHELL =================== */
+function renderModule(m){
+  const cur = getCurrent();
+  const prog = getProgress(cur, m.id);
+
+  app.innerHTML = "";
+
+  const bar = el("div", "mbar");
+  const back = el("button", "backbtn", "‹ Terug");
+  back.onclick = () => { location.hash = "#/"; };
+  bar.appendChild(back);
+  bar.appendChild(el("div", "mbartitle", (m.emoji ? m.emoji + " " : "") + m.title));
+  const score = el("span", "mbarscore", "");
+  bar.appendChild(score);
+  const reset = el("button", "resetbtn", "↺ Reset");
+  bar.appendChild(reset);
+  app.appendChild(bar);
+
+  const body = el("div", "mbody");
+  app.appendChild(body);
+
+  const total = moduleTotal(m);
+  function refreshScore(){ score.textContent = progressCount(prog) + " / " + total; }
+
+  reset.onclick = async () => {
+    if(confirm("Voortgang van \"" + m.title + "\" wissen voor " + cur + "?")){
+      await resetModule(cur, m.id);
+      renderModule(m);
+    }
+  };
+
+  const ctx = { m: m, body: body, prog: prog, save: () => { scheduleFlush(cur, m.id); refreshScore(); } };
+
+  if(m.intro || (m.rules && m.rules.length)) body.appendChild(buildIntro(m));
+
+  const renderers = {
+    dehet: renderDehet, match: renderMatch, conjug: renderConjug,
+    separable: renderSeparable, order: renderOrder, choice: renderChoice, flash: renderFlash
+  };
+  (renderers[m.type] || renderUnknown)(ctx);
+  refreshScore();
+  window.scrollTo(0, 0);
+}
+
+function renderUnknown(ctx){
+  ctx.body.appendChild(el("p", "dim", "Onbekend moduletype: " + ctx.m.type));
+}
+
+function buildIntro(m){
+  const box = el("div", "introbox");
+  if(m.intro){
+    const d = el("div", "introtext");
+    d.innerHTML = m.intro;
+    box.appendChild(d);
+  }
+  (m.rules || []).forEach(r => {
+    const rb = el("div", "rulebox");
+    if(r.h) rb.appendChild(el("h3", null, r.h));
+    if(r.en){ const e = el("div", "r-en"); e.innerHTML = r.en; rb.appendChild(e); }
+    if(r.nl){ const n = el("div", "r-nl"); n.innerHTML = r.nl; rb.appendChild(n); }
+    if(r.note){ const nt = el("div", "note"); nt.innerHTML = "⚠ " + r.note; rb.appendChild(nt); }
+    box.appendChild(rb);
+  });
+  return box;
+}
+
+/* =================== TYPE: dehet =================== */
+function renderDehet(ctx){
+  const { body, prog, save } = ctx;
+  ctx.m.data.forEach(cat => {
+    const h = el("h2", "section");
+    h.innerHTML = esc(cat.topic) + ' <span class="badge">' + cat.words.length + " woorden</span>";
+    body.appendChild(h);
+    const list = el("div", "list");
+    cat.words.forEach(w => {
+      const en = w[0], nl = w[1], correct = w[2];
+      const key = cat.topic + "::" + nl;
+      const row = el("div", "rowitem");
+      row.innerHTML = '<div class="w-en">' + esc(en) + '</div><div class="w-nl">' + esc(nl) + "</div>";
+      const btns = el("div", "btns");
+      const deB = el("button", null, "de");
+      const hetB = el("button", null, "het");
+      function lock(){
+        deB.disabled = true; hetB.disabled = true;
+        (correct === "de" ? deB : hetB).classList.add("correct");
+      }
+      if(prog[key]) lock();
+      function attempt(choice, btn){
+        if(btn.disabled) return;
+        if(choice === correct){
+          btn.classList.add("correct");
+          deB.disabled = true; hetB.disabled = true;
+          prog[key] = true; save();
+        } else {
+          btn.classList.add("incorrect");
+          setTimeout(() => btn.classList.remove("incorrect"), 500);
+        }
+      }
+      deB.onclick = () => attempt("de", deB);
+      hetB.onclick = () => attempt("het", hetB);
+      btns.appendChild(deB); btns.appendChild(hetB);
+      row.appendChild(btns);
+      list.appendChild(row);
+    });
+    body.appendChild(list);
+  });
+}
+
+/* =================== TYPE: conjug =================== */
+const CONJ_FIELDS = [
+  { i: 0, label: "ik" },
+  { i: 1, label: "jij / je" },
+  { i: 2, label: "hij / zij / het" },
+  { i: 3, label: "wij / jullie / zij" },
+  { i: 4, label: "verleden (enkelv.)" },
+  { i: 5, label: "verleden (meerv.)" },
+  { i: 6, label: "voltooid deelwoord" }
+];
+const GROUP_LABELS = {
+  t: "🔷 't kofschip'-werkwoorden",
+  d: "🔶 Andere regelmatige werkwoorden",
+  irr: "🟥 Onregelmatige / sterke werkwoorden",
+  hard: "⬛ Extra moeilijk / gevorderd"
+};
+function conjAlt(c){
+  const s = new Set();
+  if(c.endsWith("t")) s.add(c.slice(0, -1)); else s.add(c + "t");
+  if(c.endsWith("d")) s.add(c.slice(0, -1)); else s.add(c + "d");
+  if(c.endsWith("de")) s.add(c.slice(0, -2) + "te");
+  if(c.endsWith("te")) s.add(c.slice(0, -2) + "de");
+  if(c.endsWith("den")) s.add(c.slice(0, -3) + "ten");
+  if(c.endsWith("ten")) s.add(c.slice(0, -3) + "den");
+  if(c.startsWith("ge") && c.length > 3 && c.endsWith("d")) s.add(c.slice(0, -1) + "t");
+  if(c.startsWith("ge") && c.length > 3 && c.endsWith("t")) s.add(c.slice(0, -1) + "d");
+  s.delete(c);
+  return [...s];
+}
+function conjOptions(correctArr, extras){
+  const cs = new Set(correctArr);
+  const pool = new Set();
+  correctArr.forEach(c => conjAlt(c).forEach(a => { if(!cs.has(a)) pool.add(a); }));
+  (extras || []).forEach(e => { if(e && !cs.has(e)) pool.add(e); });
+  const need = Math.max(1, 4 - correctArr.length);
+  return shuffle([...correctArr, ...shuffle([...pool]).slice(0, need)]);
+}
+function renderConjug(ctx){
+  const { body, prog, save } = ctx;
+  let lastGroup = null;
+  ctx.m.data.forEach(v => {
+    if(v.group && v.group !== lastGroup && GROUP_LABELS[v.group]){
+      lastGroup = v.group;
+      body.appendChild(el("h2", "section", GROUP_LABELS[v.group]));
+    }
+    body.appendChild(conjCard(v, prog, save));
+  });
+}
+function conjCard(v, prog, save){
+  const card = el("div", "card");
+  const top = el("div", "c-top");
+  top.innerHTML =
+    '<span class="c-en">' + esc(v.en) + '</span><span class="arr">→</span>' +
+    '<span class="c-nl">' + esc(v.nl) + '</span>' +
+    (v.aux ? '<span class="aux">' + esc(v.aux) + "</span>" : "");
+  card.appendChild(top);
+  if(v.note) card.appendChild(el("div", "c-note", "⚠ " + v.note));
+
+  const grid = el("div", "cgrid");
+  CONJ_FIELDS.forEach(fd => {
+    const raw = v.f[fd.i];
+    if(raw === null || raw === undefined) return;
+    const correctArr = toArr(raw);
+    const key = v.nl + "::" + fd.i;
+    const wrap = el("div", "field");
+    wrap.appendChild(el("label", null, fd.label));
+    const sel = document.createElement("select");
+    sel.className = "placeholder";
+    const ph = document.createElement("option");
+    ph.value = ""; ph.textContent = "— kies —";
+    sel.appendChild(ph);
+    conjOptions(correctArr, [v.nl]).forEach(o => {
+      const op = document.createElement("option");
+      op.value = o; op.textContent = o;
+      sel.appendChild(op);
+    });
+    if(prog[key]){
+      sel.value = correctArr[0];
+      sel.classList.remove("placeholder");
+      sel.classList.add("correct");
+      sel.disabled = true;
+    }
+    sel.addEventListener("change", () => {
+      sel.classList.remove("placeholder", "correct", "incorrect");
+      if(sel.value === "") return;
+      if(correctArr.indexOf(sel.value) >= 0){
+        sel.classList.add("correct");
+        sel.disabled = true;
+        prog[key] = true; save();
+      } else {
+        sel.classList.add("incorrect");
+      }
+    });
+    wrap.appendChild(sel);
+    grid.appendChild(wrap);
+  });
+  card.appendChild(grid);
+
+  if(v.ex){
+    const ex = el("div", "cex");
+    ex.innerHTML = '<span class="exnl">' + esc(v.ex[0]) + '</span><span class="exen">' + esc(v.ex[1]) + "</span>";
+    card.appendChild(ex);
+  }
+  return card;
+}
+
+/* =================== TYPE: separable =================== */
+function sepAlt(c){
+  const s = new Set();
+  if(c.endsWith("t")) s.add(c.slice(0, -1)); else s.add(c + "t");
+  if(c.endsWith("d")) s.add(c.slice(0, -1)); else s.add(c + "d");
+  s.delete(c);
+  return [...s];
+}
+function sepOptions(correct, extras){
+  const pool = new Set();
+  sepAlt(correct).forEach(a => { if(a !== correct) pool.add(a); });
+  (extras || []).forEach(e => { if(e && e !== correct) pool.add(e); });
+  return shuffle([correct, ...shuffle([...pool]).slice(0, 3)]);
+}
+function sepSelect(key, correct, options, prog, save){
+  const sel = document.createElement("select");
+  sel.className = "inline placeholder";
+  const ph = document.createElement("option");
+  ph.value = ""; ph.textContent = "…";
+  sel.appendChild(ph);
+  options.forEach(o => {
+    const op = document.createElement("option");
+    op.value = o; op.textContent = o;
+    sel.appendChild(op);
+  });
+  if(prog[key]){
+    sel.value = correct;
+    sel.classList.remove("placeholder");
+    sel.classList.add("correct");
+    sel.disabled = true;
+  }
+  sel.addEventListener("change", () => {
+    sel.classList.remove("placeholder", "correct", "incorrect");
+    if(sel.value === "") return;
+    if(sel.value === correct){
+      sel.classList.add("correct");
+      sel.disabled = true;
+      prog[key] = true; save();
+    } else {
+      sel.classList.add("incorrect");
+    }
+  });
+  return sel;
+}
+function renderSeparable(ctx){
+  const { body, prog, save } = ctx;
+  const allPrefixes = [...new Set(ctx.m.data.map(v => v.prefix))];
+  ctx.m.data.forEach(v => {
+    const card = el("div", "card");
+    const top = el("div", "c-top");
+    top.innerHTML =
+      '<span class="c-en">' + esc(v.en) + '</span><span class="arr">→</span>' +
+      '<span class="c-nl"><u>' + esc(v.prefix) + "</u>" + esc(v.nl.slice(v.prefix.length)) + "</span>" +
+      (v.aux ? '<span class="aux">' + esc(v.aux) + "</span>" : "");
+    card.appendChild(top);
+    if(v.note) card.appendChild(el("div", "c-note", "⚠ " + v.note));
+
+    const mrow = el("div", "srow");
+    mrow.appendChild(el("span", "lbl", "Hoofdzin"));
+    v.tpl.split(/(\{V\}|\{P\})/).forEach(p => {
+      if(p === "{V}"){
+        mrow.appendChild(sepSelect(v.nl + "::V", v.stemIk, sepOptions(v.stemIk, [v.nl, v.prefix + v.stemIk]), prog, save));
+      } else if(p === "{P}"){
+        const others = shuffle(allPrefixes.filter(x => x !== v.prefix)).slice(0, 3);
+        mrow.appendChild(sepSelect(v.nl + "::P", v.prefix, shuffle([v.prefix, ...others]), prog, save));
+      } else if(p){
+        mrow.appendChild(document.createTextNode(p));
+      }
+    });
+    card.appendChild(mrow);
+    if(v.tplEN) card.appendChild(el("div", "exen", v.tplEN));
+
+    if(v.sub){
+      const sub = el("div", "subclause");
+      sub.innerHTML = '<span class="lbl2">Bijzin:</span> ' + esc(v.sub) +
+        (v.subEN ? '<br><span class="exen">' + esc(v.subEN) + "</span>" : "");
+      card.appendChild(sub);
+    }
+
+    const prow = el("div", "srow");
+    prow.appendChild(el("span", "lbl", "Voltooid deelwoord"));
+    v.perfTpl.split(/(\{PART\})/).forEach(p => {
+      if(p === "{PART}"){
+        prow.appendChild(sepSelect(v.nl + "::PART", v.part, sepOptions(v.part, [v.nl, "ge" + v.nl, v.prefix + v.stemIk]), prog, save));
+      } else if(p){
+        prow.appendChild(document.createTextNode(p));
+      }
+    });
+    card.appendChild(prow);
+    if(v.perfEN) card.appendChild(el("div", "exen", v.perfEN));
+
+    body.appendChild(card);
+  });
+}
+
+/* =================== TYPE: match =================== */
+function renderMatch(ctx){
+  const { body, prog, save } = ctx;
+  const rounds = ctx.m.data;
+
+  let cur = rounds.findIndex(r => r.words.some(w => !prog[r.topic + "::" + w[1]]));
+  if(cur < 0) cur = 0;
+
+  const nav = el("div", "matchnav");
+  const title = el("div", "roundtitle");
+  const picker = document.createElement("select");
+  picker.className = "roundpicker";
+  rounds.forEach((r, i) => {
+    const o = document.createElement("option");
+    o.value = i;
+    o.textContent = "Ronde " + (i + 1) + " – " + r.topic;
+    picker.appendChild(o);
+  });
+  picker.onchange = () => { cur = parseInt(picker.value, 10); draw(); };
+  nav.appendChild(title);
+  nav.appendChild(picker);
+  body.appendChild(nav);
+
+  const board = el("div", "board");
+  body.appendChild(board);
+
+  const btnrow = el("div", "matchbtns");
+  const prev = el("button", null, "‹ Vorige");
+  const next = el("button", null, "Volgende ›");
+  prev.onclick = () => { if(cur > 0){ cur--; draw(); } };
+  next.onclick = () => { if(cur < rounds.length - 1){ cur++; draw(); } };
+  btnrow.appendChild(prev);
+  btnrow.appendChild(next);
+  body.appendChild(btnrow);
+
+  let selectedChip = null, dragged = null;
+
+  function place(slot, key, correct, word, chip){
+    if(word === correct){
+      slot.textContent = word;
+      slot.classList.remove("incorrect");
+      slot.classList.add("correct", "filled");
+      prog[key] = true; save();
+      if(chip) chip.remove();
+      const bank = board.querySelector(".bank");
+      if(bank && bank.querySelectorAll(".chip").length === 0){
+        const db = board.querySelector(".donebar");
+        if(db) db.textContent = "🎉 Ronde voltooid!";
+      }
+    } else {
+      slot.classList.add("incorrect");
+      setTimeout(() => slot.classList.remove("incorrect"), 500);
+    }
+  }
+
+  function draw(){
+    const r = rounds[cur];
+    picker.value = cur;
+    title.innerHTML = "Ronde " + (cur + 1) + " / " + rounds.length + " — " + esc(r.topic) +
+      (r.level ? ' <span class="tag">' + esc(r.level) + "</span>" : "");
+    prev.disabled = cur === 0;
+    next.disabled = cur === rounds.length - 1;
+
+    board.innerHTML = "";
+    selectedChip = null;
+
+    const rows = el("div", "rows");
+    r.words.forEach(pair => {
+      const key = r.topic + "::" + pair[1];
+      const row = el("div", "mrow");
+      row.appendChild(el("div", "w-en2", pair[0]));
+      const slot = el("div", "slot");
+      if(prog[key]){
+        slot.textContent = pair[1];
+        slot.classList.add("correct", "filled");
+      } else {
+        slot.textContent = "…";
+        slot.addEventListener("dragover", e => { e.preventDefault(); slot.classList.add("dragover"); });
+        slot.addEventListener("dragleave", () => slot.classList.remove("dragover"));
+        slot.addEventListener("drop", e => {
+          e.preventDefault();
+          slot.classList.remove("dragover");
+          const word = dragged ? dragged.word : e.dataTransfer.getData("text/plain");
+          place(slot, key, pair[1], word, dragged ? dragged.chip : null);
+          dragged = null;
+        });
+        slot.addEventListener("click", () => {
+          if(selectedChip){
+            place(slot, key, pair[1], selectedChip.dataset.word, selectedChip);
+            selectedChip.classList.remove("sel");
+            selectedChip = null;
+          }
+        });
+      }
+      row.appendChild(slot);
+      rows.appendChild(row);
+    });
+    board.appendChild(rows);
+
+    const bank = el("div", "bank");
+    const remaining = r.words.filter(w => !prog[r.topic + "::" + w[1]]).map(w => w[1]);
+    shuffle(remaining).forEach(word => {
+      const chip = el("div", "chip", word);
+      chip.draggable = true;
+      chip.dataset.word = word;
+      chip.addEventListener("dragstart", e => {
+        dragged = { word: word, chip: chip };
+        e.dataTransfer.setData("text/plain", word);
+        e.dataTransfer.effectAllowed = "move";
+      });
+      chip.addEventListener("click", () => {
+        if(chip.classList.contains("sel")){
+          chip.classList.remove("sel");
+          selectedChip = null;
+        } else {
+          bank.querySelectorAll(".chip.sel").forEach(c => c.classList.remove("sel"));
+          chip.classList.add("sel");
+          selectedChip = chip;
+        }
+      });
+      bank.appendChild(chip);
+    });
+    board.appendChild(bank);
+
+    const done = el("div", "donebar");
+    if(remaining.length === 0) done.textContent = "🎉 Ronde voltooid!";
+    board.appendChild(done);
+  }
+
+  draw();
+}
+
+/* =================== TYPE: order =================== */
+function renderOrder(ctx){
+  const { body, prog, save } = ctx;
+  let lastGroup = null;
+  ctx.m.data.forEach(item => {
+    if(item.group && item.group !== lastGroup){
+      lastGroup = item.group;
+      body.appendChild(el("h2", "section", item.group));
+    }
+    body.appendChild(orderCard(item, prog, save));
+  });
+}
+function orderCard(item, prog, save){
+  const answers = toArr(item.nl);
+  const key = answers[0];
+  const tokens = answers[0].split(/\s+/);
+
+  const card = el("div", "card");
+  card.appendChild(el("div", "c-en", "🇬🇧 " + item.en));
+  if(item.note) card.appendChild(el("div", "c-note", "💡 " + item.note));
+
+  const target = el("div", "ordertarget");
+  const bank = el("div", "orderbank");
+  const hint = el("div", "orderhint", "");
+  card.appendChild(target);
+  card.appendChild(bank);
+  card.appendChild(hint);
+
+  function showSolved(){
+    target.classList.add("done");
+    target.innerHTML = "";
+    tokens.forEach(t => target.appendChild(el("span", "otok fixed", t)));
+    bank.innerHTML = "";
+    hint.textContent = "✓ juist";
+    hint.className = "orderhint good";
+  }
+
+  if(prog[key]){ showSolved(); return card; }
+
+  let ids = shuffle(tokens.map((t, i) => i));
+  if(tokens.length > 1 && ids.every((v, i) => v === i)) ids.reverse();
+  const placed = [];
+
+  function evaluate(){
+    if(placed.length !== tokens.length){ hint.textContent = ""; hint.className = "orderhint"; return; }
+    const attempt = placed.map(ti => tokens[ti]).join(" ");
+    if(answers.indexOf(attempt) >= 0){
+      prog[key] = true; save();
+      showSolved();
+    } else {
+      hint.textContent = "✗ nog niet juist — tik een woord aan om aan te passen";
+      hint.className = "orderhint bad";
+      target.classList.add("shake");
+      setTimeout(() => target.classList.remove("shake"), 400);
+    }
+  }
+  function redraw(){
+    target.innerHTML = "";
+    bank.innerHTML = "";
+    if(placed.length === 0){
+      target.appendChild(el("span", "orderplaceholder", "tik de woorden hieronder in de juiste volgorde…"));
+    }
+    placed.forEach((ti, pos) => {
+      const s = el("span", "otok", tokens[ti]);
+      s.onclick = () => { placed.splice(pos, 1); hint.textContent = ""; hint.className = "orderhint"; redraw(); };
+      target.appendChild(s);
+    });
+    ids.filter(ti => placed.indexOf(ti) < 0).forEach(ti => {
+      const s = el("span", "otok bankchip", tokens[ti]);
+      s.onclick = () => { placed.push(ti); redraw(); evaluate(); };
+      bank.appendChild(s);
+    });
+  }
+  redraw();
+  return card;
+}
+
+/* =================== TYPE: choice =================== */
+function renderChoice(ctx){
+  const { body, prog, save } = ctx;
+  ctx.m.data.forEach(item => {
+    const key = item.q;
+    const card = el("div", "card");
+    card.appendChild(el("div", "q", item.q));
+    const opts = el("div", "choiceopts");
+    const locked = !!prog[key];
+
+    let note = null;
+    if(item.note){
+      note = el("div", "c-note", "✓ " + item.note);
+      note.hidden = !locked;
+    }
+
+    shuffle(item.options).forEach(opt => {
+      const b = el("button", "choicebtn", opt);
+      if(locked){
+        b.disabled = true;
+        if(opt === item.answer) b.classList.add("correct");
+      }
+      b.onclick = () => {
+        if(opt === item.answer){
+          b.classList.add("correct");
+          opts.querySelectorAll("button").forEach(x => x.disabled = true);
+          if(note) note.hidden = false;
+          prog[key] = true; save();
+        } else {
+          b.classList.add("incorrect");
+          setTimeout(() => b.classList.remove("incorrect"), 500);
+        }
+      };
+      opts.appendChild(b);
+    });
+    card.appendChild(opts);
+    if(note) card.appendChild(note);
+    body.appendChild(card);
+  });
+}
+
+/* =================== TYPE: flash =================== */
+function renderFlash(ctx){
+  const { body, prog, save } = ctx;
+  ctx.m.data.forEach(item => {
+    const key = item.front;
+    const card = el("div", "flashcard");
+    if(prog[key]) card.classList.add("known");
+    card.appendChild(el("div", "flashfront", item.front));
+    const back = el("div", "flashback", item.back);
+    back.hidden = true;
+    card.appendChild(back);
+    let note = null;
+    if(item.note){
+      note = el("div", "c-note", item.note);
+      note.hidden = true;
+      card.appendChild(note);
+    }
+    const actions = el("div", "flashactions");
+    const reveal = el("button", "fbtn", "Toon antwoord");
+    const mark = el("button", "fbtn good", prog[key] ? "✓ Gekend" : "Markeer als gekend");
+    if(!prog[key]) mark.hidden = true;
+    reveal.onclick = () => {
+      const show = back.hidden;
+      back.hidden = !show;
+      if(note) note.hidden = !show;
+      reveal.textContent = show ? "Verberg" : "Toon antwoord";
+      mark.hidden = false;
+    };
+    mark.onclick = () => {
+      prog[key] = !prog[key];
+      if(!prog[key]) delete prog[key];
+      save();
+      card.classList.toggle("known", !!prog[key]);
+      mark.textContent = prog[key] ? "✓ Gekend" : "Markeer als gekend";
+    };
+    actions.appendChild(reveal);
+    actions.appendChild(mark);
+    card.appendChild(actions);
+    body.appendChild(card);
+  });
+}
+
+/* =================== START =================== */
+(async function start(){
+  app.innerHTML = '<div class="gate"><div class="gate-logo">🇧🇪</div>' +
+    '<h1>Nederlands leren</h1><p class="dim">laden…</p></div>';
+  try { await storeInit(); } catch(e){ console.warn(e); }
+  if(!location.hash) location.hash = "#/";
+  route();
+})();
+
+</script>
+</body>
+</html>
