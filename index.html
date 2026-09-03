@@ -212,34 +212,45 @@
   .typefb.yellow{ color:var(--nl); }
   .typefb.red{ color:var(--bad); }
 
-  /* ---------- mascotte ---------- */
-  .mascot{ position:fixed; right:14px; bottom:14px; z-index:60; display:flex; align-items:flex-end; gap:8px;
-    transform:translateY(150%); opacity:0; pointer-events:none;
-    transition:transform .5s cubic-bezier(.34,1.4,.5,1), opacity .35s; }
+  /* ---------- mascotte (hondje) ---------- */
+  .mascot{ position:fixed; right:12px; bottom:14px; z-index:60; display:flex; align-items:flex-end; gap:7px;
+    transform:translateX(135%); opacity:0; pointer-events:none;
+    transition:transform .5s cubic-bezier(.3,1.4,.5,1), opacity .3s; }
   .mascot.show{ transform:none; opacity:1; pointer-events:auto; }
-  .mascot-owl{ width:78px; height:78px; flex:none; cursor:pointer; filter:drop-shadow(0 6px 14px rgba(0,0,0,.35)); animation:owlbob 2.8s ease-in-out infinite; }
-  .mascot-owl svg{ width:100%; height:100%; display:block; overflow:visible; }
-  .mascot-bubble{ position:relative; max-width:240px; background:var(--panel); border:1px solid var(--border); border-radius:14px 14px 4px 14px;
-    padding:11px 30px 11px 13px; font-size:13px; line-height:1.45; color:var(--text); box-shadow:0 8px 20px rgba(0,0,0,.28); }
-  .mascot-bubble:after{ content:""; position:absolute; right:-7px; bottom:12px; width:12px; height:12px; background:var(--panel);
+  .mascot-dog{ width:60px; height:60px; flex:none; cursor:pointer; filter:drop-shadow(0 5px 12px rgba(0,0,0,.35)); animation:dogbob 2.8s ease-in-out infinite; }
+  .mascot-dog svg{ width:100%; height:100%; display:block; overflow:visible; }
+  .mascot-bubble{ position:relative; max-width:216px; background:var(--panel); border:1px solid var(--border); border-radius:13px 13px 4px 13px;
+    padding:10px 26px 8px 12px; font-size:12.5px; line-height:1.45; color:var(--text); box-shadow:0 8px 20px rgba(0,0,0,.28); }
+  .mascot-bubble:after{ content:""; position:absolute; right:-7px; bottom:11px; width:12px; height:12px; background:var(--panel);
     border-right:1px solid var(--border); border-bottom:1px solid var(--border); transform:rotate(-45deg); }
-  .mascot-x{ position:absolute; top:4px; right:6px; background:none; border:none; color:var(--text-dim); font-size:16px; line-height:1; cursor:pointer; padding:2px 5px; }
+  .mascot-x{ position:absolute; top:3px; right:5px; background:none; border:none; color:var(--text-dim); font-size:15px; line-height:1; cursor:pointer; padding:2px 5px; }
   .mascot-x:hover{ color:var(--text); }
-  .owl-eye-lid{ transform-box:fill-box; transform-origin:center; animation:owlblink 4.4s infinite; }
-  .owl-wing{ transform-box:fill-box; transform-origin:top center; }
-  .mascot.show .owl-wing{ animation:owlwave .5s ease 2; }
-  .mascot.celebrate .mascot-owl{ animation:owlhop .5s ease 3; }
+  .mascot-lang{ display:flex; gap:4px; margin-top:7px; }
+  .mascot-lang button{ font-size:10px; font-weight:700; letter-spacing:.02em; padding:2px 7px; border-radius:6px;
+    border:1px solid var(--border-soft); background:var(--panel2); color:var(--text-dim); cursor:pointer; }
+  .mascot-lang button.on{ background:var(--accent); color:#160e2e; border-color:var(--accent); }
+  .dog-lid{ transform-box:fill-box; transform-origin:top center; transform:scaleY(0); animation:dogblink 4.6s infinite; }
+  .dog-tail{ transform-box:fill-box; transform-origin:100% 100%; animation:dogwag .45s ease-in-out infinite; }
+  .dog-ear{ transform-box:fill-box; transform-origin:top center; }
+  .mascot.show .dog-ear-l{ animation:dogear .5s ease 2; }
+  .mascot.show .dog-ear-r{ animation:dogear .5s ease 2 reverse; }
+  .mascot.celebrate .mascot-dog{ animation:doghop .5s ease 3; }
   .mascot .spark{ position:absolute; width:10px; height:10px; pointer-events:none; color:var(--nl); font-size:12px; animation:sparkup .9s ease forwards; }
-  @keyframes owlbob{ 50%{ transform:translateY(-6px); } }
-  @keyframes owlblink{ 0%,90%,100%{ transform:scaleY(1); } 94%{ transform:scaleY(.08); } }
-  @keyframes owlwave{ 0%,100%{ transform:rotate(0); } 50%{ transform:rotate(-24deg); } }
-  @keyframes owlhop{ 0%,100%{ transform:translateY(0) rotate(0); } 40%{ transform:translateY(-16px) rotate(-8deg); } 70%{ transform:translateY(0) rotate(6deg); } }
-  @keyframes sparkup{ 0%{ transform:translateY(0) scale(.4); opacity:0; } 30%{ opacity:1; } 100%{ transform:translateY(-38px) scale(1.1); opacity:0; } }
+  @keyframes dogbob{ 50%{ transform:translateY(-5px); } }
+  @keyframes dogblink{ 0%,91%,100%{ transform:scaleY(0); } 95%{ transform:scaleY(1); } }
+  @keyframes dogwag{ 0%,100%{ transform:rotate(-6deg); } 50%{ transform:rotate(20deg); } }
+  @keyframes dogear{ 0%,100%{ transform:rotate(0); } 50%{ transform:rotate(-14deg); } }
+  @keyframes doghop{ 0%,100%{ transform:translateY(0) rotate(0); } 40%{ transform:translateY(-14px) rotate(-7deg); } 70%{ transform:translateY(0) rotate(5deg); } }
+  @keyframes sparkup{ 0%{ transform:translateY(0) scale(.4); opacity:0; } 30%{ opacity:1; } 100%{ transform:translateY(-34px) scale(1.1); opacity:0; } }
   @media (prefers-reduced-motion: reduce){
-    .mascot-owl, .mascot.show .owl-wing, .mascot.celebrate .mascot-owl, .owl-eye-lid{ animation:none; }
+    .mascot-dog, .mascot.show .dog-ear-l, .mascot.show .dog-ear-r, .mascot.celebrate .mascot-dog, .dog-lid, .dog-tail{ animation:none; }
     .mascot{ transition:opacity .3s; transform:none; }
   }
-  @media (max-width:520px){ .mascot-owl{ width:62px; height:62px; } .mascot-bubble{ max-width:200px; font-size:12.5px; } }
+  @media (max-width:520px){
+    .mascot{ right:8px; bottom:10px; }
+    .mascot-dog{ width:50px; height:50px; }
+    .mascot-bubble{ max-width:172px; font-size:12px; padding:9px 24px 7px 10px; }
+  }
 
   /* ---------- choice / flash ---------- */
   .q{ font-size:14.5px; font-weight:600; margin-bottom:10px; }
@@ -1735,7 +1746,7 @@ function renderModule(m){
     score.textContent = progressCount(prog) + " / " + total;
     if(!wasComplete && total > 0 && progressCount(prog) >= total){
       wasComplete = true;
-      mascotCelebrate("“" + m.title + "” is helemaal af!");
+      mascotCelebrate("“" + m.title + "” is helemaal af!", "“" + m.title + "” is all done!");
     }
   }
 
@@ -1812,7 +1823,7 @@ function renderDehet(ctx){
         } else {
           btn.classList.add("incorrect");
           setTimeout(() => btn.classList.remove("incorrect"), 500);
-          bumpStruggle("dehet:" + key, 3, "Denk aan de regels bovenaan: verkleinwoorden op -je, talen, metalen en windrichtingen zijn altijd 'het'.");
+          bumpStruggle("dehet:" + key, 3, { nl: "Denk aan de regels bovenaan: verkleinwoorden op -je, talen, metalen en windrichtingen zijn altijd 'het'.", en: "Remember the rules on top: diminutives in -je, and languages, metals and compass directions are always 'het'." });
         }
       }
       deB.onclick = () => attempt("de", deB);
@@ -1916,7 +1927,7 @@ function conjCard(v, prog, save){
         prog[key] = true; save();
       } else {
         sel.classList.add("incorrect");
-        bumpStruggle("conj:" + v.nl, 3, "'t kofschip: eindigt de stam op t, k, f, s, ch of p? Dan -te / -t. Anders -de / -d.");
+        bumpStruggle("conj:" + v.nl, 3, { nl: "'t kofschip: eindigt de stam op t, k, f, s, ch of p? Dan -te / -t. Anders -de / -d.", en: "'t kofschip' rule: does the stem end in t, k, f, s, ch or p? Then -te / -t. Otherwise -de / -d." });
       }
     });
     wrap.appendChild(sel);
@@ -1972,7 +1983,7 @@ function sepSelect(key, correct, options, prog, save){
       prog[key] = true; save();
     } else {
       sel.classList.add("incorrect");
-      bumpStruggle("sep:" + key, 3, "In de hoofdzin springt het losse voorvoegsel (op, aan, uit, weg…) helemaal naar het einde van de zin.");
+      bumpStruggle("sep:" + key, 3, { nl: "In de hoofdzin springt het losse voorvoegsel (op, aan, uit, weg…) helemaal naar het einde van de zin.", en: "In a main clause the separated prefix (op, aan, uit, weg…) jumps all the way to the end of the sentence." });
     }
   });
   return sel;
@@ -2080,7 +2091,7 @@ function renderMatch(ctx){
     } else {
       slot.classList.add("incorrect");
       setTimeout(() => slot.classList.remove("incorrect"), 500);
-      bumpStruggle("match:" + String(key).split("::")[0], 4, "Twijfel je? Sla een moeilijke over en kom er later op terug — of denk aan een woord dat erop lijkt.");
+      bumpStruggle("match:" + String(key).split("::")[0], 4, { nl: "Twijfel je? Sla een moeilijke over en kom er later op terug — of denk aan een woord dat erop lijkt.", en: "Not sure? Skip a hard one and come back to it later — or think of a word that looks similar." });
     }
   }
 
@@ -2215,7 +2226,7 @@ function orderCard(item, prog, save){
       hint.className = "orderhint bad";
       target.classList.add("shake");
       setTimeout(() => target.classList.remove("shake"), 400);
-      bumpStruggle("ord:" + key, 2, "Woordvolgorde: in een gewone zin staat het werkwoord op de 2e plaats; in een vraag helemaal vooraan.");
+      bumpStruggle("ord:" + key, 2, { nl: "Woordvolgorde: in een gewone zin staat het werkwoord op de 2e plaats; in een vraag helemaal vooraan.", en: "Word order: in a normal sentence the verb is in second place; in a question it comes first." });
     }
   }
   function redraw(){
@@ -2270,7 +2281,7 @@ function renderChoice(ctx){
         } else {
           b.classList.add("incorrect");
           setTimeout(() => b.classList.remove("incorrect"), 500);
-          bumpStruggle("ch:" + key, 3, "Lees de zin nog eens rustig — welk woord hoort hier vast bij? Twijfel je tussen twee? Kies de meest gebruikte.");
+          bumpStruggle("ch:" + key, 3, { nl: "Lees de zin nog eens rustig — welk woord hoort hier vast bij? Twijfel je tussen twee? Kies de meest gebruikte.", en: "Read the sentence again calmly — which word fixedly belongs here? Torn between two? Pick the more common one." });
         }
       };
       opts.appendChild(b);
@@ -2467,17 +2478,24 @@ function typeTip(user, correct, level){
   const u = normText(user).split(" ").filter(Boolean);
   const c = normText(correct).split(" ").filter(Boolean);
   if(c.length <= 1){
-    return "Hint: het begint met “" + correct.trim()[0].toLowerCase() + "” en heeft " +
-      correct.replace(/\s/g, "").length + " letters.";
+    const first = correct.trim()[0].toLowerCase(), n = correct.replace(/\s/g, "").length;
+    return { nl: "Hint: het begint met “" + first + "” en heeft " + n + " letters.",
+             en: "Hint: it starts with “" + first + "” and has " + n + " letters." };
   }
   for(let i = 0; i < c.length; i++){
     if(u[i] !== c[i]){
-      if(u[i] && lev(u[i], c[i]) <= 2) return "Kijk goed naar “" + c[i] + "” — jij schreef “" + (u[i] || "…") + "”.";
-      return "Woord " + (i + 1) + " klopt niet: het moet “" + c[i] + "” zijn.";
+      if(u[i] && lev(u[i], c[i]) <= 2)
+        return { nl: "Kijk goed naar “" + c[i] + "” — jij schreef “" + (u[i] || "…") + "”.",
+                 en: "Look closely at “" + c[i] + "” — you wrote “" + (u[i] || "…") + "”." };
+      return { nl: "Woord " + (i + 1) + " klopt niet: het moet “" + c[i] + "” zijn.",
+               en: "Word " + (i + 1) + " is off: it should be “" + c[i] + "”." };
     }
   }
-  if(u.length !== c.length) return "De zin heeft " + c.length + " woorden — jij hebt er " + u.length + ".";
-  return "Bijna! Let op de woordvolgorde: het werkwoord staat op de tweede plaats.";
+  if(u.length !== c.length)
+    return { nl: "De zin heeft " + c.length + " woorden — jij hebt er " + u.length + ".",
+             en: "The sentence has " + c.length + " words — you have " + u.length + "." };
+  return { nl: "Bijna! Let op de woordvolgorde: het werkwoord staat op de tweede plaats.",
+           en: "Almost! Mind the word order: the verb goes in second place." };
 }
 
 /* =================== TYPE: renderer =================== */
@@ -2558,81 +2576,107 @@ function typeCard(item, prog, save, wordMode){
   inp.addEventListener("focus", () => {
     clearTimeout(idleTimer);
     idleTimer = setTimeout(() => {
-      if(!inp.disabled && !inp.value.trim()) mascotStruggle("Twijfel je? " + typeTip("", item.nl, "red"));
+      if(!inp.disabled && !inp.value.trim()){
+        const tp = typeTip("", item.nl, "red");
+        mascotStruggle({ nl: "Twijfel je? " + tp.nl, en: "Not sure? " + tp.en });
+      }
     }, 14000);
   });
   inp.addEventListener("blur", () => clearTimeout(idleTimer));
   return card;
 }
 
-/* =================== MASCOTTE (uiltje) =================== */
+/* =================== MASCOTTE (hondje, tweetalig) =================== */
 let pendingWelcome = null;
 let _mascotEl = null, _mascotTimer = null, _lastMascot = 0, _mascotCount = 0;
-const OWL_SVG =
+let _masLang = (lsGet(NS + "_masclang", "nl") === "en") ? "en" : "nl";
+let _masMsg = { nl: "", en: "" };
+
+const DOG_SVG =
   '<svg viewBox="0 0 100 104" xmlns="http://www.w3.org/2000/svg">' +
-  '<path d="M28 24 L20 5 L40 19 Z" fill="#8b6df0"/><path d="M72 24 L80 5 L60 19 Z" fill="#8b6df0"/>' +
-  '<ellipse cx="50" cy="58" rx="35" ry="37" fill="#a78bfa"/>' +
-  '<ellipse cx="50" cy="66" rx="22" ry="25" fill="#efeafe"/>' +
-  '<ellipse class="owl-wing owl-wl" cx="16" cy="60" rx="9" ry="19" fill="#8b6df0"/>' +
-  '<ellipse class="owl-wing owl-wr" cx="84" cy="60" rx="9" ry="19" fill="#8b6df0"/>' +
-  '<circle cx="38" cy="48" r="14" fill="#fff"/><circle cx="62" cy="48" r="14" fill="#fff"/>' +
-  '<circle cx="38" cy="49" r="6.5" fill="#2b2440"/><circle cx="62" cy="49" r="6.5" fill="#2b2440"/>' +
-  '<circle cx="40.5" cy="46" r="2.2" fill="#fff"/><circle cx="64.5" cy="46" r="2.2" fill="#fff"/>' +
-  '<ellipse class="owl-eye-lid" cx="38" cy="48" rx="14.5" ry="14.5" fill="#a78bfa"/>' +
-  '<ellipse class="owl-eye-lid" cx="62" cy="48" rx="14.5" ry="14.5" fill="#a78bfa"/>' +
-  '<path d="M50 54 l-6 9 h12 Z" fill="#fbbf24"/>' +
-  '<path d="M41 94 v6 M37 100 h8 M59 94 v6 M55 100 h8" stroke="#fbbf24" stroke-width="3.4" stroke-linecap="round" fill="none"/>' +
+  '<path class="dog-tail" d="M14 68 q-13 -3 -12 -20 q7 9 16 13 Z" fill="#c98a3c"/>' +
+  '<ellipse cx="52" cy="76" rx="30" ry="24" fill="#e2a458"/>' +
+  '<ellipse cx="40" cy="98" rx="7.5" ry="5" fill="#f6e6cd"/><ellipse cx="64" cy="98" rx="7.5" ry="5" fill="#f6e6cd"/>' +
+  '<path class="dog-ear dog-ear-l" d="M27 24 q-16 3 -14 33 q11 -6 22 -12 Z" fill="#c98a3c"/>' +
+  '<path class="dog-ear dog-ear-r" d="M73 24 q16 3 14 33 q-11 -6 -22 -12 Z" fill="#c98a3c"/>' +
+  '<circle cx="50" cy="46" r="28" fill="#e2a458"/>' +
+  '<ellipse cx="50" cy="57" rx="17" ry="14" fill="#f6e6cd"/>' +
+  '<circle cx="39" cy="42" r="4.6" fill="#33261a"/><circle cx="61" cy="42" r="4.6" fill="#33261a"/>' +
+  '<circle cx="40.6" cy="40.4" r="1.6" fill="#fff"/><circle cx="62.6" cy="40.4" r="1.6" fill="#fff"/>' +
+  '<rect class="dog-lid" x="33" y="35.5" width="12" height="11" rx="5.5" fill="#e2a458"/>' +
+  '<rect class="dog-lid" x="55" y="35.5" width="12" height="11" rx="5.5" fill="#e2a458"/>' +
+  '<ellipse cx="50" cy="52" rx="5.2" ry="3.8" fill="#33261a"/>' +
+  '<path d="M50 55 v5 M50 60 q-5 4 -9 1 M50 60 q5 4 9 1" stroke="#33261a" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+  '<path class="dog-tongue" d="M46.5 60 q3.5 8 7 0 Z" fill="#f2889b"/>' +
   '</svg>';
 
 function ensureMascot(){
   if(_mascotEl) return _mascotEl;
   const m = el("div", "mascot");
   m.innerHTML =
-    '<div class="mascot-bubble"><span class="mascot-text"></span>' +
-    '<button class="mascot-x" aria-label="sluiten">×</button></div>' +
-    '<div class="mascot-owl">' + OWL_SVG + '</div>';
+    '<div class="mascot-bubble">' +
+    '<button class="mascot-x" aria-label="sluiten">×</button>' +
+    '<span class="mascot-text"></span>' +
+    '<div class="mascot-lang"><button data-l="nl">NL</button><button data-l="en">EN</button></div>' +
+    '</div>' +
+    '<div class="mascot-dog">' + DOG_SVG + '</div>';
   m.querySelector(".mascot-x").onclick = hideMascot;
-  m.querySelector(".mascot-owl").onclick = hideMascot;
+  m.querySelector(".mascot-dog").onclick = hideMascot;
+  m.querySelectorAll(".mascot-lang button").forEach(b => {
+    b.onclick = () => { _masLang = b.dataset.l; lsSet(NS + "_masclang", _masLang); paintMascot(); };
+  });
   document.body.appendChild(m);
   _mascotEl = m;
   return m;
+}
+function paintMascot(){
+  if(!_mascotEl) return;
+  _mascotEl.querySelector(".mascot-text").textContent = _masMsg[_masLang] || _masMsg.nl || _masMsg.en || "";
+  _mascotEl.querySelectorAll(".mascot-lang button").forEach(b => b.classList.toggle("on", b.dataset.l === _masLang));
 }
 function hideMascot(){
   if(_mascotEl){ _mascotEl.classList.remove("show", "celebrate"); }
   clearTimeout(_mascotTimer);
 }
-function mascotSay(text, opts){
+function mascotSay(msg, opts){
   opts = opts || {};
+  if(typeof msg === "string") msg = { nl: msg, en: msg };
+  _masMsg = { nl: msg.nl || msg.en || "", en: msg.en || msg.nl || "" };
   const m = ensureMascot();
-  // herstart binnenkomst-animatie
   m.classList.remove("show");
-  void m.offsetWidth;
-  m.querySelector(".mascot-text").textContent = text;
+  void m.offsetWidth;                       // herstart binnenkomst-animatie
+  paintMascot();
   m.classList.toggle("celebrate", !!opts.celebrate);
   m.classList.add("show");
   if(opts.celebrate) sparkle(m);
   clearTimeout(_mascotTimer);
-  _mascotTimer = setTimeout(hideMascot, opts.duration || (opts.celebrate ? 6500 : 5200));
+  _mascotTimer = setTimeout(hideMascot, opts.duration || 8000);
 }
 function mascotWelcome(name){
-  mascotSay("Welkom" + (name ? ", " + name : "") + "! Veel leerplezier! 🌟", { duration: 5200 });
+  mascotSay({
+    nl: "Welkom" + (name ? ", " + name : "") + "! Veel leerplezier! 🌟",
+    en: "Welcome" + (name ? ", " + name : "") + "! Have fun learning! 🌟"
+  }, { duration: 9000 });
 }
-function mascotCelebrate(what){
-  mascotSay("Proficiat! 🎉 " + (what ? what + " " : "") + "Op naar het volgende level!", { celebrate: true });
+function mascotCelebrate(whatNl, whatEn){
+  mascotSay({
+    nl: "Proficiat! 🎉 " + (whatNl ? whatNl + " " : "") + "Op naar het volgende level!",
+    en: "Congratulations! 🎉 " + (whatEn ? whatEn + " " : "") + "On to the next level!"
+  }, { celebrate: true, duration: 9000 });
 }
 function mascotStruggle(tip){
   const now = Date.now();
   if(now - _lastMascot < 20000) return;
-  if(_mascotCount >= 10) return;
+  if(_mascotCount >= 12) return;
   _lastMascot = now;
   _mascotCount++;
-  mascotSay(tip || "Neem rustig je tijd — jij kan dit! 💪", { duration: 6800 });
+  mascotSay(tip || { nl: "Neem rustig je tijd — jij kan dit! 💪", en: "Take your time — you've got this! 💪" }, { duration: 16000 });
 }
 function sparkle(m){
   for(let i = 0; i < 6; i++){
     const s = el("span", "spark", "✨");
-    s.style.left = (10 + Math.random() * 60) + "px";
-    s.style.bottom = (20 + Math.random() * 40) + "px";
+    s.style.left = (8 + Math.random() * 46) + "px";
+    s.style.bottom = (16 + Math.random() * 34) + "px";
     s.style.animationDelay = (Math.random() * 0.35) + "s";
     m.appendChild(s);
     setTimeout(() => s.remove(), 1200);
