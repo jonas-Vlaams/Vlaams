@@ -217,9 +217,9 @@
     transform:translateX(135%); opacity:0; pointer-events:none;
     transition:transform .5s cubic-bezier(.3,1.4,.5,1), opacity .3s; }
   .mascot.show{ transform:none; opacity:1; pointer-events:auto; }
-  .mascot-dog{ width:60px; height:60px; flex:none; cursor:pointer; filter:drop-shadow(0 5px 12px rgba(0,0,0,.35)); animation:dogbob 2.8s ease-in-out infinite; }
+  .mascot-dog{ width:66px; height:66px; flex:none; cursor:pointer; filter:drop-shadow(0 5px 12px rgba(0,0,0,.35)); animation:dogbob 2.8s ease-in-out infinite; }
   .mascot-dog svg{ width:100%; height:100%; display:block; overflow:visible; }
-  .mascot-bubble{ position:relative; max-width:216px; background:var(--panel); border:1px solid var(--border); border-radius:13px 13px 4px 13px;
+  .mascot-bubble{ position:relative; max-width:224px; background:var(--panel); border:1px solid var(--border); border-radius:13px 13px 4px 13px;
     padding:10px 26px 8px 12px; font-size:12.5px; line-height:1.45; color:var(--text); box-shadow:0 8px 20px rgba(0,0,0,.28); }
   .mascot-bubble:after{ content:""; position:absolute; right:-7px; bottom:11px; width:12px; height:12px; background:var(--panel);
     border-right:1px solid var(--border); border-bottom:1px solid var(--border); transform:rotate(-45deg); }
@@ -230,7 +230,7 @@
     border:1px solid var(--border-soft); background:var(--panel2); color:var(--text-dim); cursor:pointer; }
   .mascot-lang button.on{ background:var(--accent); color:#160e2e; border-color:var(--accent); }
   .dog-lid{ transform-box:fill-box; transform-origin:top center; transform:scaleY(0); animation:dogblink 4.6s infinite; }
-  .dog-tail{ transform-box:fill-box; transform-origin:100% 100%; animation:dogwag .45s ease-in-out infinite; }
+  .dog-tail{ transform-box:fill-box; transform-origin:85% 88%; animation:dogwag .5s ease-in-out infinite; }
   .dog-ear{ transform-box:fill-box; transform-origin:top center; }
   .mascot.show .dog-ear-l{ animation:dogear .5s ease 2; }
   .mascot.show .dog-ear-r{ animation:dogear .5s ease 2 reverse; }
@@ -238,7 +238,7 @@
   .mascot .spark{ position:absolute; width:10px; height:10px; pointer-events:none; color:var(--nl); font-size:12px; animation:sparkup .9s ease forwards; }
   @keyframes dogbob{ 50%{ transform:translateY(-5px); } }
   @keyframes dogblink{ 0%,91%,100%{ transform:scaleY(0); } 95%{ transform:scaleY(1); } }
-  @keyframes dogwag{ 0%,100%{ transform:rotate(-6deg); } 50%{ transform:rotate(20deg); } }
+  @keyframes dogwag{ 0%,100%{ transform:rotate(-5deg); } 50%{ transform:rotate(12deg); } }
   @keyframes dogear{ 0%,100%{ transform:rotate(0); } 50%{ transform:rotate(-14deg); } }
   @keyframes doghop{ 0%,100%{ transform:translateY(0) rotate(0); } 40%{ transform:translateY(-14px) rotate(-7deg); } 70%{ transform:translateY(0) rotate(5deg); } }
   @keyframes sparkup{ 0%{ transform:translateY(0) scale(.4); opacity:0; } 30%{ opacity:1; } 100%{ transform:translateY(-34px) scale(1.1); opacity:0; } }
@@ -248,8 +248,8 @@
   }
   @media (max-width:520px){
     .mascot{ right:8px; bottom:10px; }
-    .mascot-dog{ width:50px; height:50px; }
-    .mascot-bubble{ max-width:172px; font-size:12px; padding:9px 24px 7px 10px; }
+    .mascot-dog{ width:54px; height:54px; }
+    .mascot-bubble{ max-width:176px; font-size:12px; padding:9px 24px 7px 10px; }
   }
 
   /* ---------- choice / flash ---------- */
@@ -2592,22 +2592,28 @@ let _mascotEl = null, _mascotTimer = null, _lastMascot = 0, _mascotCount = 0;
 let _masLang = (lsGet(NS + "_masclang", "nl") === "en") ? "en" : "nl";
 let _masMsg = { nl: "", en: "" };
 
+// Samoyed "Beau" — pluizige witte hond met naamplaatje
 const DOG_SVG =
-  '<svg viewBox="0 0 100 104" xmlns="http://www.w3.org/2000/svg">' +
-  '<path class="dog-tail" d="M14 68 q-13 -3 -12 -20 q7 9 16 13 Z" fill="#c98a3c"/>' +
-  '<ellipse cx="52" cy="76" rx="30" ry="24" fill="#e2a458"/>' +
-  '<ellipse cx="40" cy="98" rx="7.5" ry="5" fill="#f6e6cd"/><ellipse cx="64" cy="98" rx="7.5" ry="5" fill="#f6e6cd"/>' +
-  '<path class="dog-ear dog-ear-l" d="M27 24 q-16 3 -14 33 q11 -6 22 -12 Z" fill="#c98a3c"/>' +
-  '<path class="dog-ear dog-ear-r" d="M73 24 q16 3 14 33 q-11 -6 -22 -12 Z" fill="#c98a3c"/>' +
-  '<circle cx="50" cy="46" r="28" fill="#e2a458"/>' +
-  '<ellipse cx="50" cy="57" rx="17" ry="14" fill="#f6e6cd"/>' +
-  '<circle cx="39" cy="42" r="4.6" fill="#33261a"/><circle cx="61" cy="42" r="4.6" fill="#33261a"/>' +
-  '<circle cx="40.6" cy="40.4" r="1.6" fill="#fff"/><circle cx="62.6" cy="40.4" r="1.6" fill="#fff"/>' +
-  '<rect class="dog-lid" x="33" y="35.5" width="12" height="11" rx="5.5" fill="#e2a458"/>' +
-  '<rect class="dog-lid" x="55" y="35.5" width="12" height="11" rx="5.5" fill="#e2a458"/>' +
-  '<ellipse cx="50" cy="52" rx="5.2" ry="3.8" fill="#33261a"/>' +
-  '<path d="M50 55 v5 M50 60 q-5 4 -9 1 M50 60 q5 4 9 1" stroke="#33261a" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-  '<path class="dog-tongue" d="M46.5 60 q3.5 8 7 0 Z" fill="#f2889b"/>' +
+  '<svg viewBox="0 0 100 112" xmlns="http://www.w3.org/2000/svg">' +
+  '<path class="dog-tail" d="M23 55 q-21 -5 -13 -31 q23 2 27 25 q-5 8 -14 6 Z" fill="#e9edf4"/>' +
+  '<ellipse cx="53" cy="84" rx="30" ry="23" fill="#f5f7fb"/>' +
+  '<ellipse cx="41" cy="104" rx="8" ry="5.5" fill="#eef1f7"/><ellipse cx="66" cy="104" rx="8" ry="5.5" fill="#eef1f7"/>' +
+  '<ellipse cx="50" cy="65" rx="28" ry="17" fill="#eef1f7"/>' +
+  '<path class="dog-ear dog-ear-l" d="M31 24 L22 3 L45 19 Z" fill="#eef1f7"/>' +
+  '<path class="dog-ear dog-ear-r" d="M69 24 L78 3 L55 19 Z" fill="#eef1f7"/>' +
+  '<path d="M33 22 L28 9 L41 20 Z" fill="#f3ccd7"/><path d="M67 22 L72 9 L59 20 Z" fill="#f3ccd7"/>' +
+  '<circle cx="50" cy="44" r="26" fill="#f7f9fc"/>' +
+  '<ellipse cx="40" cy="42" rx="3.7" ry="4.7" fill="#26262b"/><ellipse cx="60" cy="42" rx="3.7" ry="4.7" fill="#26262b"/>' +
+  '<circle cx="41.3" cy="40.1" r="1.3" fill="#fff"/><circle cx="61.3" cy="40.1" r="1.3" fill="#fff"/>' +
+  '<rect class="dog-lid" x="35.5" y="35" width="9" height="10" rx="4.5" fill="#f7f9fc"/>' +
+  '<rect class="dog-lid" x="55.5" y="35" width="9" height="10" rx="4.5" fill="#f7f9fc"/>' +
+  '<ellipse cx="50" cy="50" rx="4.6" ry="3.4" fill="#26262b"/>' +
+  '<path d="M50 53 v3 M50 56 q-8 7 -13 -1 M50 56 q8 7 13 -1" stroke="#26262b" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+  '<path class="dog-tongue" d="M46 57 q4 7 8 0 Z" fill="#f2889b"/>' +
+  '<path d="M29 60 q21 14 42 0" stroke="#a78bfa" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+  '<line x1="50" y1="64" x2="50" y2="69" stroke="#c9a24a" stroke-width="1.6"/>' +
+  '<rect x="36" y="68" width="28" height="13.5" rx="3.5" fill="#fbbf24" stroke="#dca62f" stroke-width="1"/>' +
+  '<text x="50" y="77.9" text-anchor="middle" font-family="system-ui,-apple-system,Arial,sans-serif" font-size="8.4" font-weight="800" fill="#5b3d0b">Beau</text>' +
   '</svg>';
 
 function ensureMascot(){
@@ -2654,9 +2660,9 @@ function mascotSay(msg, opts){
 }
 function mascotWelcome(name){
   mascotSay({
-    nl: "Welkom" + (name ? ", " + name : "") + "! Veel leerplezier! 🌟",
-    en: "Welcome" + (name ? ", " + name : "") + "! Have fun learning! 🌟"
-  }, { duration: 9000 });
+    nl: "Woef! Ik ben Beau 🐾 Welkom" + (name ? ", " + name : "") + "! Veel leerplezier!",
+    en: "Woof! I'm Beau 🐾 Welcome" + (name ? ", " + name : "") + "! Have fun learning!"
+  }, { duration: 9500 });
 }
 function mascotCelebrate(whatNl, whatEn){
   mascotSay({
