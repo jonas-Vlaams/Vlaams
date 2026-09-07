@@ -11,9 +11,9 @@
 <title>Nederlands leren</title>
 <style>
   :root{
-    --bg:#0f1117; --panel:#1a1d29; --panel2:#1f2333;
-    --border:#2c3142; --border-soft:#252a3a;
-    --text:#e7e9f2; --text-dim:#9aa0b8;
+    --bg:#161427; --panel:#201d33; --panel2:#28243d;
+    --border:#363058; --border-soft:#2c2747;
+    --text:#eceaf6; --text-dim:#a6a2c2;
     --en:#7dd3fc; --nl:#fbbf24;
     --good:#4ade80; --bad:#f87171;
     --good-bg:rgba(74,222,128,0.14); --bad-bg:rgba(248,113,113,0.14);
@@ -286,10 +286,14 @@
     --blue:#1cb0f6; --gold:#ffc800; --red-x:#ff4b4b; --wrong-bg:rgba(255,75,75,.14);
     --ok-bg:rgba(88,204,2,.16); --almost:#ffc800; --almost-bg:rgba(255,200,0,.16);
   }
-  body{ background:
-      radial-gradient(1200px 500px at 12% -8%, rgba(167,139,250,.16), transparent 60%),
-      radial-gradient(1000px 460px at 100% 0%, rgba(28,176,246,.12), transparent 55%),
-      var(--bg); }
+  body{
+    background:
+      radial-gradient(1100px 520px at 8% -6%, rgba(167,139,250,.20), transparent 58%),
+      radial-gradient(1000px 480px at 100% 2%, rgba(28,176,246,.14), transparent 55%),
+      radial-gradient(1200px 620px at 50% 116%, rgba(88,204,2,.12), transparent 60%),
+      linear-gradient(178deg, #1b1733 0%, #161427 46%, #131a1c 100%) fixed;
+    background-color:var(--bg);
+  }
   .d-btn{
     background:var(--green); color:#08340a; border:none; border-radius:14px; font-weight:800;
     font-size:15px; letter-spacing:.02em; padding:13px 18px; cursor:pointer; width:100%;
@@ -302,6 +306,7 @@
   .d-btn.big{ padding:15px; font-size:16px; }
   .d-btn.wrong{ background:var(--red-x); box-shadow:0 4px 0 #c92c2c; color:#fff; }
   .d-btn.ok{ background:var(--green); box-shadow:0 4px 0 var(--green-d); }
+  .d-btn.retry{ background:var(--gold); box-shadow:0 4px 0 #c99e00; color:#4a3800; }
 
   .duo-top{ position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between;
     gap:10px; padding:10px 16px 8px; background:rgba(15,17,23,.92); backdrop-filter:blur(8px); }
@@ -2558,10 +2563,17 @@ MODULES.splice(5, 0,
 );
 
 /* ---- fuzzy nakijken ---- */
+const NUM_NL = { 0:"nul",1:"een",2:"twee",3:"drie",4:"vier",5:"vijf",6:"zes",7:"zeven",8:"acht",9:"negen",
+  10:"tien",11:"elf",12:"twaalf",13:"dertien",14:"veertien",15:"vijftien",16:"zestien",17:"zeventien",
+  18:"achttien",19:"negentien",20:"twintig",21:"eenentwintig",22:"tweeentwintig",25:"vijfentwintig",
+  30:"dertig",40:"veertig",50:"vijftig",60:"zestig",70:"zeventig",80:"tachtig",90:"negentig",
+  100:"honderd",1000:"duizend" };
 function normText(s){
   return String(s == null ? "" : s).toLowerCase()
     .normalize("NFD").replace(/[̀-ͯ]/g, "")
     .replace(/[.,!?;:'"()’‘“”]/g, "")
+    .replace(/(\d+)\s*(?:u|uur)\b/g, "$1 uur")
+    .replace(/\b\d+\b/g, m => (NUM_NL[+m] != null ? NUM_NL[+m] : m))
     .replace(/\s+/g, " ").trim();
 }
 function lev(a, b){
@@ -3207,37 +3219,48 @@ function drawExercise(){
 
   const ctx = {
     ex: ex, body: body, act: act, banner: banner,
-    setReady: (ok) => { act.disabled = !ok; },
-    result: null
+    setReady: (ok) => { if(ctx.phase !== "answered") act.disabled = !ok; },
+    phase: null            // null -> "retry" (bijna, opnieuw) -> "answered"
   };
   const R = EX_RENDER[ex.t] || EX_RENDER.pick;
   R(ctx);
 
   act.onclick = () => {
-    if(!ctx.result){
-      const r = ctx.check();
-      ctx.result = r;
-      showBanner(banner, r);
-      recordWeak(ex, r.ok);
-      if(!r.ok) S.again.push(ex);
-      else { S.right++; S.xp += 8; }
-      act.textContent = "Doorgaan";
-      act.classList.toggle("wrong", !r.ok);
-      act.classList.toggle("ok", r.ok);
+    if(ctx.phase === "answered"){ S.pos++; drawExercise(); return; }
+    if(ctx.phase === "retry"){ drawExercise(); return; }   // zelfde oefening, vers
+
+    const r = ctx.check();
+    showBanner(banner, r);
+    act.classList.remove("ok", "wrong", "retry");
+
+    if(r.ok && !r.almost){
+      ctx.phase = "answered";
+      S.right++; S.xp += 8;
+      recordWeak(ex, true);
+      act.textContent = "Doorgaan"; act.classList.add("ok");
       if(ctx.lock) ctx.lock();
-      if(r.ok && (ex.t === "pick" || ex.t === "listen")) { /* al voorgelezen */ }
+    } else if(r.almost){
+      ctx.phase = "retry";
+      recordWeak(ex, false);
+      act.textContent = "Opnieuw proberen"; act.classList.add("retry");
+      // niet vergrendelen: laat verbeteren tot het helemaal juist is
     } else {
-      S.pos++;
-      drawExercise();
+      ctx.phase = "answered";
+      S.again.push(ex);
+      recordWeak(ex, false);
+      act.textContent = "Doorgaan"; act.classList.add("wrong");
+      if(ctx.lock) ctx.lock();
     }
   };
   window.scrollTo(0, 0);
 }
 function showBanner(b, r){
-  b.className = "lx-banner show " + (r.ok ? (r.almost ? "almost" : "ok") : "bad");
-  b.innerHTML = r.ok
-    ? (r.almost ? "Bijna juist! ✅ <span>" + esc(r.solution || "") + "</span>" : "Goed zo! 🎉")
-    : "Antwoord: <span>" + esc(r.solution || "") + "</span>";
+  b.className = "lx-banner show " + (r.ok && !r.almost ? "ok" : (r.almost ? "almost" : "bad"));
+  b.innerHTML = (r.ok && !r.almost)
+    ? "Goed zo! 🎉"
+    : (r.almost
+        ? "Bijna! Maak het helemaal juist om verder te gaan.<span>" + esc(r.solution || "") + "</span>"
+        : "Antwoord: <span>" + esc(r.solution || "") + "</span>");
 }
 function recordWeak(ex, ok){
   const S = _lx; if(!S) return;
@@ -3315,7 +3338,7 @@ EX_RENDER.pick = function(ctx){
     b.appendChild(el("span", null, o));
     if(ex.speakOpts) b.appendChild(spk(o, "mini"));
     b.onclick = () => {
-      if(ctx.result) return;
+      if(ctx.phase === "answered") return;
       grid.querySelectorAll(".lx-opt").forEach(x => x.classList.remove("sel"));
       b.classList.add("sel"); chosen = o; ctx.setReady(true);
       if(ex.speakOpts) speak(o, { word: true });
@@ -3354,7 +3377,7 @@ EX_RENDER.listen = function(ctx){
     b.appendChild(el("span", null, o));
     b.appendChild(spk(o, "mini"));
     b.onclick = () => {
-      if(ctx.result) return;
+      if(ctx.phase === "answered") return;
       grid.querySelectorAll(".lx-opt").forEach(x => x.classList.remove("sel"));
       b.classList.add("sel"); chosen = o; ctx.setReady(true);
     };
@@ -3451,12 +3474,12 @@ EX_RENDER.build = function(ctx){
     if(!placed.length) target.appendChild(el("span", "lx-ph", "…"));
     placed.forEach((ti, pos) => {
       const s = el("button", "lx-tok", tokens[ti]);
-      s.onclick = () => { if(ctx.result) return; placed.splice(pos, 1); redraw(); };
+      s.onclick = () => { if(ctx.phase === "answered") return; placed.splice(pos, 1); redraw(); };
       target.appendChild(s);
     });
     ids.filter(ti => placed.indexOf(ti) < 0).forEach(ti => {
       const s = el("button", "lx-tok bank", tokens[ti]);
-      s.onclick = () => { if(ctx.result) return; placed.push(ti); speak(tokens[ti]); redraw(); ctx.setReady(placed.length === tokens.length); };
+      s.onclick = () => { if(ctx.phase === "answered") return; placed.push(ti); speak(tokens[ti]); redraw(); ctx.setReady(placed.length === tokens.length); };
       bank.appendChild(s);
     });
     ctx.setReady(placed.length === tokens.length);
@@ -3489,7 +3512,7 @@ EX_RENDER.match = function(ctx){
     if(side === "R") b.appendChild(spk(o.txt, "mini"));
     b.dataset.i = o.i;
     b.onclick = () => {
-      if(ctx.result || b.classList.contains("done")) return;
+      if(ctx.phase === "answered" || b.classList.contains("done")) return;
       (side === "L" ? left : right).querySelectorAll(".lx-opt").forEach(x => x.classList.remove("sel"));
       b.classList.add("sel");
       if(side === "L") selL = b; else { selR = b; speak(o.txt, { word: true }); }
@@ -3535,7 +3558,7 @@ EX_RENDER.speak = function(ctx){
     mic.onclick = () => { speak(ex.target, { word: ex.word }); score = 0.9; tried = true; ctx.setReady(true); out.textContent = "Zeg het luidop en tik dan hierboven."; };
   } else {
     mic.onclick = () => {
-      if(ctx.result) return;
+      if(ctx.phase === "answered") return;
       mic.classList.add("rec"); mic.textContent = "🎙️ Luisteren…";
       recognizeNL(alts => {
         mic.classList.remove("rec"); mic.textContent = "🎤 Opnieuw proberen";
