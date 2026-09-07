@@ -2895,12 +2895,32 @@ if(window.speechSynthesis){
   loadVoices();
   try { speechSynthesis.onvoiceschanged = loadVoices; } catch(e){}
 }
+/* Uitspraak-woordenboek: losse woorden die de stem anders verkeerd zegt.
+   Alleen toegepast op losse woorden (niet in zinnen), zodat "een" als
+   lidwoord in een zin gewoon /ən/ blijft. Vul gerust aan. */
+const PRON = {
+  "een": "één",
+  "gsm": "gee-es-em", "sms": "es-em-es", "tv": "tee-vee", "pc": "pee-cee",
+  "cd": "cee-dee", "dvd": "dee-vee-dee", "wc": "wee-cee", "eu": "ee-joe",
+  "'s morgens": "s ochtends"
+};
+function fixPron(text, isWord){
+  let t = String(text).replace(/\s*\/\s*.*$/, "").replace(/\(.*?\)/g, "").trim() || String(text);
+  if(isWord){
+    const key = t.toLowerCase().replace(/[.!?,;:"']/g, "").trim();
+    if(PRON[key]) return PRON[key];
+  }
+  // altijd veilig (informele samentrekkingen die de stem struikelt over)
+  t = t.replace(/\bz'n\b/gi, "zijn").replace(/\bm'n\b/gi, "mijn").replace(/\bd'r\b/gi, "der")
+       .replace(/(^|\s)'t(\s|$)/gi, "$1het$2");
+  return t;
+}
 function speak(text, opts){
   opts = opts || {};
   if(!window.speechSynthesis || !_ttsOn) return;
   try {
     speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(String(text).replace(/\s*\/\s*.*$/, "").replace(/\(.*?\)/g, "").trim() || String(text));
+    const u = new SpeechSynthesisUtterance(fixPron(text, opts.word));
     u.lang = "nl-BE";
     if(_nlVoice) u.voice = _nlVoice;
     u.rate = opts.slow ? 0.62 : 0.92;
@@ -2913,7 +2933,7 @@ function spk(text, extra){
   b.type = "button";
   b.innerHTML = '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true"><path fill="currentColor" d="M4 9v6h4l5 5V4L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.06A7 7 0 0 1 14 20.7v2.06A9 9 0 0 0 14 3.2z"/></svg>';
   b.setAttribute("aria-label", "Uitspreken");
-  b.onclick = e => { e.stopPropagation(); e.preventDefault(); speak(text); };
+  b.onclick = e => { e.stopPropagation(); e.preventDefault(); speak(text, { word: true }); };
   return b;
 }
 
@@ -3090,7 +3110,7 @@ function exMatch(items){
 }
 function exSpeak(it){
   const target = it.kind === "sentence" ? it.nl : it.nls[0];
-  return { t: "speak", target: target, hintEN: it.kind === "sentence" ? it.en : it.en, it: it };
+  return { t: "speak", target: target, word: it.kind !== "sentence", hintEN: it.en, it: it };
 }
 
 function buildLesson(lesson, unitIdx){
@@ -3298,7 +3318,7 @@ EX_RENDER.pick = function(ctx){
       if(ctx.result) return;
       grid.querySelectorAll(".lx-opt").forEach(x => x.classList.remove("sel"));
       b.classList.add("sel"); chosen = o; ctx.setReady(true);
-      if(ex.speakOpts) speak(o);
+      if(ex.speakOpts) speak(o, { word: true });
     };
     grid.appendChild(b);
   });
@@ -3320,12 +3340,12 @@ EX_RENDER.listen = function(ctx){
   ctx.body.appendChild(el("div", "lx-q", "Wat hoor je?"));
   const big = el("button", "lx-bigspk");
   big.innerHTML = '<svg viewBox="0 0 24 24" width="34" height="34"><path fill="currentColor" d="M4 9v6h4l5 5V4L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg>';
-  big.onclick = () => speak(ex.play);
+  big.onclick = () => speak(ex.play, { word: true });
   ctx.body.appendChild(big);
   const slow = el("button", "lx-slow", "🐢 trager");
-  slow.onclick = () => speak(ex.play, { slow: true });
+  slow.onclick = () => speak(ex.play, { slow: true, word: true });
   ctx.body.appendChild(slow);
-  setTimeout(() => speak(ex.play), 350);
+  setTimeout(() => speak(ex.play, { word: true }), 350);
 
   let chosen = null;
   const grid = el("div", "lx-opts");
@@ -3472,7 +3492,7 @@ EX_RENDER.match = function(ctx){
       if(ctx.result || b.classList.contains("done")) return;
       (side === "L" ? left : right).querySelectorAll(".lx-opt").forEach(x => x.classList.remove("sel"));
       b.classList.add("sel");
-      if(side === "L") selL = b; else { selR = b; speak(o.txt); }
+      if(side === "L") selL = b; else { selR = b; speak(o.txt, { word: true }); }
       if(selL && selR){
         if(selL.dataset.i === selR.dataset.i){
           selL.classList.add("done"); selR.classList.add("done");
@@ -3512,7 +3532,7 @@ EX_RENDER.speak = function(ctx){
   skip.onclick = () => { score = 0.85; tried = true; ctx.setReady(true); out.textContent = "Top — zelf beoordeeld ✅"; out.className = "lx-heard ok"; };
 
   if(!SR){
-    mic.onclick = () => { speak(ex.target); score = 0.9; tried = true; ctx.setReady(true); out.textContent = "Zeg de zin luidop en tik dan hierboven."; };
+    mic.onclick = () => { speak(ex.target, { word: ex.word }); score = 0.9; tried = true; ctx.setReady(true); out.textContent = "Zeg het luidop en tik dan hierboven."; };
   } else {
     mic.onclick = () => {
       if(ctx.result) return;
