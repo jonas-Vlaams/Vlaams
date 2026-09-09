@@ -3,21 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0f1117">
+<meta name="theme-color" content="#8fd3ff">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Nederlands">
 <title>Nederlands leren</title>
 <style>
   :root{
-    --bg:#161427; --panel:#201d33; --panel2:#28243d;
-    --border:#363058; --border-soft:#2c2747;
-    --text:#eceaf6; --text-dim:#a6a2c2;
-    --en:#7dd3fc; --nl:#fbbf24;
-    --good:#4ade80; --bad:#f87171;
-    --good-bg:rgba(74,222,128,0.14); --bad-bg:rgba(248,113,113,0.14);
-    --accent:#a78bfa;
+    --bg:#c3e6ff; --panel:#ffffff; --panel2:#eef4fb;
+    --border:#d7e2ee; --border-soft:#e6edf5;
+    --text:#20303d; --text-dim:#5e7284;
+    --en:#1382c6; --nl:#b9781f;
+    --good:#3fa826; --bad:#e5484d;
+    --good-bg:rgba(63,168,38,0.13); --bad-bg:rgba(229,72,77,0.12);
+    --accent:#7c5cff;
+    --card-shadow:0 6px 18px rgba(40,70,110,.12);
   }
   *{box-sizing:border-box;}
   html,body{margin:0;}
@@ -65,7 +66,7 @@
   .topbar{
     position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:10px;
     justify-content:space-between; padding:10px 16px;
-    background:rgba(15,17,23,0.96); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
+    background:rgba(255,255,255,0.86); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);
     border-bottom:1px solid var(--border);
   }
   .profchip{
@@ -96,7 +97,7 @@
   /* ---------- module bar ---------- */
   .mbar{
     position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:10px;
-    padding:10px 14px; background:rgba(15,17,23,0.97);
+    padding:10px 14px; background:rgba(255,255,255,0.9);
     -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); border-bottom:1px solid var(--border);
   }
   .backbtn{ background:var(--panel2); border:1px solid var(--border); color:var(--text); border-radius:8px; padding:7px 11px; font-size:13px; cursor:pointer; }
@@ -286,13 +287,59 @@
     --blue:#1cb0f6; --gold:#ffc800; --red-x:#ff4b4b; --wrong-bg:rgba(255,75,75,.14);
     --ok-bg:rgba(88,204,2,.16); --almost:#ffc800; --almost-bg:rgba(255,200,0,.16);
   }
-  body{
-    background:
-      radial-gradient(1100px 520px at 8% -6%, rgba(167,139,250,.20), transparent 58%),
-      radial-gradient(1000px 480px at 100% 2%, rgba(28,176,246,.14), transparent 55%),
-      radial-gradient(1200px 620px at 50% 116%, rgba(88,204,2,.12), transparent 60%),
-      linear-gradient(178deg, #1b1733 0%, #161427 46%, #131a1c 100%) fixed;
-    background-color:var(--bg);
+  body{ background:var(--bg); }
+  #app{ position:relative; z-index:1; }
+
+  /* ===== speelse geanimeerde achtergrond ===== */
+  #scene{ position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+  #scene .sky{ position:absolute; inset:0;
+    background:linear-gradient(180deg, #8fd3ff 0%, #bfe6ff 42%, #e7f7ff 66%, #dff3d0 100%); }
+  #scene .sun{ position:absolute; top:-26px; right:-26px; width:150px; height:150px; border-radius:50%;
+    background:radial-gradient(circle at 42% 42%, #fff3b0, #ffd84d 62%, #ffc21f 100%);
+    box-shadow:0 0 60px 18px rgba(255,214,77,.55); animation:sunpulse 6s ease-in-out infinite; }
+  #scene .sun:before{ content:""; position:absolute; inset:-34px; border-radius:50%;
+    background:conic-gradient(from 0deg, rgba(255,221,120,.55) 0 8deg, transparent 8deg 30deg);
+    -webkit-mask:radial-gradient(circle, transparent 58%, #000 60%); mask:radial-gradient(circle, transparent 58%, #000 60%);
+    animation:spin 40s linear infinite; }
+  #scene .cloud{ position:absolute; width:130px; height:42px; background:#fff; border-radius:40px;
+    filter:drop-shadow(0 8px 10px rgba(80,120,160,.12)); opacity:.9; animation:drift linear infinite; }
+  #scene .cloud:before,#scene .cloud:after{ content:""; position:absolute; background:#fff; border-radius:50%; }
+  #scene .cloud:before{ width:56px; height:56px; left:16px; top:-24px; }
+  #scene .cloud:after{ width:40px; height:40px; right:20px; top:-16px; }
+  #scene .flyword{ position:absolute; font-weight:800; font-size:15px; color:rgba(30,70,110,.42);
+    white-space:nowrap; animation:flyby linear forwards; text-shadow:0 1px 0 rgba(255,255,255,.6); }
+  #scene .hopper{ position:absolute; bottom:8px; font-size:22px; animation:hopby linear forwards; }
+  #scene .hopper span{ display:inline-block; animation:hopY .45s ease-in-out infinite; }
+  #scene .ground{ position:absolute; left:0; right:0; bottom:0; height:80px;
+    background:linear-gradient(180deg, #cdeeae, #9fd97e); border-top-left-radius:50% 22px; border-top-right-radius:50% 22px; }
+  @keyframes sunpulse{ 50%{ transform:scale(1.05); box-shadow:0 0 78px 26px rgba(255,214,77,.6); } }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  @keyframes drift{ from{ transform:translateX(-160px); } to{ transform:translateX(calc(100vw + 160px)); } }
+  @keyframes flyby{ 0%{ transform:translate(-30vw,0) rotate(-4deg); opacity:0; }
+    10%{ opacity:.5; } 90%{ opacity:.5; } 100%{ transform:translate(90vw,-16px) rotate(4deg); opacity:0; } }
+  @keyframes hopby{ 0%{ transform:translateX(-12vw) translateY(0); } 100%{ transform:translateX(112vw) translateY(0); } }
+  @keyframes hopY{ 50%{ transform:translateY(-16px); } }
+
+  /* per-eenheid thema-band achter het pad */
+  .unit-wrap{ position:relative; border-radius:20px; margin:4px 0; padding:2px 0 10px;
+    background:linear-gradient(180deg, var(--b1), var(--b2)); overflow:hidden; }
+  .unit-wrap .band-deco{ position:absolute; z-index:1; pointer-events:none; opacity:.92; font-size:27px;
+    animation:floaty 7s ease-in-out infinite; filter:drop-shadow(0 3px 4px rgba(0,0,0,.12)); }
+  .unit-wrap .band-deco.s{ font-size:18px; opacity:.75; }
+  .unit-wrap .band-beau{ position:absolute; bottom:8px; width:74px; height:auto; animation:walkAcross linear infinite; }
+  .unit-wrap .band-beau.flip{ transform:scaleX(-1); }
+  @keyframes floaty{ 50%{ transform:translateY(-10px) rotate(4deg); } }
+  @keyframes walkAcross{ 0%{ left:-90px; } 100%{ left:100%; } }
+  .band-beau .wleg{ transform-box:fill-box; transform-origin:top center; }
+  .band-beau .wleg-f1,.band-beau .wleg-b2{ animation:trot .5s ease-in-out infinite; }
+  .band-beau .wleg-f2,.band-beau .wleg-b1{ animation:trot .5s ease-in-out infinite reverse; }
+  .band-beau .wtail{ transform-box:fill-box; transform-origin:0% 100%; animation:dogwag .4s ease-in-out infinite; }
+  @keyframes trot{ 50%{ transform:rotate(24deg); } }
+
+  @media (prefers-reduced-motion: reduce){
+    #scene .cloud,#scene .flyword,#scene .hopper,#scene .sun,#scene .sun:before,
+    .unit-wrap .band-deco,.unit-wrap .band-beau,.band-beau .wleg,.band-beau .wtail{ animation:none !important; }
+    #scene .flyword,#scene .hopper{ display:none; }
   }
   .d-btn{
     background:var(--green); color:#08340a; border:none; border-radius:14px; font-weight:800;
@@ -309,7 +356,7 @@
   .d-btn.retry{ background:var(--gold); box-shadow:0 4px 0 #c99e00; color:#4a3800; }
 
   .duo-top{ position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between;
-    gap:10px; padding:10px 16px 8px; background:rgba(15,17,23,.92); backdrop-filter:blur(8px); }
+    gap:10px; padding:10px 16px 8px; background:rgba(255,255,255,.88); backdrop-filter:blur(8px); }
   .duo-top-r{ display:flex; align-items:center; gap:8px; }
   .duo-stat{ display:flex; align-items:center; gap:4px; font-size:13px; background:var(--panel2);
     border:1px solid var(--border); border-radius:20px; padding:5px 10px; color:var(--text); }
@@ -318,7 +365,7 @@
   .duo-stat.sndtog{ cursor:pointer; font-size:15px; padding:5px 9px; }
   .duo-stat.sndtog.on{ border-color:var(--blue); }
   .duo-tabs{ position:sticky; top:46px; z-index:19; display:flex; gap:6px; padding:0 12px 10px;
-    background:rgba(15,17,23,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); }
+    background:rgba(255,255,255,.88); backdrop-filter:blur(8px); border-bottom:1px solid var(--border); }
   .duo-tab{ flex:1; background:var(--panel); border:1px solid var(--border); border-radius:12px;
     padding:9px 6px; font-size:12.5px; font-weight:700; color:var(--text-dim); cursor:pointer; }
   .duo-tab.on{ color:var(--text); border-color:var(--accent); background:var(--panel2); box-shadow:0 3px 0 rgba(167,139,250,.25); }
@@ -336,7 +383,7 @@
     font-size:22px; color:#fff; background:var(--c);
     box-shadow:0 6px 0 color-mix(in srgb, var(--c) 55%, #000); transition:transform .08s; }
   .duo-node:active{ transform:translateY(3px); }
-  .duo-node.lock{ background:var(--panel2); color:var(--text-dim); box-shadow:0 6px 0 var(--border); cursor:default; }
+  .duo-node.lock{ background:#dbe5f0; color:#8ba0b4; box-shadow:0 6px 0 #c3d1e0; cursor:default; }
   .duo-node.done{ background:var(--gold); box-shadow:0 6px 0 #c99e00; color:#5a4600; }
   .duo-node.rev{ border-radius:16px; }
   .duo-node.cur{ transform:scale(1.14); box-shadow:0 8px 0 color-mix(in srgb, var(--c) 55%, #000); animation:nodePulse 1.8s ease-in-out infinite; }
@@ -427,6 +474,34 @@
   .confetti i{ position:absolute; top:-12px; width:9px; height:14px; border-radius:2px; animation:conffall 2.4s linear forwards; }
   @keyframes conffall{ to{ transform:translateY(105vh) rotate(640deg); opacity:.2; } }
   @media (prefers-reduced-motion: reduce){ .confetti, .duo-node.cur{ animation:none; } }
+
+  /* ===== licht thema: witte kaarten, leesbare tekst ===== */
+  .duo-tab{ box-shadow:var(--card-shadow); }
+  .duo-tab.on{ box-shadow:0 3px 0 var(--accent); }
+  .mcard,.rulebox,.introtext,.list,.card,.board,.duo-weak{ box-shadow:var(--card-shadow); }
+  .duo-node-cr{ color:#fff; text-shadow:0 1px 2px rgba(0,0,0,.4); }
+  .lx-q{ text-shadow:0 1px 0 rgba(255,255,255,.5); }
+  .lx{ background:rgba(255,255,255,.6); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px); border-radius:0; }
+  .lx-foot{ background:linear-gradient(180deg, rgba(255,255,255,.4), var(--panel)); }
+  .lx-opt,.lx-prompt,.lx-input,.lx-tok{ box-shadow:var(--card-shadow); }
+  .storenote{ color:var(--text-dim); }
+
+  /* ===== mobiel: app-look met vaste onderbalk ===== */
+  @media (max-width:640px){
+    #app{ padding-bottom:72px; }
+    .duo-tabs{ position:fixed; left:0; right:0; bottom:0; top:auto; z-index:45;
+      gap:0; padding:6px 6px calc(6px + env(safe-area-inset-bottom));
+      background:rgba(255,255,255,.96); border-top:1px solid var(--border); border-bottom:none;
+      box-shadow:0 -6px 18px rgba(40,70,110,.1); }
+    .duo-tab{ background:none; border:none; box-shadow:none; border-radius:12px;
+      display:flex; flex-direction:column; align-items:center; gap:2px; font-size:10.5px; padding:6px 2px; }
+    .duo-tab .ti{ font-size:20px; line-height:1; }
+    .duo-tab.on{ background:var(--panel2); box-shadow:none; color:var(--accent); }
+    .duo-top{ position:sticky; }
+    .duo-path{ padding-bottom:96px; }
+    .duo-review,.hub-grid,.hubfoot{ padding-bottom:90px; }
+    .topbar .backbtn{ display:none; }
+  }
 </style>
 </head>
 <body>
@@ -1764,6 +1839,7 @@ function storageNote(){
 /* =================== GATE =================== */
 function renderGate(){
   app.innerHTML = "";
+  if(typeof ensureScene === "function") ensureScene();
   const wrap = el("div", "gate");
   wrap.appendChild(el("div", "gate-logo", "🇧🇪"));
   wrap.appendChild(el("h1", null, "Nederlands leren"));
@@ -1806,18 +1882,8 @@ function renderGate(){
 function renderHub(){
   const cur = getCurrent();
   app.innerHTML = "";
-
-  const top = el("div", "topbar");
-  const b = el("button", "backbtn", "‹ Leerpad");
-  b.onclick = () => { location.hash = "#/"; };
-  top.appendChild(b);
-  const chip = el("button", "profchip");
-  chip.innerHTML = "👤 " + esc(cur) + ' <span class="chev">▾</span>';
-  chip.onclick = openProfileMenu;
-  top.appendChild(chip);
-  const t = totalProgressForProfile(cur);
-  top.appendChild(el("span", "toptotal", t.done + " / " + t.total));
-  app.appendChild(top);
+  if(typeof ensureScene === "function") ensureScene();
+  app.appendChild(topBar("extra"));
 
   const head = el("div", "hubhead");
   head.appendChild(el("h1", null, "Extra oefeningen"));
@@ -1882,6 +1948,7 @@ function renderModule(m){
   const prog = getProgress(cur, m.id);
 
   app.innerHTML = "";
+  if(typeof ensureScene === "function") ensureScene();
 
   const bar = el("div", "mbar");
   const back = el("button", "backbtn", "‹ Terug");
@@ -2756,57 +2823,65 @@ let _mascotEl = null, _mascotTimer = null, _lastMascot = 0, _mascotCount = 0;
 let _masLang = (lsGet(NS + "_masclang", "nl") === "en") ? "en" : "nl";
 let _masMsg = { nl: "", en: "" };
 
-// Samoyed "Beau" — schoon vormgegeven, zittend met pootjes
-const DOG_SVG = (function(){
-  function fluff(cx, cy, R, n, r, fill, start){
-    let s = "";
-    for(let i = 0; i < n; i++){
-      const a = (i / n) * Math.PI * 2 + (start || 0);
-      s += '<circle cx="' + (cx + R * Math.cos(a)).toFixed(1) +
-           '" cy="' + (cy + R * Math.sin(a)).toFixed(1) +
-           '" r="' + r + '" fill="' + fill + '"/>';
-    }
-    return s;
-  }
-  const SHADE = "#e4ebf4", SOFT = "#f8fafc", WHITE = "#ffffff";
-  return '<svg viewBox="0 0 108 128" xmlns="http://www.w3.org/2000/svg">' +
-    '<ellipse cx="55" cy="122" rx="33" ry="4.5" fill="#000" opacity=".16"/>' +
-    '<g class="dog-tail">' + fluff(19, 62, 8, 5, 8, SHADE) + fluff(20, 61, 7, 5, 7.5, SOFT) + '</g>' +
-    fluff(56, 90, 27, 9, 11.5, SHADE, -0.2) +
-    fluff(56, 88, 26, 9, 11.5, SOFT, -0.2) +
-    '<ellipse cx="56" cy="90" rx="24" ry="21" fill="' + WHITE + '"/>' +
-    '<ellipse cx="45" cy="112" rx="9.5" ry="8" fill="' + SHADE + '"/>' +
-    '<ellipse cx="45" cy="110" rx="9" ry="7.5" fill="' + WHITE + '"/>' +
-    '<ellipse cx="67" cy="112" rx="9.5" ry="8" fill="' + SHADE + '"/>' +
-    '<ellipse cx="67" cy="110" rx="9" ry="7.5" fill="' + WHITE + '"/>' +
-    '<path d="M41.5 108 v5 M45 108.5 v5.5 M48.5 108 v5" stroke="#d8e0ec" stroke-width="1.4" fill="none" stroke-linecap="round"/>' +
-    '<path d="M63.5 108 v5 M67 108.5 v5.5 M70.5 108 v5" stroke="#d8e0ec" stroke-width="1.4" fill="none" stroke-linecap="round"/>' +
-    '<ellipse cx="56" cy="86" rx="15" ry="12" fill="' + WHITE + '"/>' +
-    '<g class="dog-ear dog-ear-l"><path d="M35 27 Q30 5 45 16 Q47 25 40 31 Z" fill="' + SOFT + '"/>' +
-      '<path d="M37 26 Q34 13 42 18 Q43 24 39 28 Z" fill="#f6c9d6"/></g>' +
-    '<g class="dog-ear dog-ear-r"><path d="M73 27 Q78 5 63 16 Q61 25 68 31 Z" fill="' + SOFT + '"/>' +
-      '<path d="M71 26 Q74 13 66 18 Q65 24 69 28 Z" fill="#f6c9d6"/></g>' +
-    fluff(54, 46, 25, 13, 10, SHADE, -1.7) +
-    fluff(54, 45, 24, 13, 10, SOFT, -1.7) +
-    '<circle cx="54" cy="46" r="22.5" fill="' + WHITE + '"/>' +
-    '<ellipse cx="44" cy="44" rx="3.6" ry="4.7" fill="#2a2a30"/>' +
-    '<ellipse cx="64" cy="44" rx="3.6" ry="4.7" fill="#2a2a30"/>' +
-    '<circle cx="45.2" cy="41.9" r="1.35" fill="#fff"/><circle cx="65.2" cy="41.9" r="1.35" fill="#fff"/>' +
-    '<rect class="dog-lid" x="39.9" y="36" width="8.4" height="10" rx="4.2" fill="' + WHITE + '"/>' +
-    '<rect class="dog-lid" x="59.9" y="36" width="8.4" height="10" rx="4.2" fill="' + WHITE + '"/>' +
-    '<ellipse cx="40" cy="51.5" rx="3.6" ry="2.3" fill="#f6b8c6" opacity=".5"/>' +
-    '<ellipse cx="68" cy="51.5" rx="3.6" ry="2.3" fill="#f6b8c6" opacity=".5"/>' +
-    '<ellipse cx="54" cy="53" rx="10.5" ry="8" fill="' + WHITE + '"/>' +
-    '<ellipse cx="54" cy="51" rx="4.4" ry="3.2" fill="#2a2a30"/>' +
-    '<circle cx="52.6" cy="49.7" r="1" fill="#fff" opacity=".85"/>' +
-    '<path d="M54 54.2 v3 M54 57.2 Q47 63.5 43.5 56.7 M54 57.2 Q61 63.5 64.5 56.7" stroke="#2a2a30" stroke-width="2" fill="none" stroke-linecap="round"/>' +
-    '<path class="dog-tongue" d="M50.5 58.8 q3.5 6 7 0 Z" fill="#f2889b"/>' +
-    '<path d="M34 63 Q54 75 74 63" stroke="#8b6df0" stroke-width="5" fill="none" stroke-linecap="round"/>' +
-    '<circle cx="54" cy="71" r="1.7" fill="none" stroke="#c99a2e" stroke-width="1.3"/>' +
-    '<rect x="40" y="71" width="28" height="13" rx="4" fill="#f5b833" stroke="#d99f2b" stroke-width="1"/>' +
-    '<text x="54" y="80.5" text-anchor="middle" font-family="system-ui,-apple-system,Arial,sans-serif" font-size="8.4" font-weight="800" fill="#6b4a0e">Beau</text>' +
-    '</svg>';
-})();
+// Samoyed "Beau" — duidelijk hondje, zittend, met kwispelstaart
+const DOG_SVG =
+  '<svg viewBox="0 0 120 134" xmlns="http://www.w3.org/2000/svg">' +
+  '<ellipse cx="60" cy="127" rx="37" ry="5" fill="#000" opacity=".12"/>' +
+  '<g class="dog-tail">' +
+    '<path d="M37 100 C 13 98 5 74 12 54 C 21 61 27 74 35 83 C 42 90 44 96 37 100 Z" fill="#eef2f7"/>' +
+    '<path d="M15 58 C 21 66 27 74 33 80 M13 67 C 20 73 26 79 32 85" stroke="#dbe3ee" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
+  '</g>' +
+  '<ellipse cx="79" cy="99" rx="24" ry="27" fill="#eef2f7"/>' +
+  '<path d="M60 58 C 39 58 29 82 31 101 C 32 116 42 124 60 124 C 85 124 97 113 97 96 C 97 75 82 58 60 58 Z" fill="#ffffff"/>' +
+  '<ellipse cx="47" cy="121" rx="10.5" ry="7.5" fill="#e9eef4"/><ellipse cx="47" cy="119" rx="10" ry="7" fill="#ffffff"/>' +
+  '<ellipse cx="73" cy="121" rx="10.5" ry="7.5" fill="#e9eef4"/><ellipse cx="73" cy="119" rx="10" ry="7" fill="#ffffff"/>' +
+  '<path d="M43 115 v6 M47 115.5 v6.5 M51 115 v6" stroke="#d8e0ec" stroke-width="1.5" fill="none" stroke-linecap="round"/>' +
+  '<path d="M69 115 v6 M73 115.5 v6.5 M77 115 v6" stroke="#d8e0ec" stroke-width="1.5" fill="none" stroke-linecap="round"/>' +
+  '<path d="M33 65 C 39 84 51 93 60 93 C 69 93 81 84 87 65 C 83 73 77 78 71 76 C 67 82 63 82 60 82 C 57 82 53 82 49 76 C 43 78 37 73 33 65 Z" fill="#eef2f7"/>' +
+  '<circle cx="60" cy="46" r="27" fill="#ffffff"/>' +
+  '<path d="M34 48 C 28 46 26 52 31 56 C 27 52 29 45 34 41 Z" fill="#ffffff"/>' +
+  '<path d="M86 48 C 92 46 94 52 89 56 C 93 52 91 45 86 41 Z" fill="#ffffff"/>' +
+  '<g class="dog-ear dog-ear-l"><path d="M38 30 L27 5 L53 22 Z" fill="#ffffff"/><path d="M40 27 L34 12 L49 23 Z" fill="#f6c9d6"/>' +
+    '<path d="M38 30 C 34 27 31 27 29 29" stroke="#e6ecf3" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>' +
+  '<g class="dog-ear dog-ear-r"><path d="M82 30 L93 5 L67 22 Z" fill="#ffffff"/><path d="M80 27 L86 12 L71 23 Z" fill="#f6c9d6"/>' +
+    '<path d="M82 30 C 86 27 89 27 91 29" stroke="#e6ecf3" stroke-width="1.5" fill="none" stroke-linecap="round"/></g>' +
+  '<path d="M48 34 C 51 31 55 31 58 33 M62 33 C 65 31 69 31 72 34" stroke="#e6ecf3" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+  '<ellipse cx="50" cy="44" rx="4" ry="5.2" fill="#2a2a30"/><ellipse cx="70" cy="44" rx="4" ry="5.2" fill="#2a2a30"/>' +
+  '<circle cx="51.6" cy="41.7" r="1.5" fill="#fff"/><circle cx="71.6" cy="41.7" r="1.5" fill="#fff"/>' +
+  '<rect class="dog-lid" x="45.4" y="37" width="9.2" height="11" rx="4.6" fill="#ffffff"/>' +
+  '<rect class="dog-lid" x="65.4" y="37" width="9.2" height="11" rx="4.6" fill="#ffffff"/>' +
+  '<ellipse cx="41" cy="54" rx="4" ry="2.6" fill="#f7b8c6" opacity=".45"/>' +
+  '<ellipse cx="79" cy="54" rx="4" ry="2.6" fill="#f7b8c6" opacity=".45"/>' +
+  '<ellipse cx="60" cy="56" rx="13" ry="11" fill="#ffffff"/>' +
+  '<path d="M48 52 C 54 49 66 49 72 52" stroke="#eef2f7" stroke-width="2" fill="none" stroke-linecap="round"/>' +
+  '<ellipse cx="60" cy="53" rx="5" ry="3.7" fill="#2a2a30"/><circle cx="58.3" cy="51.5" r="1.1" fill="#fff" opacity=".8"/>' +
+  '<path d="M60 56.5 v3 M60 59.5 C 55 65 49 63 47 58 M60 59.5 C 65 65 71 63 73 58" stroke="#2a2a30" stroke-width="2.1" fill="none" stroke-linecap="round"/>' +
+  '<path class="dog-tongue" d="M56 61 q4 7 8 0 Z" fill="#f4899b"/>' +
+  '<path d="M40 70 Q60 85 80 70" stroke="#7c5cff" stroke-width="5.5" fill="none" stroke-linecap="round"/>' +
+  '<path d="M40 70 Q60 85 80 70" stroke="#5f43d6" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".5"/>' +
+  '<circle cx="60" cy="78" r="2" fill="none" stroke="#c99a2e" stroke-width="1.4"/>' +
+  '<rect x="45" y="78" width="30" height="14" rx="4" fill="#f5b833" stroke="#d99f2b" stroke-width="1"/>' +
+  '<text x="60" y="88" text-anchor="middle" font-family="system-ui,-apple-system,Arial,sans-serif" font-size="9" font-weight="800" fill="#6b4a0e">Beau</text>' +
+  '</svg>';
+
+// zijaanzicht wandelend (voor de achtergrond)
+const DOG_WALK_SVG =
+  '<svg viewBox="0 0 104 66" xmlns="http://www.w3.org/2000/svg">' +
+  '<g class="wleg wleg-b1"><rect x="60" y="40" width="6.5" height="20" rx="3.2" fill="#dbe3ee"/></g>' +
+  '<g class="wleg wleg-b2"><rect x="32" y="40" width="6.5" height="20" rx="3.2" fill="#dbe3ee"/></g>' +
+  '<path class="wtail" d="M80 30 C 94 26 98 10 91 2 C 89 12 84 21 77 26 Z" fill="#eef2f7"/>' +
+  '<ellipse cx="54" cy="34" rx="27" ry="17" fill="#ffffff"/>' +
+  '<g class="wleg wleg-f1"><rect x="64" y="41" width="7" height="20" rx="3.4" fill="#ffffff"/></g>' +
+  '<g class="wleg wleg-f2"><rect x="30" y="41" width="7" height="20" rx="3.4" fill="#ffffff"/></g>' +
+  '<ellipse cx="28" cy="31" rx="13" ry="14" fill="#eef2f7"/>' +
+  '<circle cx="24" cy="24" r="13" fill="#ffffff"/>' +
+  '<path class="dog-ear" d="M24 12 L19 -1 L32 9 Z" fill="#ffffff"/><path d="M24 11 L22 4 L29 9 Z" fill="#f6c9d6"/>' +
+  '<ellipse cx="12" cy="27" rx="7.5" ry="5.5" fill="#ffffff"/>' +
+  '<circle cx="21" cy="22" r="2.5" fill="#2a2a30"/>' +
+  '<circle cx="7" cy="26" r="2.5" fill="#2a2a30"/>' +
+  '<path d="M9 30 q4 4 8 1" stroke="#2a2a30" stroke-width="1.6" fill="none" stroke-linecap="round"/>' +
+  '<path d="M18 40 Q30 47 42 40" stroke="#7c5cff" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+  '</svg>';
 
 function ensureMascot(){
   if(_mascotEl) return _mascotEl;
@@ -3608,8 +3683,9 @@ function topBar(active){
   bar.appendChild(right);
 
   const tabs = el("div", "duo-tabs");
-  [["", "🛤️ Leerpad"], ["herhalen", "🎯 Herhalen"], ["extra", "📚 Extra"]].forEach(([h, label]) => {
-    const t = el("button", "duo-tab" + (active === h ? " on" : ""), label);
+  [["", "🛤️", "Leerpad"], ["herhalen", "🎯", "Herhalen"], ["extra", "📚", "Extra"]].forEach(([h, icon, label]) => {
+    const t = el("button", "duo-tab" + (active === h ? " on" : ""));
+    t.innerHTML = '<span class="ti">' + icon + '</span><span>' + label + '</span>';
     t.onclick = () => { location.hash = "#/" + h; };
     tabs.appendChild(t);
   });
@@ -3618,26 +3694,64 @@ function topBar(active){
   return holder;
 }
 
+const SCENE_THEMES = [
+  { name:"weide",     b1:"#c7ebff", b2:"#dbf2c6", deco:["🐄","🌼","🦋","🐝","🌷"] },
+  { name:"bos",       b1:"#d3eecf", b2:"#aadcae", deco:["🌲","🌳","🦊","🍄","🐿️"] },
+  { name:"kasteel",   b1:"#e9ecf2", b2:"#d0d8e4", deco:["🏰","⚔️","🛡️","👑","🐉"] },
+  { name:"kust",      b1:"#fff0d0", b2:"#c4eaff", deco:["🏖️","🪣","🐚","⛵","🦀"] },
+  { name:"hemel",     b1:"#e2f2ff", b2:"#f6faff", deco:["☁️","😇","⭐","🕊️","🌈"] },
+  { name:"zee",       b1:"#a7dcf4", b2:"#66bce8", deco:["🐠","🐙","🫧","🪸","🐢"] },
+  { name:"bergen",    b1:"#eaf0f6", b2:"#d0dbe8", deco:["⛰️","🏔️","❄️","🦅","🌲"] },
+  { name:"boerderij", b1:"#fdf1d2", b2:"#f2e0a9", deco:["🚜","🐔","🌾","🐷","🐑"] },
+  { name:"stad",      b1:"#e7edf5", b2:"#d5e1ed", deco:["🏙️","🚕","🚦","🎈","🏢"] },
+  { name:"ruimte",    b1:"#2b3763", b2:"#161d38", deco:["🚀","🪐","⭐","🌙","👽"] }
+];
+const BEAU_PROPS = ["", "", "🌼", "🛡️", "🪣", "😇", "🥽", "🎈", "❄️", "🌟"];
+
 function renderHome(){
   const cur = getCurrent();
   const course = getCourse();
   const st = pathState(cur);
   app.innerHTML = "";
+  ensureScene();
   app.appendChild(topBar(""));
 
   const path = el("div", "duo-path");
   app.appendChild(path);
 
-  let firstAvailable = null, currentNode = null;
+  let currentNode = null;
   course.units.forEach(u => {
+    const th = SCENE_THEMES[u.idx % SCENE_THEMES.length];
+    const nx = SCENE_THEMES[(u.idx + 1) % SCENE_THEMES.length];
+    const wrap = el("div", "unit-wrap");
+    wrap.style.setProperty("--b1", th.b1);
+    wrap.style.setProperty("--b2", nx.b1);
+
+    // decoraties (aan de randen, weg van de knoppen in het midden)
+    const dn = [{ l: 3, t: 24, s: 0 }, { l: 86, t: 46, s: 1 }, { l: 5, t: 72, s: 1 }, { l: 88, t: 10, s: 0 }];
+    dn.forEach((d, i) => {
+      const e = el("span", "band-deco" + (d.s ? " s" : ""), th.deco[i % th.deco.length]);
+      e.style.left = d.l + "%"; e.style.top = d.t + "%";
+      e.style.animationDelay = (i * 1.3) + "s";
+      e.style.animationDuration = (6 + i * 1.5) + "s";
+      wrap.appendChild(e);
+    });
+    // wandelende Beau in ~1 op 3 banden
+    if(u.idx % 3 === 1){
+      const bw = el("div", "band-beau" + (u.idx % 6 === 4 ? " flip" : ""));
+      bw.style.animationDuration = (22 + (u.idx % 4) * 6) + "s";
+      bw.style.animationDelay = (-(u.idx % 5) * 4) + "s";
+      bw.innerHTML = DOG_WALK_SVG + (BEAU_PROPS[u.idx % BEAU_PROPS.length] ? '<span style="position:absolute;left:-14px;top:-6px;font-size:16px">' + BEAU_PROPS[u.idx % BEAU_PROPS.length] + '</span>' : "");
+      wrap.appendChild(bw);
+    }
+
     const banner = el("div", "duo-unit");
     banner.style.setProperty("--c", u.color);
     banner.innerHTML =
       '<div class="duo-unit-h"><span class="duo-unit-n">Eenheid ' + (u.idx + 1) + '</span>' +
-      '<span class="duo-unit-t">' + u.icon + " " + esc(u.title) + '</span></div>';
-    const gild = u.lessons.every(l => (st.crowns[l.id] || 0) >= 1);
-    if(gild) banner.classList.add("gild");
-    path.appendChild(banner);
+      '<span class="duo-unit-t">' + u.icon + " " + esc(u.title) + " · " + th.name + '</span></div>';
+    if(u.lessons.every(l => (st.crowns[l.id] || 0) >= 1)) banner.classList.add("gild");
+    wrap.appendChild(banner);
 
     const trail = el("div", "duo-trail");
     u.lessons.forEach((ls, li) => {
@@ -3645,7 +3759,6 @@ function renderHome(){
       const crowns = st.crowns[ls.id] || 0;
       const prevDone = idxFlat === 0 || (st.crowns[course.flat[idxFlat - 1].id] || 0) >= 1;
       const state = crowns > 0 ? "done" : (prevDone ? "open" : "lock");
-      if(state === "open" && !firstAvailable) firstAvailable = ls.id;
 
       const off = [0, 34, 52, 34, 0, -34, -52, -34][li % 8];
       const node = el("button", "duo-node " + state + (ls.kind === "review" ? " rev" : ""));
@@ -3654,31 +3767,32 @@ function renderHome(){
       node.innerHTML = state === "lock" ? "🔒"
         : (ls.kind === "review" ? "🏆" : (ls.kind === "sentences" ? "💬" : (crowns >= 3 ? "👑" : (crowns > 0 ? "★" : "▶"))));
       if(crowns > 0){
-        const cr = el("span", "duo-node-cr");
-        cr.textContent = "•".repeat(crowns);
-        node.appendChild(cr);
+        const crn = el("span", "duo-node-cr");
+        crn.textContent = "•".repeat(crowns);
+        node.appendChild(crn);
       }
       node.disabled = state === "lock";
       node.onclick = () => { if(state !== "lock") location.hash = "#/lesson/" + ls.id; };
       if(state === "open" && !currentNode){ currentNode = node; node.classList.add("cur"); }
       trail.appendChild(node);
     });
-    path.appendChild(trail);
+    wrap.appendChild(trail);
+    path.appendChild(wrap);
   });
-
-  // Beau op het pad
-  const beau = el("div", "duo-beau");
-  beau.innerHTML = DOG_SVG;
-  path.appendChild(beau);
 
   setTimeout(() => {
     const c = path.querySelector(".duo-node.cur") || path.querySelector(".duo-node.open") || path.querySelector(".duo-node.done");
     if(c){
-      c.scrollIntoView({ block: "center", behavior: "instant" in c ? "instant" : "auto" });
-      const b = path.querySelector(".duo-beau");
-      if(b){ b.style.top = (c.offsetTop - 6) + "px"; b.style.left = Math.min(Math.max(c.offsetLeft + 62, 8), path.clientWidth - 78) + "px"; }
+      c.scrollIntoView({ block: "center" });
+      const trail = c.parentElement;
+      trail.style.position = "relative";
+      const beau = el("div", "duo-beau");
+      beau.innerHTML = DOG_SVG;
+      beau.style.cssText = "position:absolute;width:70px;z-index:3;top:" + (c.offsetTop - 8) + "px;left:" +
+        Math.min(Math.max(c.offsetLeft + 60, 4), trail.clientWidth - 74) + "px";
+      trail.appendChild(beau);
     }
-  }, 30);
+  }, 40);
 
   if(pendingWelcome){ mascotWelcome(pendingWelcome); pendingWelcome = null; }
 }
@@ -3687,6 +3801,7 @@ function renderReview(){
   const cur = getCurrent();
   const st = pathState(cur);
   app.innerHTML = "";
+  ensureScene();
   app.appendChild(topBar("herhalen"));
   const wrap = el("div", "duo-review");
   wrap.appendChild(el("h1", null, "🎯 Herhalen"));
@@ -3746,6 +3861,49 @@ function confetti(){
     box.appendChild(p);
   }
   setTimeout(() => box.remove(), 2600);
+}
+
+/* ---------- speelse achtergrond ---------- */
+let _sceneEl = null, _flyT = null, _hopT = null;
+function ensureScene(){
+  if(_sceneEl && document.body.contains(_sceneEl)) return;
+  const s = document.createElement("div");
+  s.id = "scene";
+  s.innerHTML =
+    '<div class="sky"></div><div class="sun"></div>' +
+    '<div class="cloud" style="top:9%;animation-duration:62s"></div>' +
+    '<div class="cloud" style="top:22%;animation-duration:95s;transform:scale(.78)"></div>' +
+    '<div class="cloud" style="top:38%;animation-duration:80s;transform:scale(1.2)"></div>' +
+    '<div class="ground"></div>';
+  document.body.insertBefore(s, document.body.firstChild);
+  _sceneEl = s;
+  clearTimeout(_flyT); clearTimeout(_hopT);
+  const fly = () => {
+    if(!_sceneEl) return;
+    try {
+      const ws = getCourse().words;
+      const w = ws[(Math.random() * ws.length) | 0];
+      const sp = el("span", "flyword", Math.random() < 0.5 ? w.nls[0] : w.en);
+      sp.style.top = (10 + Math.random() * 58) + "%";
+      sp.style.animationDuration = (16 + Math.random() * 12) + "s";
+      _sceneEl.appendChild(sp);
+      setTimeout(() => sp.remove(), 30000);
+    } catch(e){}
+    _flyT = setTimeout(fly, 5500 + Math.random() * 6000);
+  };
+  const crit = ["🐰", "🐿️", "🐤", "🦔", "🐸", "🦆"];
+  const hop = () => {
+    if(!_sceneEl) return;
+    const h = el("div", "hopper");
+    const inner = el("span", null, crit[(Math.random() * crit.length) | 0]);
+    h.appendChild(inner);
+    h.style.animationDuration = (9 + Math.random() * 7) + "s";
+    _sceneEl.appendChild(h);
+    setTimeout(() => h.remove(), 17000);
+    _hopT = setTimeout(hop, 12000 + Math.random() * 12000);
+  };
+  _flyT = setTimeout(fly, 1600);
+  _hopT = setTimeout(hop, 4500);
 }
 
 
