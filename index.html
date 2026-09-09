@@ -471,9 +471,60 @@
   .spk.inline{ width:28px; height:28px; }
 
   .confetti{ position:fixed; inset:0; pointer-events:none; z-index:80; overflow:hidden; }
-  .confetti i{ position:absolute; top:-12px; width:9px; height:14px; border-radius:2px; animation:conffall 2.4s linear forwards; }
-  @keyframes conffall{ to{ transform:translateY(105vh) rotate(640deg); opacity:.2; } }
-  @media (prefers-reduced-motion: reduce){ .confetti, .duo-node.cur{ animation:none; } }
+  .confetti i{ position:absolute; top:-12px; width:10px; height:16px; border-radius:2px; animation:conffall 2.6s linear forwards; }
+  @keyframes conffall{ to{ transform:translateY(108vh) rotate(680deg); opacity:.2; } }
+
+  /* ===== beloningen ===== */
+  .rewardpop{ position:fixed; left:50%; top:40%; z-index:92; pointer-events:none; white-space:nowrap;
+    font-size:36px; font-weight:900; letter-spacing:.01em; color:#ff9500;
+    -webkit-text-stroke:3px #fff; paint-order:stroke fill;
+    filter:drop-shadow(0 5px 10px rgba(0,0,0,.22));
+    transform:translate(-50%,-50%) scale(.3);
+    animation:rewardpop 1.1s cubic-bezier(.18,1.5,.4,1) forwards; }
+  .rewardpop.big{ font-size:48px; top:36%; color:#ff5b7f; }
+  @keyframes rewardpop{
+    0%{ transform:translate(-50%,-50%) scale(.3) rotate(-9deg); opacity:0; }
+    26%{ transform:translate(-50%,-50%) scale(1.18) rotate(4deg); opacity:1; }
+    46%{ transform:translate(-50%,-50%) scale(1) rotate(-2deg); }
+    78%{ opacity:1; }
+    100%{ transform:translate(-50%,-72%) scale(1) rotate(0); opacity:0; } }
+  .sparkbox{ position:fixed; z-index:91; pointer-events:none; }
+  .sparkbox i{ position:absolute; left:0; top:0; width:10px; height:10px; border-radius:2px;
+    animation:sparkfly .78s ease-out forwards; }
+  @keyframes sparkfly{ 0%{ transform:translate(0,0) scale(1); opacity:1; }
+    100%{ transform:translate(var(--dx),var(--dy)) scale(.15) rotate(180deg); opacity:0; } }
+
+  .lx-end-emoji.pop{ animation:trophypop 1s cubic-bezier(.2,1.6,.35,1) both; }
+  @keyframes trophypop{ 0%{ transform:scale(0) rotate(-30deg); } 55%{ transform:scale(1.3) rotate(12deg); }
+    72%{ transform:scale(.92) rotate(-6deg); } 100%{ transform:scale(1) rotate(0); } }
+  .lx-crowns{ font-size:30px; letter-spacing:6px; margin-bottom:6px; }
+  .lx-crowns span{ display:inline-block; transform:scale(0); animation:crownpop .5s cubic-bezier(.2,1.7,.4,1) forwards; }
+  .lx-crowns span.old{ opacity:.5; }
+  @keyframes crownpop{ 0%{ transform:scale(0) rotate(-20deg); } 60%{ transform:scale(1.35) rotate(10deg); } 100%{ transform:scale(1) rotate(0); } }
+  .lx-crowns-l{ font-size:12px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.08em; margin-bottom:16px; }
+  .lx-ribbon{ display:inline-block; margin:2px auto 18px; padding:8px 18px; border-radius:999px;
+    font-weight:900; font-size:14px; color:#fff; letter-spacing:.03em;
+    background:linear-gradient(90deg,#ff8c00,#ff5b7f); box-shadow:0 6px 16px rgba(255,91,127,.35);
+    animation:ribbonin .6s cubic-bezier(.2,1.5,.4,1) both; }
+  @keyframes ribbonin{ 0%{ transform:scale(.4) rotate(-4deg); opacity:0; } 100%{ transform:scale(1) rotate(0); opacity:1; } }
+
+  .duo-node.juststamp{ animation:juststamp 1s cubic-bezier(.2,1.7,.4,1) both; }
+  @keyframes juststamp{ 0%{ transform:scale(.2) rotate(-20deg); } 55%{ transform:scale(1.4) rotate(10deg); }
+    75%{ transform:scale(.94); } 100%{ transform:scale(1) rotate(0); } }
+
+  /* ===== A/B/C/D vraag ===== */
+  .lx-opts.abcd .lx-opt.quiz{ align-items:center; gap:12px; }
+  .lx-abcd{ flex:none; width:30px; height:30px; border-radius:9px; display:flex; align-items:center; justify-content:center;
+    font-weight:900; font-size:14px; background:var(--panel2); color:var(--accent); border:1px solid var(--border); }
+  .lx-opt.quiz.sel .lx-abcd{ background:var(--blue); color:#fff; border-color:var(--blue); }
+  .lx-opt.quiz.good .lx-abcd{ background:var(--green); color:#fff; }
+  .lx-opt.quiz.bad .lx-abcd{ background:var(--red-x); color:#fff; }
+  .lx-opt-t{ flex:1; }
+
+  @media (prefers-reduced-motion: reduce){
+    .confetti,.duo-node.cur,.rewardpop,.sparkbox i,.lx-end-emoji.pop,.lx-crowns span,.lx-ribbon,.duo-node.juststamp{ animation:none; }
+    .rewardpop{ opacity:1; transform:translate(-50%,-50%); }
+  }
 
   /* ===== licht thema: witte kaarten, leesbare tekst ===== */
   .duo-tab{ box-shadow:var(--card-shadow); }
@@ -1970,6 +2021,10 @@ function renderModule(m){
     score.textContent = progressCount(prog) + " / " + total;
     if(!wasComplete && total > 0 && progressCount(prog) >= total){
       wasComplete = true;
+      if(typeof sfx === "function") sfx("win");
+      if(typeof confetti === "function") confetti();
+      if(typeof rewardPop === "function") rewardPop("MODULE KLAAR! 🏆", true);
+      if(typeof sparks === "function") setTimeout(() => sparks(window.innerWidth / 2, window.innerHeight * 0.4, 24), 120);
       mascotCelebrate("“" + m.title + "” is helemaal af!", "“" + m.title + "” is all done!");
     }
   }
@@ -1981,7 +2036,7 @@ function renderModule(m){
     }
   };
 
-  const ctx = { m: m, body: body, prog: prog, save: () => { scheduleFlush(cur, m.id); refreshScore(); } };
+  const ctx = { m: m, body: body, prog: prog, save: () => { if(typeof sfx === "function") sfx("correct"); scheduleFlush(cur, m.id); refreshScore(); } };
 
   if(m.intro || (m.rules && m.rules.length)) body.appendChild(buildIntro(m));
 
@@ -2972,6 +3027,87 @@ function bumpStruggle(id, threshold, tip){
 /* ---------- spraak: voorlezen (TTS) ---------- */
 var _voices = [], _nlVoice = null, _ttsOn = (lsGet(NS + "_tts", 1) !== 0);
 var _micOn = (lsGet(NS + "_mic", 1) !== 0);
+var _sfxOn = (lsGet(NS + "_sfx", 1) !== 0);
+
+/* ---------- geluidseffecten (Web Audio, geen bestanden) ---------- */
+let _ac = null;
+function audioCtx(){
+  try {
+    if(!_ac) _ac = new (window.AudioContext || window.webkitAudioContext)();
+    if(_ac.state === "suspended") _ac.resume();
+  } catch(e){ _ac = null; }
+  return _ac;
+}
+function _tone(ctx, freq, at, dur, type, gain){
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type = type || "sine";
+  o.frequency.setValueAtTime(freq, at);
+  g.gain.setValueAtTime(0.0001, at);
+  g.gain.linearRampToValueAtTime(gain || 0.18, at + 0.012);
+  g.gain.exponentialRampToValueAtTime(0.0005, at + dur);
+  o.connect(g); g.connect(ctx.destination);
+  o.start(at); o.stop(at + dur + 0.03);
+}
+function sfx(name){
+  if(!_sfxOn) return;
+  const ctx = audioCtx(); if(!ctx) return;
+  const t = ctx.currentTime + 0.01;
+  const seq = {
+    correct: [[659, 0], [880, 0.08], [1175, 0.17]],
+    combo:   [[784, 0], [988, 0.07], [1319, 0.14], [1760, 0.22]],
+    crown:   [[1319, 0], [1760, 0.09], [2637, 0.18]],
+    tap:     [[520, 0]],
+    win:     [[523, 0], [659, 0.11], [784, 0.22], [1047, 0.35], [1319, 0.5], [1760, 0.66]]
+  }[name];
+  if(name === "wrong"){
+    _tone(ctx, 233, t, 0.14, "sawtooth", 0.1);
+    _tone(ctx, 175, t + 0.09, 0.2, "sine", 0.1);
+    return;
+  }
+  if(!seq) return;
+  const long = name === "win";
+  seq.forEach(([f, d]) => _tone(ctx, f, t + d, long ? 0.42 : 0.22, "triangle", long ? 0.2 : 0.18));
+}
+function buzz(pattern){ try { navigator.vibrate && navigator.vibrate(pattern); } catch(e){} }
+
+/* ---------- beloning: uitspringend beeld + vonken ---------- */
+const PRAISE = ["SUPER!", "TOP!", "JUIST!", "GEWELDIG!", "KEIGOED!", "PERFECT!", "KNAP!", "YES!", "BAM!", "SPOT ON!"];
+function rewardPop(text, big){
+  const w = el("div", "rewardpop" + (big ? " big" : ""), text);
+  document.body.appendChild(w);
+  setTimeout(() => w.remove(), 1150);
+}
+function sparks(x, y, n, cols){
+  cols = cols || ["#ffc800", "#58cc02", "#1cb0f6", "#ff86d0", "#ff9600"];
+  const box = el("div", "sparkbox");
+  box.style.left = x + "px"; box.style.top = y + "px";
+  document.body.appendChild(box);
+  const cnt = n || 12;
+  for(let i = 0; i < cnt; i++){
+    const s = el("i");
+    const ang = (Math.PI * 2 * i / cnt) + Math.random() * 0.6;
+    const dist = 42 + Math.random() * 60;
+    s.style.setProperty("--dx", (Math.cos(ang) * dist).toFixed(0) + "px");
+    s.style.setProperty("--dy", (Math.sin(ang) * dist).toFixed(0) + "px");
+    s.style.background = cols[i % cols.length];
+    s.style.animationDelay = (Math.random() * 0.06) + "s";
+    box.appendChild(s);
+  }
+  setTimeout(() => box.remove(), 900);
+}
+function rewardCorrect(anchorEl, combo){
+  sfx(combo >= 5 && combo % 5 === 0 ? "combo" : "correct");
+  buzz(14);
+  let x = window.innerWidth / 2, y = window.innerHeight * 0.62;
+  try { const r = anchorEl.getBoundingClientRect(); x = r.left + r.width / 2; y = r.top; } catch(e){}
+  sparks(x, y, combo >= 5 && combo % 5 === 0 ? 20 : 12);
+  if(combo >= 5 && combo % 5 === 0){
+    rewardPop("🔥 " + combo + " OP RIJ!", true);
+    mascotSay({ nl: "🔥 " + combo + " op rij! Wauw!", en: "🔥 " + combo + " in a row! Wow!" }, { duration: 3200 });
+  } else {
+    rewardPop(PRAISE[(Math.random() * PRAISE.length) | 0]);
+  }
+}
 function loadVoices(){
   try { _voices = window.speechSynthesis ? speechSynthesis.getVoices() : []; } catch(e){ _voices = []; }
   _nlVoice = _voices.find(v => /^nl[-_]?be/i.test(v.lang)) ||
@@ -3199,6 +3335,20 @@ function exSpeak(it){
   const target = it.kind === "sentence" ? it.nl : it.nls[0];
   return { t: "speak", target: target, word: it.kind !== "sentence", hintEN: it.en, it: it };
 }
+function quizPool(){
+  return [].concat(
+    (typeof DATA_VOORZETSELS !== "undefined" ? DATA_VOORZETSELS : []),
+    (typeof DATA_UITDRUKKINGEN !== "undefined" ? DATA_UITDRUKKINGEN : [])
+  );
+}
+function exQuiz(){                          // vraag met A / B / C / D
+  const p = quizPool();
+  if(!p.length) return null;
+  const item = p[(Math.random() * p.length) | 0];
+  let opts = duoShuffle(item.options.slice()).slice(0, 4);
+  if(opts.indexOf(item.answer) < 0){ opts[3] = item.answer; opts = duoShuffle(opts); }
+  return { t: "quiz", q: item.q, answer: item.answer, opts: opts, it: { en: item.q, nls: [item.answer] } };
+}
 
 function buildLesson(lesson, unitIdx){
   const hard = unitIdx >= 8;
@@ -3223,9 +3373,11 @@ function buildLesson(lesson, unitIdx){
       (lesson.teach || []).forEach((it, i) => { if(i < 2) exs.push(exPick(it, true)); });
     }
     let i = 0;
+    const wantQuiz = (lesson.kind === "review" || unitIdx >= 5) && Math.random() < 0.5;
     while(exs.length < 10){
       const it = pool[(i * 3 + 2) % pool.length];
       const roll = (i + (hard ? 2 : 0)) % 7;
+      if(wantQuiz && i === 3){ const q = exQuiz(); if(q){ exs.push(q); i++; continue; } }
       if(roll === 0) exs.push(exPick(it, false));
       else if(roll === 1) exs.push(exListen(it));
       else if(roll === 2) exs.push(exPick(it, true));
@@ -3246,7 +3398,7 @@ function duoShuffleKeepFirst(arr){
 }
 
 /* ============ LES-SPELER ============ */
-let _lx = null;
+let _lx = null, _justFinished = null;
 function startLesson(lessonId){
   const course = getCourse();
   const lesson = course.flat.find(l => l.id === lessonId);
@@ -3254,7 +3406,7 @@ function startLesson(lessonId){
   const cur = getCurrent();
   const exs = buildLesson(lesson, lesson.u);
   if(!exs.length){ location.hash = "#/"; return; }
-  _lx = { lesson: lesson, queue: exs, pos: 0, again: [], right: 0, total: exs.length, xp: 0, hearts: 0 };
+  _lx = { lesson: lesson, queue: exs, pos: 0, again: [], right: 0, total: exs.length, xp: 0, combo: 0 };
   drawExercise();
 }
 
@@ -3311,18 +3463,24 @@ function drawExercise(){
     if(r.ok && !r.almost){
       ctx.phase = "answered";
       S.right++; S.xp += 8;
+      S.combo = (S.combo || 0) + 1;
       recordWeak(ex, true);
+      rewardCorrect(act, S.combo);
       act.textContent = "Doorgaan"; act.classList.add("ok");
       if(ctx.lock) ctx.lock();
     } else if(r.almost){
       ctx.phase = "retry";
+      S.combo = 0;
       recordWeak(ex, false);
+      sfx("wrong"); buzz(10);
       act.textContent = "Opnieuw proberen"; act.classList.add("retry");
       // niet vergrendelen: laat verbeteren tot het helemaal juist is
     } else {
       ctx.phase = "answered";
+      S.combo = 0;
       S.again.push(ex);
       recordWeak(ex, false);
+      sfx("wrong"); buzz([8, 40, 8]);
       act.textContent = "Doorgaan"; act.classList.add("wrong");
       if(ctx.lock) ctx.lock();
     }
@@ -3363,30 +3521,70 @@ function finishLesson(){
   if(st.lastDay !== t){ st.streak = (st.lastDay === yesterStr()) ? (st.streak || 0) + 1 : 1; st.lastDay = t; streakUp = true; }
   savePath(cur);
 
+  _justFinished = S.lesson.id;
+  const perfect = S.right >= S.total;
+  const milestone = [3, 7, 14, 30, 50, 75, 100, 150, 200, 365].indexOf(st.streak) >= 0;
+
   app.innerHTML = "";
   const w = el("div", "lx-end");
-  w.appendChild(el("div", "lx-end-emoji", nowC > prev ? "🏆" : "✅"));
-  w.appendChild(el("h1", null, S.right >= S.total ? "Perfecte les!" : "Les voltooid!"));
+  const em = el("div", "lx-end-emoji pop", nowC > prev ? "🏆" : "🎉");
+  w.appendChild(em);
+  w.appendChild(el("h1", null, perfect ? "PERFECTE LES! 🌟" : "Les voltooid!"));
   const stats = el("div", "lx-stats");
-  stats.appendChild(statTile("💎 XP", "+" + gained, "#ffc800"));
-  stats.appendChild(statTile("🎯 Juist", S.right + "/" + S.total, "#58cc02"));
-  stats.appendChild(statTile("🔥 Streak", (st.streak || 1) + (st.streak === 1 ? " dag" : " dagen"), "#ff9600"));
+  const xpTile = statTile("💎 XP", "+0", "#eab000");
+  stats.appendChild(xpTile);
+  stats.appendChild(statTile("🎯 Juist", S.right + "/" + S.total, "#3fa826"));
+  stats.appendChild(statTile("🔥 Streak", (st.streak || 1) + (st.streak === 1 ? " dag" : " dagen"), "#ff8c00"));
   w.appendChild(stats);
-  if(nowC > prev) w.appendChild(el("div", "lx-crowns", "👑".repeat(nowC) + "  (" + nowC + "/3)"));
+
+  if(nowC > prev){
+    const cr = el("div", "lx-crowns");
+    for(let i = 0; i < nowC; i++){
+      const c = el("span", "cr" + (i < prev ? " old" : ""), "👑");
+      c.style.animationDelay = (0.15 + i * 0.28) + "s";
+      cr.appendChild(c);
+    }
+    w.appendChild(cr);
+    w.appendChild(el("div", "lx-crowns-l", "Niveau " + nowC + " / 3"));
+  }
+  if(milestone) w.appendChild(el("div", "lx-ribbon", "🔥 " + st.streak + " DAGEN OP RIJ!"));
+
   const go = el("button", "d-btn big", "Doorgaan");
   go.onclick = () => { _lx = null; location.hash = "#/"; };
   w.appendChild(go);
   app.appendChild(w);
 
+  // beloningen
+  sfx("win");
+  buzz([12, 30, 12, 30, 24]);
   confetti();
+  setTimeout(() => sparks(window.innerWidth / 2, window.innerHeight * 0.34, 26), 120);
+  rewardPop(perfect ? "PERFECT! 🏆" : "LES KLAAR! 🎉", true);
+  // XP telt op
+  let shown = 0;
+  const step = Math.max(1, Math.round(gained / 22));
+  const tick = setInterval(() => {
+    shown = Math.min(gained, shown + step);
+    const v = xpTile.querySelector(".lx-stat-v");
+    if(v) v.textContent = "+" + shown;
+    if(shown >= gained) clearInterval(tick);
+  }, 34);
+  // kroontjes-geluid per kroon
+  if(nowC > prev){
+    for(let i = prev; i < nowC; i++) setTimeout(() => sfx("crown"), 200 + (i - prev) * 300 + (i) * 0);
+  }
+  if(milestone) setTimeout(() => sparks(window.innerWidth / 2, window.innerHeight * 0.5, 22, ["#ff8c00", "#ffc800", "#ff5b7f"]), 400);
+
   const msgs = [
     { nl: "Knap gedaan! 🎉 Op naar de volgende les!", en: "Well done! 🎉 On to the next lesson!" },
     { nl: "Woef! Dat ging goed! 🐾", en: "Woof! That went well! 🐾" },
-    { nl: "Elke les maakt je beter. Doe zo voort!", en: "Every lesson makes you better. Keep it up!" }
+    { nl: "Elke les maakt je sterker. Doe zo voort!", en: "Every lesson makes you stronger. Keep going!" }
   ];
-  mascotSay(streakUp && st.streak > 1
-    ? { nl: "🔥 " + st.streak + " dagen op rij! Trots op je!", en: "🔥 " + st.streak + " days in a row! So proud!" }
-    : msgs[(Math.random() * msgs.length) | 0], { celebrate: true, duration: 9000 });
+  mascotSay(milestone
+    ? { nl: "🔥 " + st.streak + " dagen op rij!! Zo trots op je!", en: "🔥 " + st.streak + " days in a row!! So proud of you!" }
+    : (perfect
+        ? { nl: "Foutloos! Jij bent op dreef! 💪", en: "Flawless! You're on fire! 💪" }
+        : msgs[(Math.random() * msgs.length) | 0]), { celebrate: true, duration: 9000 });
 }
 function statTile(label, val, col){
   const t = el("div", "lx-stat");
@@ -3431,6 +3629,35 @@ EX_RENDER.pick = function(ctx){
     return { ok: ok, solution: ex.answer };
   };
   function norm(s){ return String(s || "").toLowerCase().trim(); }
+};
+
+EX_RENDER.quiz = function(ctx){
+  const ex = ctx.ex;
+  ctx.body.appendChild(el("div", "lx-q", ex.q));
+  const opts = el("div", "lx-opts abcd");
+  const LET = ["A", "B", "C", "D"];
+  let chosen = null;
+  ex.opts.forEach((o, i) => {
+    const b = el("button", "lx-opt quiz");
+    b.appendChild(el("span", "lx-abcd", LET[i] || "•"));
+    b.appendChild(el("span", "lx-opt-t", o));
+    b.onclick = () => {
+      if(ctx.phase === "answered") return;
+      opts.querySelectorAll(".lx-opt").forEach(x => x.classList.remove("sel"));
+      b.classList.add("sel"); chosen = o; ctx.setReady(true);
+    };
+    opts.appendChild(b);
+  });
+  ctx.body.appendChild(opts);
+  ctx.check = () => {
+    const ok = String(chosen).trim() === String(ex.answer).trim();
+    opts.querySelectorAll(".lx-opt").forEach(b => {
+      const t = b.querySelector(".lx-opt-t").textContent;
+      if(t === ex.answer) b.classList.add("good");
+      else if(t === chosen) b.classList.add("bad");
+    });
+    return { ok: ok, solution: ex.answer };
+  };
 };
 
 EX_RENDER.listen = function(ctx){
@@ -3596,7 +3823,8 @@ EX_RENDER.match = function(ctx){
           selL.classList.add("done"); selR.classList.add("done");
           selL.classList.remove("sel"); selR.classList.remove("sel");
           matched++; selL = null; selR = null;
-          if(matched === ex.pairs.length) ctx.setReady(true);
+          sfx("tap");
+          if(matched === ex.pairs.length){ ctx.setReady(true); }
         } else {
           const a = selL, c = selR;
           a.classList.add("bad"); c.classList.add("bad");
@@ -3672,7 +3900,11 @@ function topBar(active){
   spk2.innerHTML = _ttsOn ? "🔊" : "🔇";
   spk2.title = "Uitspraak aan/uit";
   spk2.onclick = () => { _ttsOn = !_ttsOn; lsSet(NS + "_tts", _ttsOn ? 1 : 0); spk2.classList.toggle("on", _ttsOn); spk2.innerHTML = _ttsOn ? "🔊" : "🔇"; if(_ttsOn) speak("Hallo"); };
-  right.appendChild(flame); right.appendChild(xp); right.appendChild(spk2);
+  const sfxT = el("button", "duo-stat sndtog" + (_sfxOn ? " on" : ""));
+  sfxT.innerHTML = _sfxOn ? "🎉" : "🙊";
+  sfxT.title = "Beloningsgeluidjes aan/uit";
+  sfxT.onclick = () => { _sfxOn = !_sfxOn; lsSet(NS + "_sfx", _sfxOn ? 1 : 0); sfxT.classList.toggle("on", _sfxOn); sfxT.innerHTML = _sfxOn ? "🎉" : "🙊"; if(_sfxOn) sfx("correct"); };
+  right.appendChild(flame); right.appendChild(xp); right.appendChild(spk2); right.appendChild(sfxT);
   if(SR){
     const mic2 = el("button", "duo-stat sndtog" + (_micOn ? " on" : ""));
     mic2.innerHTML = _micOn ? "🎤" : "🚫";
@@ -3774,6 +4006,12 @@ function renderHome(){
       node.disabled = state === "lock";
       node.onclick = () => { if(state !== "lock") location.hash = "#/lesson/" + ls.id; };
       if(state === "open" && !currentNode){ currentNode = node; node.classList.add("cur"); }
+      if(ls.id === _justFinished){
+        node.classList.add("juststamp");
+        setTimeout(() => {
+          try { const r = node.getBoundingClientRect(); sparks(r.left + r.width / 2, r.top + r.height / 2, 16, ["#ffc800", "#ffd94d", "#fff"]); } catch(e){}
+        }, 260);
+      }
       trail.appendChild(node);
     });
     wrap.appendChild(trail);
@@ -3795,6 +4033,7 @@ function renderHome(){
   }, 40);
 
   if(pendingWelcome){ mascotWelcome(pendingWelcome); pendingWelcome = null; }
+  _justFinished = null;
 }
 
 function renderReview(){
@@ -3843,7 +4082,7 @@ function startReviewSession(weak){
     else exs.push(exPick(it, true));
     i++;
   }
-  _lx = { lesson: { id: "REVIEW", kind: "review" }, queue: exs.slice(0, 10), pos: 0, again: [], right: 0, total: 10, xp: 0 };
+  _lx = { lesson: { id: "REVIEW", kind: "review" }, queue: exs.slice(0, 10), pos: 0, again: [], right: 0, total: 10, xp: 0, combo: 0 };
   drawExercise();
 }
 
