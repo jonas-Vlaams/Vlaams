@@ -3749,7 +3749,7 @@ function renderHome(){
     banner.style.setProperty("--c", u.color);
     banner.innerHTML =
       '<div class="duo-unit-h"><span class="duo-unit-n">Eenheid ' + (u.idx + 1) + '</span>' +
-      '<span class="duo-unit-t">' + u.icon + " " + esc(u.title) + " · " + th.name + '</span></div>';
+      '<span class="duo-unit-t">' + u.icon + " " + esc(u.title) + '</span></div>';
     if(u.lessons.every(l => (st.crowns[l.id] || 0) >= 1)) banner.classList.add("gild");
     wrap.appendChild(banner);
 
