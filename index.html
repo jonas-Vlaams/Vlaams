@@ -521,6 +521,47 @@
   .lx-opt.quiz.bad .lx-abcd{ background:var(--red-x); color:#fff; }
   .lx-opt-t{ flex:1; }
 
+  /* ===== shop ===== */
+  .duo-stat.xp{ cursor:pointer; }
+  .shop{ max-width:640px; margin:0 auto; padding:16px 18px 96px; }
+  .shop-head{ display:flex; align-items:center; gap:12px; margin-bottom:4px; }
+  .shop-head h1{ flex:1; font-size:20px; margin:0; }
+  .shop-wallet{ background:var(--panel2); border:1px solid var(--border); border-radius:20px; padding:6px 12px; font-size:14px; color:var(--gold); font-weight:700; }
+  .shop-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; margin-top:12px; }
+  .shop-card{ background:var(--panel); border:2px solid var(--border); border-radius:16px; padding:12px; text-align:center; box-shadow:var(--card-shadow); }
+  .shop-card.active{ border-color:var(--green); }
+  .shop-pic{ width:100%; height:110px; display:flex; align-items:center; justify-content:center; }
+  .shop-pic svg{ width:96px; height:110px; }
+  .shop-name{ font-weight:800; font-size:15px; margin-top:4px; }
+  .shop-kind{ font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; }
+  .shop-card .d-btn{ font-size:13px; padding:9px 8px; }
+  .shop-card .d-btn.locked{ background:var(--panel2); color:var(--text-dim); box-shadow:0 4px 0 var(--border); }
+
+  /* ===== examens ===== */
+  .exam-banner{ display:flex; align-items:center; gap:12px; width:calc(100% - 40px); margin:6px 20px 0;
+    background:linear-gradient(120deg,#7c5cff,#5f43d6); color:#fff; border:none; border-radius:16px;
+    padding:14px 16px; cursor:pointer; box-shadow:0 6px 0 #4b34ad; text-align:left; }
+  .exam-banner:active{ transform:translateY(3px); box-shadow:0 3px 0 #4b34ad; }
+  .eb-emoji{ font-size:26px; }
+  .eb-txt{ flex:1; display:flex; flex-direction:column; }
+  .eb-txt b{ font-size:15px; }
+  .eb-txt span{ font-size:12px; opacity:.9; }
+  .eb-go{ font-size:22px; opacity:.8; }
+  .exams{ max-width:600px; margin:0 auto; padding:16px 20px 96px; }
+  .exams h1{ font-size:20px; margin:6px 0 6px; }
+  .exam-card{ background:var(--panel); border:2px solid var(--border); border-radius:16px; padding:14px 16px; margin-top:12px; box-shadow:var(--card-shadow); }
+  .exam-top{ display:flex; align-items:center; justify-content:space-between; }
+  .exam-name{ font-weight:800; font-size:16px; }
+  .exam-best{ font-size:11px; font-weight:700; padding:3px 9px; border-radius:12px; background:var(--panel2); color:var(--text-dim); }
+  .exam-best.ok{ background:var(--good-bg); color:var(--good); }
+  .exam-best.new{ color:var(--accent); }
+  .exam-sub{ font-size:13px; color:var(--text-dim); margin:4px 0 2px; }
+  .exam-meta{ font-size:11.5px; color:var(--text-dim); margin-bottom:10px; }
+  .exam-count{ font-size:12px; color:var(--text-dim); font-weight:700; }
+  .exam-endrow{ display:flex; gap:10px; margin-top:6px; }
+  .exam-endrow .d-btn{ flex:1; }
+  .d-btn.ghost{ background:var(--panel2); color:var(--text); box-shadow:0 4px 0 var(--border); }
+
   @media (prefers-reduced-motion: reduce){
     .confetti,.duo-node.cur,.rewardpop,.sparkbox i,.lx-end-emoji.pop,.lx-crowns span,.lx-ribbon,.duo-node.juststamp{ animation:none; }
     .rewardpop{ opacity:1; transform:translate(-50%,-50%); }
@@ -1869,6 +1910,9 @@ async function route(){
   if(!cur || profileNames.indexOf(cur) < 0){ renderGate(); return; }
   await ensureLoaded(cur);
   if(h.indexOf("lesson/") === 0){ startLesson(h.slice(7)); return; }
+  if(h === "shop"){ renderShop(); return; }
+  if(h === "examens"){ renderExams(); return; }
+  if(h.indexOf("exam/") === 0){ startExam(h.slice(5)); return; }
   if(h === "herhalen"){ renderReview(); return; }
   if(h === "extra"){ renderHub(); return; }
   if(h.indexOf("m/") === 0){
@@ -1940,6 +1984,14 @@ function renderHub(){
   head.appendChild(el("h1", null, "Extra oefeningen"));
   head.appendChild(el("p", "dim", "Losse thema-oefeningen naast het leerpad — kies vrij wat je wil."));
   app.appendChild(head);
+
+  const examBtn = el("button", "exam-banner");
+  const exSt = (typeof pathState === "function") ? pathState(cur).exams || {} : {};
+  const passed = Object.keys(exSt).filter(k => exSt[k] && exSt[k].passed).length;
+  examBtn.innerHTML = '<span class="eb-emoji">📝</span><span class="eb-txt"><b>Proefexamens</b><span>' +
+    (typeof EXAM_DEFS !== "undefined" ? EXAM_DEFS.length : 4) + ' examens · A1 → B2 · ' + passed + ' geslaagd</span></span><span class="eb-go">›</span>';
+  examBtn.onclick = () => { location.hash = "#/examens"; };
+  app.appendChild(examBtn);
 
   const grid = el("div", "hub-grid");
   MODULES.forEach(m => {
@@ -2947,7 +2999,7 @@ function ensureMascot(){
     '<span class="mascot-text"></span>' +
     '<div class="mascot-lang"><button data-l="nl">NL</button><button data-l="en">EN</button></div>' +
     '</div>' +
-    '<div class="mascot-dog">' + DOG_SVG + '</div>';
+    '<div class="mascot-dog">' + (typeof buddySVG === "function" ? buddySVG() : DOG_SVG) + '</div>';
   m.querySelector(".mascot-x").onclick = hideMascot;
   m.querySelector(".mascot-dog").onclick = hideMascot;
   m.querySelectorAll(".mascot-lang button").forEach(b => {
@@ -2981,9 +3033,10 @@ function mascotSay(msg, opts){
   _mascotTimer = setTimeout(hideMascot, opts.duration || 8000);
 }
 function mascotWelcome(name){
+  const b = (typeof activeBuddy === "function") ? activeBuddy() : { greetNl: "Woef! Ik ben Beau 🐾", greetEn: "Woof! I'm Beau 🐾" };
   mascotSay({
-    nl: "Woef! Ik ben Beau 🐾 Welkom" + (name ? ", " + name : "") + "! Veel leerplezier!",
-    en: "Woof! I'm Beau 🐾 Welcome" + (name ? ", " + name : "") + "! Have fun learning!"
+    nl: b.greetNl + " Welkom" + (name ? ", " + name : "") + "! Veel leerplezier!",
+    en: b.greetEn + " Welcome" + (name ? ", " + name : "") + "! Have fun learning!"
   }, { duration: 9500 });
 }
 function mascotCelebrate(whatNl, whatEn){
@@ -3198,7 +3251,17 @@ function pathState(p){
   s.streak = s.streak || 0;
   s.lastDay = s.lastDay || "";
   s.done = s.done || 0;
+  if(s.gems == null) s.gems = s.xp || 0;      // portemonnee (uitgeefbaar); bestaat -> begin gelijk aan XP
+  s.owned = Array.isArray(s.owned) ? s.owned : ["beau"];
+  if(s.owned.indexOf("beau") < 0) s.owned.unshift("beau");
+  s.buddy = s.buddy || "beau";
+  s.exams = (s.exams && typeof s.exams === "object") ? s.exams : {};
   return s;
+}
+function addGems(n){
+  const st = pathState(getCurrent());
+  st.gems = Math.max(0, (st.gems || 0) + n);
+  return st.gems;
 }
 function savePath(p){ try { scheduleFlush(p, "_path"); } catch(e){} }
 
@@ -3512,6 +3575,7 @@ function finishLesson(){
   const isReview = S.lesson.kind === "review";
   const gained = (isReview ? 20 : 15) + S.right * 2;
   st.xp += gained;
+  st.gems = (st.gems || 0) + gained;
   const prev = st.crowns[S.lesson.id] || 0;
   const nowC = Math.min(3, prev + 1);
   st.crowns[S.lesson.id] = nowC;
@@ -3895,7 +3959,9 @@ function topBar(active){
   bar.appendChild(chip);
   const right = el("div", "duo-top-r");
   const flame = el("div", "duo-stat streak"); flame.innerHTML = "🔥 <b>" + (st.streak || 0) + "</b>";
-  const xp = el("div", "duo-stat xp"); xp.innerHTML = "💎 <b>" + (st.xp || 0) + "</b>";
+  const xp = el("button", "duo-stat xp"); xp.innerHTML = "💎 <b>" + (st.gems || 0) + "</b>";
+  xp.title = "Shop — geef je diamanten uit";
+  xp.onclick = () => { location.hash = "#/shop"; };
   const spk2 = el("button", "duo-stat sndtog" + (_ttsOn ? " on" : ""));
   spk2.innerHTML = _ttsOn ? "🔊" : "🔇";
   spk2.title = "Uitspraak aan/uit";
@@ -3973,7 +4039,7 @@ function renderHome(){
       const bw = el("div", "band-beau" + (u.idx % 6 === 4 ? " flip" : ""));
       bw.style.animationDuration = (22 + (u.idx % 4) * 6) + "s";
       bw.style.animationDelay = (-(u.idx % 5) * 4) + "s";
-      bw.innerHTML = DOG_WALK_SVG + (BEAU_PROPS[u.idx % BEAU_PROPS.length] ? '<span style="position:absolute;left:-14px;top:-6px;font-size:16px">' + BEAU_PROPS[u.idx % BEAU_PROPS.length] + '</span>' : "");
+      bw.innerHTML = buddyWalkSVG() + (BEAU_PROPS[u.idx % BEAU_PROPS.length] ? '<span style="position:absolute;left:-14px;top:-6px;font-size:16px">' + BEAU_PROPS[u.idx % BEAU_PROPS.length] + '</span>' : "");
       wrap.appendChild(bw);
     }
 
@@ -4025,7 +4091,7 @@ function renderHome(){
       const trail = c.parentElement;
       trail.style.position = "relative";
       const beau = el("div", "duo-beau");
-      beau.innerHTML = DOG_SVG;
+      beau.innerHTML = buddySVG();
       beau.style.cssText = "position:absolute;width:70px;z-index:3;top:" + (c.offsetTop - 8) + "px;left:" +
         Math.min(Math.max(c.offsetLeft + 60, 4), trail.clientWidth - 74) + "px";
       trail.appendChild(beau);
@@ -4143,6 +4209,335 @@ function ensureScene(){
   };
   _flyT = setTimeout(fly, 1600);
   _hopT = setTimeout(hop, 4500);
+}
+
+
+/* ==================================================================
+   SHOP (hulpdiertjes, diamanten)  +  PROEFEXAMENS
+   ================================================================== */
+
+/* ---------- hulpdiertjes ---------- */
+const _EAR_L = 'class="dog-ear dog-ear-l"';
+const _EAR_R = 'class="dog-ear dog-ear-r"';
+
+const CAT_SVG =
+  '<svg viewBox="0 0 120 134" xmlns="http://www.w3.org/2000/svg">' +
+  '<ellipse cx="60" cy="127" rx="36" ry="5" fill="#000" opacity=".12"/>' +
+  '<path class="dog-tail" d="M92 104 C 112 100 116 74 104 60 C 100 74 92 84 84 90 C 90 96 92 102 92 104 Z" fill="#8b96a6"/>' +
+  '<path d="M60 60 C 40 60 30 84 32 102 C 33 116 43 124 60 124 C 84 124 96 113 96 98 C 96 78 82 60 60 60 Z" fill="#9aa6b6"/>' +
+  '<ellipse cx="60" cy="104" rx="17" ry="16" fill="#e7ecf2"/>' +
+  '<ellipse cx="47" cy="121" rx="9" ry="6.5" fill="#e7ecf2"/><ellipse cx="73" cy="121" rx="9" ry="6.5" fill="#e7ecf2"/>' +
+  '<circle cx="60" cy="46" r="26" fill="#9aa6b6"/>' +
+  '<g ' + _EAR_L + '><path d="M36 30 L28 6 L52 22 Z" fill="#9aa6b6"/><path d="M38 27 L34 13 L47 23 Z" fill="#f6c9d6"/></g>' +
+  '<g ' + _EAR_R + '><path d="M84 30 L92 6 L68 22 Z" fill="#9aa6b6"/><path d="M82 27 L86 13 L73 23 Z" fill="#f6c9d6"/></g>' +
+  '<ellipse cx="50" cy="44" rx="3.8" ry="5" fill="#2a2a30"/><ellipse cx="70" cy="44" rx="3.8" ry="5" fill="#2a2a30"/>' +
+  '<circle cx="51.4" cy="41.8" r="1.4" fill="#fff"/><circle cx="71.4" cy="41.8" r="1.4" fill="#fff"/>' +
+  '<rect class="dog-lid" x="45.6" y="37" width="8.8" height="11" rx="4.4" fill="#9aa6b6"/>' +
+  '<rect class="dog-lid" x="65.6" y="37" width="8.8" height="11" rx="4.4" fill="#9aa6b6"/>' +
+  '<ellipse cx="60" cy="55" rx="11" ry="8" fill="#e7ecf2"/>' +
+  '<path d="M56 51 l4 3 l4 -3 Z" fill="#f4899b"/>' +
+  '<path d="M60 54 v3 M60 57 q-5 4 -8 1 M60 57 q5 4 8 1" stroke="#2a2a30" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
+  '<path d="M40 52 h-12 M40 56 h-13 M80 52 h12 M80 56 h13" stroke="#cfd7e0" stroke-width="1.6" stroke-linecap="round"/>' +
+  '<path d="M40 70 Q60 84 80 70" stroke="#e5484d" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+  '<rect x="46" y="76" width="28" height="13" rx="4" fill="#f5b833" stroke="#d99f2b"/>' +
+  '<text x="60" y="86" text-anchor="middle" font-family="system-ui,Arial" font-size="8.4" font-weight="800" fill="#6b4a0e">Miel</text>' +
+  '</svg>';
+
+const FOX_SVG =
+  '<svg viewBox="0 0 120 134" xmlns="http://www.w3.org/2000/svg">' +
+  '<ellipse cx="60" cy="127" rx="36" ry="5" fill="#000" opacity=".12"/>' +
+  '<path class="dog-tail" d="M90 106 C 116 104 122 76 108 58 C 104 74 94 86 84 92 C 90 98 90 104 90 106 Z" fill="#e8874a"/>' +
+  '<path d="M104 66 C 112 62 114 74 108 82 C 104 76 104 70 104 66 Z" fill="#fff"/>' +
+  '<path d="M60 60 C 40 60 30 84 32 102 C 33 116 43 124 60 124 C 84 124 96 113 96 98 C 96 78 82 60 60 60 Z" fill="#e8874a"/>' +
+  '<ellipse cx="60" cy="106" rx="16" ry="15" fill="#fbeee2"/>' +
+  '<ellipse cx="47" cy="121" rx="9" ry="6.5" fill="#3a3a42"/><ellipse cx="73" cy="121" rx="9" ry="6.5" fill="#3a3a42"/>' +
+  '<circle cx="60" cy="46" r="26" fill="#e8874a"/>' +
+  '<g ' + _EAR_L + '><path d="M36 28 L26 2 L52 20 Z" fill="#e8874a"/><path d="M35 22 L30 8 L46 19 Z" fill="#3a3a42"/></g>' +
+  '<g ' + _EAR_R + '><path d="M84 28 L94 2 L68 20 Z" fill="#e8874a"/><path d="M85 22 L90 8 L74 19 Z" fill="#3a3a42"/></g>' +
+  '<path d="M60 40 C 50 44 46 58 46 66 C 52 70 68 70 74 66 C 74 58 70 44 60 40 Z" fill="#fbeee2"/>' +
+  '<ellipse cx="50" cy="44" rx="3.6" ry="4.8" fill="#2a2a30"/><ellipse cx="70" cy="44" rx="3.6" ry="4.8" fill="#2a2a30"/>' +
+  '<circle cx="51.3" cy="41.9" r="1.4" fill="#fff"/><circle cx="71.3" cy="41.9" r="1.4" fill="#fff"/>' +
+  '<rect class="dog-lid" x="45.8" y="37" width="8.4" height="10.5" rx="4.2" fill="#e8874a"/>' +
+  '<rect class="dog-lid" x="65.8" y="37" width="8.4" height="10.5" rx="4.2" fill="#e8874a"/>' +
+  '<ellipse cx="60" cy="55" rx="3.6" ry="2.8" fill="#2a2a30"/>' +
+  '<path d="M60 57 v3 M60 60 q-5 4 -8 1 M60 60 q5 4 8 1" stroke="#2a2a30" stroke-width="1.8" fill="none" stroke-linecap="round"/>' +
+  '<path d="M40 70 Q60 84 80 70" stroke="#2ec4b6" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+  '<rect x="46" y="76" width="28" height="13" rx="4" fill="#f5b833" stroke="#d99f2b"/>' +
+  '<text x="60" y="86" text-anchor="middle" font-family="system-ui,Arial" font-size="8.4" font-weight="800" fill="#6b4a0e">Vonk</text>' +
+  '</svg>';
+
+const OWL_SVG =
+  '<svg viewBox="0 0 120 134" xmlns="http://www.w3.org/2000/svg">' +
+  '<ellipse cx="60" cy="127" rx="34" ry="5" fill="#000" opacity=".12"/>' +
+  '<path class="dog-tail" d="M92 96 C 104 92 106 74 98 64 C 94 76 88 86 82 92 C 87 95 90 96 92 96 Z" fill="#a97e52"/>' +
+  '<ellipse cx="60" cy="86" rx="34" ry="38" fill="#b98a5e"/>' +
+  '<ellipse cx="60" cy="94" rx="24" ry="26" fill="#e9d8c2"/>' +
+  '<path d="M30 28 L38 8 L46 24 Z" fill="#b98a5e"/><path d="M90 28 L82 8 L74 24 Z" fill="#b98a5e"/>' +
+  '<circle cx="46" cy="44" r="15" fill="#fff"/><circle cx="74" cy="44" r="15" fill="#fff"/>' +
+  '<circle cx="46" cy="44" r="8" fill="#2a2a30"/><circle cx="74" cy="44" r="8" fill="#2a2a30"/>' +
+  '<circle cx="48.5" cy="41.5" r="2.4" fill="#fff"/><circle cx="76.5" cy="41.5" r="2.4" fill="#fff"/>' +
+  '<circle class="dog-lid" cx="46" cy="44" r="15" fill="#b98a5e"/><circle class="dog-lid" cx="74" cy="44" r="15" fill="#b98a5e"/>' +
+  '<path d="M54 52 l6 9 l6 -9 Z" fill="#f5b833"/>' +
+  '<ellipse cx="30" cy="76" rx="10" ry="20" fill="#a97e52"/><ellipse cx="90" cy="76" rx="10" ry="20" fill="#a97e52"/>' +
+  '<path d="M42 104 h8 M46 100 v10 M70 104 h8 M74 100 v10" stroke="#f5b833" stroke-width="3" stroke-linecap="round"/>' +
+  '<path d="M40 66 Q60 78 80 66" stroke="#7c5cff" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+  '<rect x="46" y="72" width="28" height="13" rx="4" fill="#f5b833" stroke="#d99f2b"/>' +
+  '<text x="60" y="82" text-anchor="middle" font-family="system-ui,Arial" font-size="8.4" font-weight="800" fill="#6b4a0e">Wies</text>' +
+  '</svg>';
+
+const PEN_SVG =
+  '<svg viewBox="0 0 120 134" xmlns="http://www.w3.org/2000/svg">' +
+  '<ellipse cx="60" cy="127" rx="34" ry="5" fill="#000" opacity=".12"/>' +
+  '<path d="M60 24 C 36 24 26 56 26 88 C 26 112 40 124 60 124 C 80 124 94 112 94 88 C 94 56 84 24 60 24 Z" fill="#2f3540"/>' +
+  '<path d="M60 44 C 46 44 40 66 40 88 C 40 108 48 118 60 118 C 72 118 80 108 80 88 C 80 66 74 44 60 44 Z" fill="#fbfdff"/>' +
+  '<path class="dog-tail" d="M24 70 C 12 74 10 92 18 100 C 22 90 26 80 30 74 Z" fill="#2f3540"/>' +
+  '<path d="M96 70 C 108 74 110 92 102 100 C 98 90 94 80 90 74 Z" fill="#2f3540"/>' +
+  '<ellipse cx="52" cy="52" rx="4" ry="5" fill="#2a2a30"/><ellipse cx="68" cy="52" rx="4" ry="5" fill="#2a2a30"/>' +
+  '<circle cx="53.4" cy="49.8" r="1.5" fill="#fff"/><circle cx="69.4" cy="49.8" r="1.5" fill="#fff"/>' +
+  '<rect class="dog-lid" x="47.6" y="45" width="8.8" height="11" rx="4.4" fill="#fbfdff"/>' +
+  '<rect class="dog-lid" x="63.6" y="45" width="8.8" height="11" rx="4.4" fill="#fbfdff"/>' +
+  '<ellipse cx="46" cy="60" rx="4" ry="2.6" fill="#f7b8c6" opacity=".6"/>' +
+  '<ellipse cx="74" cy="60" rx="4" ry="2.6" fill="#f7b8c6" opacity=".6"/>' +
+  '<path d="M54 58 l6 5 l6 -5 l-6 -3 Z" fill="#ff9600"/>' +
+  '<path d="M48 122 l-6 6 h12 Z M72 122 l-6 6 h12 Z" fill="#ff9600"/>' +
+  '<path d="M42 78 Q60 90 78 78" stroke="#ffc800" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+  '<rect x="46" y="84" width="28" height="13" rx="4" fill="#f5b833" stroke="#d99f2b"/>' +
+  '<text x="60" y="94" text-anchor="middle" font-family="system-ui,Arial" font-size="8.4" font-weight="800" fill="#6b4a0e">Pip</text>' +
+  '</svg>';
+
+const BUDDIES = [
+  { id: "beau", name: "Beau",  kind: "Samojeed", price: 0,    svg: () => DOG_SVG,
+    greetNl: "Woef! Ik ben Beau 🐾", greetEn: "Woof! I'm Beau 🐾" },
+  { id: "miel", name: "Miel",  kind: "kat",      price: 15000,  svg: () => CAT_SVG,
+    greetNl: "Miauw! Ik ben Miel 🐱", greetEn: "Meow! I'm Miel 🐱" },
+  { id: "vonk", name: "Vonk",  kind: "vos",      price: 35000,  svg: () => FOX_SVG,
+    greetNl: "Hoi! Ik ben Vonk de vos 🦊", greetEn: "Hi! I'm Vonk the fox 🦊" },
+  { id: "pip",  name: "Pip",   kind: "pinguïn",  price: 60000,  svg: () => PEN_SVG,
+    greetNl: "Ik ben Pip de pinguïn! 🐧", greetEn: "I'm Pip the penguin! 🐧" },
+  { id: "wies", name: "Wies",  kind: "uil",      price: 90000,  svg: () => OWL_SVG,
+    greetNl: "Oehoe! Ik ben Wies de uil 🦉", greetEn: "Hoot! I'm Wies the owl 🦉" }
+];
+function buddyById(id){ return BUDDIES.find(b => b.id === id) || BUDDIES[0]; }
+function activeBuddy(){ return buddyById(pathState(getCurrent()).buddy); }
+function buddySVG(){ return activeBuddy().svg(); }
+function buddyWalkSVG(){ return activeBuddy().id === "beau" ? DOG_WALK_SVG : activeBuddy().svg(); }
+
+/* ---------- shop ---------- */
+function renderShop(){
+  const cur = getCurrent();
+  const st = pathState(cur);
+  app.innerHTML = "";
+  if(typeof ensureScene === "function") ensureScene();
+  app.appendChild(topBar(""));
+
+  const wrap = el("div", "shop");
+  const head = el("div", "shop-head");
+  head.innerHTML = '<button class="backbtn">‹ Terug</button>' +
+    '<h1>🛍️ Shop</h1><div class="shop-wallet">💎 <b>' + (st.gems || 0) + '</b></div>';
+  head.querySelector(".backbtn").onclick = () => { location.hash = "#/"; };
+  wrap.appendChild(head);
+  wrap.appendChild(el("p", "dim", "Verdien 💎 met lessen en examens. Kies een hulpdiertje — je maatje verschijnt op het pad en geeft je tips."));
+
+  const grid = el("div", "shop-grid");
+  BUDDIES.forEach(b => {
+    const owned = st.owned.indexOf(b.id) >= 0;
+    const active = st.buddy === b.id;
+    const card = el("div", "shop-card" + (active ? " active" : ""));
+    const pic = el("div", "shop-pic");
+    pic.innerHTML = b.svg();
+    card.appendChild(pic);
+    card.appendChild(el("div", "shop-name", b.name));
+    card.appendChild(el("div", "shop-kind", b.kind));
+    const btn = el("button", "d-btn");
+    if(active){ btn.textContent = "In gebruik ✓"; btn.disabled = true; btn.classList.add("ok"); }
+    else if(owned){ btn.textContent = "Kies " + b.name; btn.onclick = () => { st.buddy = b.id; savePath(cur); resetMascot(); renderShop(); }; }
+    else {
+      const can = (st.gems || 0) >= b.price;
+      btn.textContent = "💎 " + b.price;
+      btn.disabled = !can;
+      if(!can) btn.classList.add("locked");
+      btn.onclick = () => {
+        if((st.gems || 0) < b.price) return;
+        st.gems -= b.price;
+        st.owned.push(b.id);
+        st.buddy = b.id;
+        savePath(cur);
+        resetMascot();
+        if(typeof sfx === "function") sfx("win");
+        if(typeof confetti === "function") confetti();
+        if(typeof rewardPop === "function") rewardPop(b.name.toUpperCase() + " ontgrendeld! 🎉", true);
+        renderShop();
+      };
+    }
+    card.appendChild(btn);
+    grid.appendChild(card);
+  });
+  wrap.appendChild(grid);
+  app.appendChild(wrap);
+  window.scrollTo(0, 0);
+}
+function resetMascot(){
+  try { if(_mascotEl){ _mascotEl.remove(); _mascotEl = null; } } catch(e){}
+}
+
+/* ================= PROEFEXAMENS ================= */
+const EXAM_DEFS = [
+  { id: "A1", name: "Examen A1", sub: "Beginner — losse woorden", n: 24, lvlMax: 0, pass: 0.6, reward: 60 },
+  { id: "A2", name: "Examen A2", sub: "Basis — woorden & korte zinnen", n: 30, lvlMax: 1, pass: 0.6, reward: 100 },
+  { id: "B1", name: "Examen B1", sub: "Gevorderd — zinnen & voorzetsels", n: 34, lvlMax: 2, pass: 0.65, reward: 150 },
+  { id: "B2", name: "Examen B2", sub: "Hoog — alles door elkaar", n: 40, lvlMax: 2, pass: 0.7, reward: 220 }
+];
+
+function examWordPool(lvlMax){
+  return getCourse().words.filter(w => w.lvl <= lvlMax);
+}
+function buildExam(def){
+  const words = duoShuffle(examWordPool(def.lvlMax));
+  const sents = duoShuffle(getCourse().sents.filter(s => s.lvl <= Math.max(1, def.lvlMax)));
+  const qz = duoShuffle(quizPool());
+  const exs = [];
+  let wi = 0, si = 0, qi = 0;
+  for(let k = 0; k < def.n; k++){
+    const roll = def.id === "A1" ? (k % 3)
+      : def.id === "A2" ? (k % 5)
+      : def.id === "B1" ? (k % 6)
+      : (k % 7);
+    let ex = null;
+    if(roll === 0 && wi < words.length) ex = exPick(words[wi++], false);
+    else if(roll === 1 && wi < words.length) ex = exListen(words[wi++]);
+    else if(roll === 2 && wi < words.length) ex = exType(words[wi++]);
+    else if(roll === 3 && si < sents.length) ex = exBuild(sents[si++], false);
+    else if(roll === 4 && si < sents.length) ex = exTypeListen(sents[si++]);
+    else if(roll === 5 && qi < qz.length){ const q = exQuiz(); ex = q; }
+    else if(roll === 6 && wi < words.length) ex = exPick(words[wi++], true);
+    if(!ex && wi < words.length) ex = exPick(words[wi++], k % 2 === 0);
+    if(!ex && si < sents.length) ex = exType(sents[si++]);
+    if(ex) exs.push(ex);
+  }
+  return exs;
+}
+
+let _exam = null;
+function renderExams(){
+  const cur = getCurrent();
+  const st = pathState(cur);
+  app.innerHTML = "";
+  if(typeof ensureScene === "function") ensureScene();
+  app.appendChild(topBar("extra"));
+  const wrap = el("div", "exams");
+  wrap.appendChild(el("h1", null, "📝 Proefexamens"));
+  wrap.appendChild(el("p", "dim", "Test jezelf zonder hints. Je krijgt een score op het einde; je beste resultaat wordt bewaard. Geslaagd = 💎 bonus."));
+  EXAM_DEFS.forEach(d => {
+    const rec = st.exams[d.id] || {};
+    const card = el("div", "exam-card");
+    card.innerHTML =
+      '<div class="exam-top"><span class="exam-name">' + d.name + '</span>' +
+      (rec.best != null ? '<span class="exam-best' + (rec.passed ? " ok" : "") + '">beste: ' + Math.round(rec.best * 100) + '%</span>' : '<span class="exam-best new">nieuw</span>') + '</div>' +
+      '<div class="exam-sub">' + d.sub + '</div>' +
+      '<div class="exam-meta">' + d.n + ' vragen · geslaagd vanaf ' + Math.round(d.pass * 100) + '% · 💎 ' + d.reward + '</div>';
+    const btn = el("button", "d-btn", rec.best != null ? "Opnieuw" : "Start examen");
+    btn.onclick = () => { location.hash = "#/exam/" + d.id; };
+    card.appendChild(btn);
+    wrap.appendChild(card);
+  });
+  app.appendChild(wrap);
+  window.scrollTo(0, 0);
+}
+
+function startExam(id){
+  const def = EXAM_DEFS.find(d => d.id === id);
+  if(!def){ location.hash = "#/examens"; return; }
+  const exs = buildExam(def);
+  if(exs.length < 6){ location.hash = "#/examens"; return; }
+  _exam = { def: def, queue: exs, pos: 0, right: 0 };
+  drawExamQ();
+}
+function drawExamQ(){
+  const E = _exam;
+  if(!E){ location.hash = "#/examens"; return; }
+  if(E.pos >= E.queue.length) return finishExam();
+  const ex = E.queue[E.pos];
+
+  app.innerHTML = "";
+  const wrap = el("div", "lx");
+  const top = el("div", "lx-top");
+  const x = el("button", "lx-x", "✕");
+  x.onclick = () => { if(confirm("Examen stoppen? Je resultaat telt niet.")){ _exam = null; location.hash = "#/examens"; } };
+  const bar = el("div", "lx-bar"); const fill = el("div", "lx-fill");
+  fill.style.width = Math.round(100 * E.pos / E.queue.length) + "%"; bar.appendChild(fill);
+  top.appendChild(x); top.appendChild(bar);
+  top.appendChild(el("span", "exam-count", (E.pos + 1) + "/" + E.queue.length));
+  wrap.appendChild(top);
+
+  const body = el("div", "lx-body");
+  wrap.appendChild(body);
+  const foot = el("div", "lx-foot");
+  const act = el("button", "d-btn big", "Antwoord");
+  act.disabled = true;
+  foot.appendChild(act);
+  wrap.appendChild(foot);
+  app.appendChild(wrap);
+
+  const ctx = { ex: ex, body: body, act: act, banner: el("div"), phase: null,
+    setReady: (ok) => { if(ctx.phase !== "answered") act.disabled = !ok; } };
+  (EX_RENDER[ex.t] || EX_RENDER.pick)(ctx);
+
+  act.onclick = () => {
+    if(ctx.phase === "answered"){ E.pos++; drawExamQ(); return; }
+    const r = ctx.check();
+    if(r.ok) E.right++;
+    if(ctx.lock) ctx.lock();
+    ctx.phase = "answered";
+    act.textContent = "Volgende ›";
+    act.classList.add(r.ok ? "ok" : "wrong");
+  };
+  window.scrollTo(0, 0);
+}
+function finishExam(){
+  const E = _exam;
+  const cur = getCurrent();
+  const st = pathState(cur);
+  const def = E.def;
+  const score = E.right / E.queue.length;
+  const passed = score >= def.pass;
+  const rec = st.exams[def.id] || { best: 0, passed: false, attempts: 0 };
+  const isBest = score > (rec.best || 0);
+  const firstPass = passed && !rec.passed;
+  st.exams[def.id] = {
+    best: Math.max(rec.best || 0, score),
+    passed: rec.passed || passed,
+    attempts: (rec.attempts || 0) + 1
+  };
+  if(firstPass){ st.gems = (st.gems || 0) + def.reward; }
+  savePath(cur);
+
+  app.innerHTML = "";
+  const w = el("div", "lx-end");
+  w.appendChild(el("div", "lx-end-emoji pop", passed ? "🎓" : "💪"));
+  w.appendChild(el("h1", null, passed ? "GESLAAGD!" : "Nog niet geslaagd"));
+  const stats = el("div", "lx-stats");
+  stats.appendChild(statTile("Score", Math.round(score * 100) + "%", passed ? "#3fa826" : "#e5484d"));
+  stats.appendChild(statTile("Juist", E.right + "/" + E.queue.length, "#1382c6"));
+  stats.appendChild(statTile("Nodig", Math.round(def.pass * 100) + "%", "#ff8c00"));
+  w.appendChild(stats);
+  if(firstPass) w.appendChild(el("div", "lx-ribbon", "💎 +" + def.reward + " bonus!"));
+  else if(isBest && rec.best) w.appendChild(el("div", "lx-crowns-l", "Nieuw persoonlijk record!"));
+
+  const row = el("div", "exam-endrow");
+  const again = el("button", "d-btn", "Opnieuw");
+  again.onclick = () => { _exam = null; location.hash = "#/exam/" + def.id; };
+  const back = el("button", "d-btn ghost", "Naar examens");
+  back.onclick = () => { _exam = null; location.hash = "#/examens"; };
+  row.appendChild(again); row.appendChild(back);
+  w.appendChild(row);
+  app.appendChild(w);
+
+  if(typeof confetti === "function" && passed) confetti();
+  if(typeof sfx === "function") sfx(passed ? "win" : "wrong");
+  mascotSay(passed
+    ? { nl: "🎓 Proficiat, examen " + def.id + " gehaald!", en: "🎓 Congrats, exam " + def.id + " passed!" }
+    : { nl: "Bijna! Oefen nog wat en probeer opnieuw. 💪", en: "Almost! Practise a bit more and try again. 💪" },
+    { celebrate: passed, duration: 8000 });
 }
 
 
